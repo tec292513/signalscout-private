@@ -262,78 +262,82 @@
 
     <!-- end sidenav -->
 <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
-  <nav class="relative flex flex-wrap items-center justify-between w-full px-0 py-2 mx-6 mt-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="true">
-    <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
-      <nav>
-        <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-          <li class="text-sm pl-2 capitalize leading-normal text-slate-700 before:float-left before:pr-2 before:text-gray-600 before:content-['/']" aria-current="page">Dashboard</li>
-        </ol>
-        <h6 class="mb-0 font-bold capitalize">Dashboard</h6>
-      </nav>
-
-      <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-        <div class="flex items-center md:ml-auto md:pr-4">
-          <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
-            <span class="text-sm ease-soft leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-              <i class="fas fa-search"></i>
-            </span>
-            <input type="text" class="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" placeholder="Type here..." />
+    <nav class="relative flex flex-wrap items-center justify-between w-full px-0 py-2 mx-6 mt-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="true">
+      <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+        <nav>
+          <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+            <li class="text-sm pl-2 capitalize leading-normal text-slate-700 before:float-left before:pr-2 before:text-gray-600 before:content-['/']" aria-current="page">Dashboard</li>
+          </ol>
+          <h6 class="mb-0 font-bold capitalize">Fintech Signals Feed</h6>
+        </nav>
+        <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+          <div class="flex items-center md:ml-auto md:pr-4">
+            <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
+              <span class="text-sm ease-soft leading-5.6 absolute z-50 -ml-px flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                <i class="fas fa-search"></i>
+              </span>
+              <input type="text" class="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" placeholder="Type here..." />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <div class="w-full px-6 py-6 mx-auto">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Fintech Signals Feed</h1>
-        <p class="text-gray-600 mt-1">New intelligence for your target accounts, updated in real-time.</p>
-    </div>
+    <div class="w-full px-6 py-6 mx-auto">
+        <div class="flex flex-wrap -mx-3">
 
-    <div class="space-y-6">
-
-        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0"><span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">JS</span></div>
-            <div class="ml-4">
-              <div class="text-lg font-bold text-gray-900">Jennifer Shaw</div>
-              <div class="text-sm text-gray-500">VP of Engineering @ Apex Financial</div>
+            <div class="w-full max-w-full px-3 mb-6 lg:w-1/2 lg:flex-none">
+                <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
+                    <div class="flex-auto p-4">
+                        <div class="flex flex-wrap -mx-3">
+                            <div class="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p class="mb-0 font-sans font-semibold leading-normal text-sm">Jennifer Shaw</p>
+                                    <h5 class="mb-0 font-bold">
+                                        VP of Engineering @ Apex Financial
+                                    </h5>
+                                    <p class="mb-0 mt-4 leading-normal text-sm text-slate-600">
+                                      "...migrating our core services... ensuring our security and compliance posture remains perfect during the move is my number one priority."
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="w-4/12 max-w-full px-3 ml-auto text-right flex-0">
+                                <div class="inline-block w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500 shadow-soft-2xl">
+                                    <i class="ni leading-none ni-money-coins text-lg relative top-3.5 text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <blockquote class="border-l-4 border-blue-500 pl-4 my-4">
-            <p class="text-gray-700 italic">
-              "...we're migrating our core services to a new cloud provider next quarter, and honestly, ensuring our security and compliance posture remains perfect during the move is my number one priority. It's a huge undertaking."
-            </p>
-          </blockquote>
-          <div class="flex items-center justify-between mt-4">
-            <div class="text-sm text-gray-500"><strong>Source:</strong> "Fintech Unfiltered" Podcast</div>
-            <a href="#" class="text-sm font-semibold text-blue-600 hover:text-blue-800">
-              View Outreach Suggestion &rarr;
-            </a>
-          </div>
-        </div>
-        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0"><span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-green-100 text-green-600 font-semibold">MR</span></div>
-            <div class="ml-4">
-              <div class="text-lg font-bold text-gray-900">Michael Russo</div>
-              <div class="text-sm text-gray-500">Director of Fraud Detection @ Nova Payments</div>
+
+            <div class="w-full max-w-full px-3 mb-6 lg:w-1/2 lg:flex-none">
+                <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
+                    <div class="flex-auto p-4">
+                        <div class="flex flex-wrap -mx-3">
+                            <div class="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p class="mb-0 font-sans font-semibold leading-normal text-sm">Michael Russo</p>
+                                    <h5 class="mb-0 font-bold">
+                                        Director of Fraud @ Nova Payments
+                                    </h5>
+                                    <p class="mb-0 mt-4 leading-normal text-sm text-slate-600">
+                                      "Our current fraud models are good, but they're too slow. We're actively researching real-time AI solutions..."
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="w-4/12 max-w-full px-3 ml-auto text-right flex-0">
+                                <div class="inline-block w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-green-600 to-lime-400 shadow-soft-2xl">
+                                    <i class="ni leading-none ni-world text-lg relative top-3.5 text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <blockquote class="border-l-4 border-green-500 pl-4 my-4">
-            <p class="text-gray-700 italic">
-              "Our current fraud models are good, but they're too slow. We're actively researching real-time AI and machine learning solutions that can score transactions in milliseconds, not seconds. That's the next frontier for us."
-            </p>
-          </blockquote>
-          <div class="flex items-center justify-between mt-4">
-            <div class="text-sm text-gray-500"><strong>Source:</strong> "This Week in Fintech" Newsletter</div>
-            <a href="#" class="text-sm font-semibold text-green-600 hover:text-green-800">
-              View Outreach Suggestion &rarr;
-            </a>
-          </div>
+
         </div>
         </div>
-    </div>
 </main>
     <div fixed-plugin>
       <a fixed-plugin-button class="bottom-7.5 right-7.5 text-xl z-990 shadow-soft-lg rounded-circle fixed cursor-pointer bg-white px-4 py-2 text-slate-700">
