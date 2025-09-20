@@ -135,7 +135,7 @@
 
             if (!response.ok) {
                 console.error("Failed to fetch data from Airtable.");
-                signalFeedContainer.innerHTML = "<p class='w-full px-3 text-red-500'>Error loading signals. Check your API Key and Base ID.</p>";
+                signalFeedContainer.innerHTML = "<p class='w-full px-3 text-red-500'>Error loading signals. Check your API Key and Base ID in secrets.js</p>";
                 return;
             }
 
@@ -145,7 +145,7 @@
             if (data.records && data.records.length > 0) {
                 data.records.forEach(record => {
                     const signal = record.fields;
-                    if (Object.keys(signal).length > 0) { // Only render cards for non-empty records
+                    if (Object.keys(signal).length > 0) {
                         const cardHTML = createSignalCard(signal);
                         signalFeedContainer.insertAdjacentHTML('beforeend', cardHTML);
                     }
