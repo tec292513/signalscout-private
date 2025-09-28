@@ -4,129 +4,224 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
     <title>SignalScout AI - AI-Powered Sales Intelligence Platform</title>
-    <meta name="description" content="Stop losing deals to faster competitors. SignalScout AI finds qualified leads automatically by detecting buying signals from podcasts, newsletters & social media. 14-day free trial." />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <meta name="description" content="Stop losing deals to faster competitors. SignalScout AI finds qualified leads automatically by detecting buying signals from podcasts, newsletters & social media." />
+    
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <link href="../assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <script 
         data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6"
         src="https://static.memberstack.com/scripts/v1/memberstack.js" 
         type="text/javascript"
     ></script>
+
     <style>
       body {
-        background-color: #111827;
-        color: #e5e7eb;
-      }
-      .feature-card {
-        background-color: #1f2937;
-        border: 1px solid #374151;
+        font-family: 'Inter', sans-serif;
+        background-color: #0B1120;
+        color: #cbd5e1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       .gradient-text {
-        background: linear-gradient(to right, #2dd4bf, #3b82f6);
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         color: transparent;
       }
-      .cta-button {
-          background: linear-gradient(to right, #2dd4bf, #3b82f6);
+      .btn-primary {
+        background-image: linear-gradient(to right, #2563eb, #3b82f6, #60a5fa);
+        transition: all 0.3s ease;
+        background-size: 200% auto;
+      }
+      .btn-primary:hover {
+        background-position: right center;
+      }
+      .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: background-color 0.3s ease;
+      }
+      .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .info-card {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+      }
+      .feature-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+      }
+      .hero-bg {
+        background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=4800');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .hero-bg::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to top, #0B1120 10%, rgba(11, 17, 32, 0.5) 100%);
+        z-index: 1;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+      .pricing-card {
+        background-color: #1E293B;
+        border: 1px solid #475569;
       }
     </style>
   </head>
-  <body class="m-0 font-sans antialiased font-normal text-start text-base leading-default">
+  <body class="bg-gray-900 text-gray-300">
     
-    <header class="w-full p-6 flex justify-between items-center text-white">
-      <div class="text-xl font-bold">SignalScout AI</div>
-      <nav class="hidden md:flex items-center space-x-6">
-        <a href="#features" class="hover:text-cyan-400">Features</a>
-        <a href="#pricing" class="hover:text-cyan-400">Pricing</a>
-        <a href="#" data-ms-modal="login" class="hover:text-cyan-400">Sign In</a>
-        <a href="#" data-ms-modal="signup" class="cta-button text-white font-semibold py-2 px-4 rounded-lg">Get Started</a>
+    <header class="w-full p-6 flex justify-between items-center container mx-auto">
+      <div class="text-xl font-bold text-white">SignalScout AI</div>
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#pricing" class="hover:text-white">Pricing</a>
+        <a href="#" data-ms-modal="login" class="btn-secondary py-2 px-4 rounded-lg">Sign In</a>
+        <a href="#" data-ms-modal="signup" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</a>
       </nav>
       <div class="md:hidden">
-         <a href="#" data-ms-modal="login" class="font-semibold">Sign In</a>
+         <a href="#" data-ms-modal="login" class="font-semibold text-white">Sign In</a>
       </div>
     </header>
 
     <main>
-      <section class="text-center py-20 px-6">
-        <h1 class="text-5xl font-extrabold text-white mb-4">Stop losing deals to faster competitors.</h1>
-        <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-8">SignalScout AI is an AI-powered sales intelligence platform that automatically finds qualified leads for you by detecting buying signals from podcasts, newsletters, social media, and more.</p>
-        <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-8 rounded-lg text-lg">Start 14-day free trial</a>
-        <p class="text-gray-500 mt-3 text-sm">No credit card required.</p>
-        
-        <div class="mt-12 max-w-5xl mx-auto">
-           <img src="https://via.placeholder.com/1024x640.png/1f2937/808080?text=Your+Dashboard+Screenshot" alt="SignalScout AI Dashboard" class="rounded-xl shadow-2xl border-2 border-gray-700">
+      <section class="hero-bg text-center pt-24 pb-32 px-6">
+        <div class="hero-content">
+          <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Stop Losing Deals to Faster Competitors</h1>
+          <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">AI-powered sales intelligence that finds qualified leads for your team automatically. No more manual prospecting. Ever.</p>
+          <a href="#" data-ms-modal="signup" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg">Start 14-day Free Trial</a>
         </div>
       </section>
 
-      <section class="py-20 px-6">
+      <section class="py-20 px-6 container mx-auto">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 class="text-4xl font-bold text-white mb-4">Prospecting is slow and inefficient.</h2>
-          <p class="text-lg text-gray-400 mb-12">Your sales team is spending hundreds of hours on manual research, listening to podcasts, and reading newsletters instead of what they should be doing: selling.</p>
+          <h2 class="text-4xl font-bold text-white mb-2">Your Sales Team is Fighting an <span class="gradient-text">Impossible Battle</span></h2>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div class="feature-card p-6 rounded-lg text-center">
-            <i class="fas fa-search text-4xl gradient-text mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">Manual Research</h3>
-            <p class="text-gray-400">Spending hours searching for potential leads with no guarantee of finding a good fit.</p>
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Manual Research is Slow</h3>
+            <p class="text-gray-400">Teams waste 2-3 hours per day listening to podcasts and reading newsletters searching for a single lead.</p>
           </div>
-          <div class="feature-card p-6 rounded-lg text-center">
-            <i class="fas fa-bullhorn text-4xl gradient-text mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">Generic Outreach</h3>
-            <p class="text-gray-400">Sending cold emails that don't resonate because you don't know their specific pain points.</p>
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Outreach is Ineffective</h3>
+            <p class="text-gray-400">50% of sales time is wasted on unproductive prospecting with generic, cold emails.</p>
           </div>
-          <div class="feature-card p-6 rounded-lg text-center">
-            <i class="fas fa-clock text-4xl gradient-text mb-4"></i>
-            <h3 class="text-xl font-semibold text-white mb-2">Missed Opportunities</h3>
-            <p class="text-gray-400">By the time you find a lead, your competitors have already reached out to them.</p>
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Opportunities are Missed</h3>
+            <p class="text-gray-400">67% of the buyer's journey is now done digitally, often before they ever contact a vendor.</p>
           </div>
         </div>
       </section>
 
-      <section id="features" class="py-20 px-6">
+      <section class="py-20 px-6 container mx-auto">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 class="text-4xl font-bold text-white mb-4">Automate your lead generation with AI</h2>
-          <p class="text-lg text-gray-400 mb-12">SignalScout AI acts as your automated sales development rep, listening to thousands of sources and delivering actionable buying signals straight to your dashboard.</p>
+          <h2 class="text-4xl font-bold text-white mb-2">SignalScout AI: Your <span class="gradient-text">Unfair Advantage</span></h2>
+          <p class="text-lg text-gray-400 mb-12">We do the work for you. Our AI engine listens to thousands of sources 24/7 to deliver actionable buying signals straight to your dashboard.</p>
         </div>
-        <div class="mt-12 max-w-5xl mx-auto">
-           <img src="https://via.placeholder.com/1024x640.png/1f2937/808080?text=Feature+Showcase+Image" alt="SignalScout AI Features" class="rounded-xl shadow-2xl border-2 border-gray-700">
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-center">
+          <div>
+            <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+            <h3 class="text-xl font-semibold text-white mb-2">We Listen</h3>
+            <p class="text-gray-400">Our AI monitors podcasts, conference talks, and newsletters in the Cloud & DevOps space.</p>
+          </div>
+          <div>
+            <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+            <h3 class="text-xl font-semibold text-white mb-2">AI Analyzes</h3>
+            <p class="text-gray-400">We identify key decision-makers (VPs, Directors) talking about specific pain points.</p>
+          </div>
+          <div>
+            <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+            <h3 class="text-xl font-semibold text-white mb-2">You Get Leads</h3>
+            <p class="text-gray-400">You receive a daily feed of actionable leads with the person, company, and their exact quote.</p>
+          </div>
         </div>
       </section>
 
-      <section id="pricing" class="py-20 px-6">
+      <section id="features" class="py-20 px-6 container mx-auto">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-white mb-2">Everything You Need to <span class="gradient-text">Dominate Your Market</span></h2>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
+            <div class="feature-card p-6">
+                <i class="fas fa-robot text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">AI-Powered Signal Detection</h3>
+                <p class="text-sm text-gray-400">Our AI is trained to understand the nuances of technical pain points in the DevOps space.</p>
+            </div>
+            <div class="feature-card p-6">
+                <i class="far fa-list-alt text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">Daily Lead Feed</h3>
+                <p class="text-sm text-gray-400">Log in to a fresh list of qualified, actionable leads every single morning.</p>
+            </div>
+             <div class="feature-card p-6">
+                <i class="fas fa-bullseye text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">Quality Over Quantity</h3>
+                <p class="text-sm text-gray-400">We focus on high-intent signals from decision-makers, not just random keyword mentions.</p>
+            </div>
+            <div class="feature-card p-6">
+                <i class="fas fa-microphone-alt text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">Podcast Monitoring</h3>
+                <p class="text-sm text-gray-400">We transcribe and analyze hundreds of industry podcasts to find hidden gems.</p>
+            </div>
+             <div class="feature-card p-6">
+                <i class="far fa-newspaper text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">Newsletter Intelligence</h3>
+                <p class="text-sm text-gray-400">Stay ahead of the market by getting signals from influential newsletters.</p>
+            </div>
+             <div class="feature-card p-6">
+                <i class="fas fa-chalkboard-teacher text-2xl gradient-text mb-4"></i>
+                <h3 class="text-lg font-semibold text-white mb-2">Conference & Webinar Insights</h3>
+                <p class="text-sm text-gray-400">Get key quotes and pain points from talks given by tech leaders.</p>
+            </div>
+          </div>
+      </section>
+
+      <section id="pricing" class="py-20 px-6 container mx-auto">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 class="text-4xl font-bold text-white mb-4">Pricing that makes sense</h2>
-          <p class="text-lg text-gray-400 mb-12">Choose a plan that works for you. Cancel anytime.</p>
+          <h2 class="text-4xl font-bold text-white mb-2">Choose Your <span class="gradient-text">Competitive Edge</span></h2>
+          <p class="text-lg text-gray-400 mb-12">Simple pricing. No hidden fees. 14-day free trial on all plans.</p>
         </div>
-        <div class="flex justify-center">
-          <div class="feature-card p-8 rounded-lg w-full max-w-sm">
-            <h3 class="text-2xl font-semibold text-white text-center">Pro Plan</h3>
-            <p class="text-center text-gray-400 mb-6">For teams who want to close more deals.</p>
-            <p class="text-5xl font-extrabold text-white text-center mb-6">$99 <span class="text-lg font-medium text-gray-400">/ month</span></p>
+        <div class="flex flex-wrap justify-center gap-8">
+          <div class="pricing-card p-8 rounded-lg w-full max-w-sm border-2 border-blue-500">
+            <h3 class="text-xl font-semibold text-white text-center">Pro Plan</h3>
+            <p class="text-center text-gray-400 mb-6">For teams ready to dominate their market.</p>
+            <p class="text-5xl font-extrabold text-white text-center mb-6">$97 <span class="text-lg font-medium text-gray-400">/ month</span></p>
             <ul class="space-y-4 text-gray-300 mb-8">
-              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Unlimited Buying Signals</li>
-              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Podcast & Newsletter Monitoring</li>
-              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Conference Talk Analysis</li>
-              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> 5 Team Seats</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> 500 new signals per month</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Podcast & Newsletter Sources</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Conference & Webinar Sources</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Up to 5 users</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Email & Chat Support</li>
             </ul>
-            <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-6 rounded-lg w-full block text-center">Start 14-day free trial</a>
+            <a href="#" data-ms-modal="signup" class="btn-primary text-white font-bold py-3 px-6 rounded-lg w-full block text-center">Start Free Trial</a>
           </div>
         </div>
       </section>
 
-      <section class="py-20 px-6 text-center">
-        <h2 class="text-4xl font-bold text-white mb-4">Ready to get started?</h2>
-        <p class="text-lg text-gray-400 mb-8">Stop searching. Start selling. Your first 14 days are on us.</p>
-        <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-8 rounded-lg text-lg">Create your account</a>
+      <section class="py-20 px-6 text-center container mx-auto">
+        <h2 class="text-4xl font-bold text-white mb-4">Stop Losing Deals to Faster Competitors</h2>
+        <a href="#" data-ms-modal="signup" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg mt-8">Get Started for Free</a>
       </section>
     </main>
 
-    <footer class="text-center p-6 text-gray-500 text-sm">
+    <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
       <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
     </footer>
 
