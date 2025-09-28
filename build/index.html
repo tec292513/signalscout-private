@@ -1,9 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SignalScout AI | Stop Searching, Start Selling</title>
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <title>SignalScout AI - AI-Powered Sales Intelligence Platform</title>
+    <meta name="description" content="Stop losing deals to faster competitors. SignalScout AI finds qualified leads automatically by detecting buying signals from podcasts, newsletters & social media. 14-day free trial." />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="../assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5" rel="stylesheet" />
@@ -12,76 +16,119 @@
         src="https://static.memberstack.com/scripts/v1/memberstack.js" 
         type="text/javascript"
     ></script>
+    <style>
+      body {
+        background-color: #111827;
+        color: #e5e7eb;
+      }
+      .feature-card {
+        background-color: #1f2937;
+        border: 1px solid #374151;
+      }
+      .gradient-text {
+        background: linear-gradient(to right, #2dd4bf, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      .cta-button {
+          background: linear-gradient(to right, #2dd4bf, #3b82f6);
+      }
+    </style>
   </head>
-  <body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
-    <main class="mt-0 transition-all duration-200 ease-soft-in-out">
-      <section class="min-h-screen">
-        <div class="relative flex items-stretch flex-wrap h-full min-h-screen">
-          
-          <div class="flex-0 w-full max-w-full lg:w-1/2" style="background-color: #111827;">
-            <div class="h-full flex flex-col justify-center items-center p-12 text-white">
-              <div class="max-w-md">
-                <h1 class="text-4xl font-bold mb-3">SignalScout AI</h1>
-                <h2 class="text-2xl font-semibold mb-6" style="color: #2dd4bf;">Stop Searching, Start Selling.</h2>
-                <p class="mb-8 opacity-80">Get a daily feed of qualified Cloud & DevOps leads who have revealed their buying intent in podcasts, conference talks, and newsletters.</p>
-                <div class="space-y-4">
-                  <div class="flex items-start">
-                    <i class="fas fa-check-circle mt-1 mr-3" style="color: #2dd4bf;"></i>
-                    <div>
-                      <h3 class="font-semibold">Find companies with a problem</h3>
-                      <p class="opacity-80">Get a feed of companies that have a pain point you can solve.</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start">
-                    <i class="fas fa-check-circle mt-1 mr-3" style="color: #2dd4bf;"></i>
-                    <div>
-                      <h3 class="font-semibold">Identify key decision-makers</h3>
-                      <p class="opacity-80">We identify the VPs, Directors, and key decision-makers for you.</p>
-                    </div>
-                  </div>
-                  <div class="flex items-start">
-                    <i class="fas fa-check-circle mt-1 mr-3" style="color: #2dd4bf;"></i>
-                    <div>
-                      <h3 class="font-semibold">Get their exact quote</h3>
-                      <p class="opacity-80">We give you the exact quote so you can write the perfect outreach email.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <body class="m-0 font-sans antialiased font-normal text-start text-base leading-default">
+    
+    <header class="w-full p-6 flex justify-between items-center text-white">
+      <div class="text-xl font-bold">SignalScout AI</div>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="#features" class="hover:text-cyan-400">Features</a>
+        <a href="#pricing" class="hover:text-cyan-400">Pricing</a>
+        <a href="#" data-ms-modal="login" class="hover:text-cyan-400">Sign In</a>
+        <a href="#" data-ms-modal="signup" class="cta-button text-white font-semibold py-2 px-4 rounded-lg">Get Started</a>
+      </nav>
+      <div class="md:hidden">
+         <a href="#" data-ms-modal="login" class="font-semibold">Sign In</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="text-center py-20 px-6">
+        <h1 class="text-5xl font-extrabold text-white mb-4">Stop losing deals to faster competitors.</h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-8">SignalScout AI is an AI-powered sales intelligence platform that automatically finds qualified leads for you by detecting buying signals from podcasts, newsletters, social media, and more.</p>
+        <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-8 rounded-lg text-lg">Start 14-day free trial</a>
+        <p class="text-gray-500 mt-3 text-sm">No credit card required.</p>
+        
+        <div class="mt-12 max-w-5xl mx-auto">
+           <img src="https://via.placeholder.com/1024x640.png/1f2937/808080?text=Your+Dashboard+Screenshot" alt="SignalScout AI Dashboard" class="rounded-xl shadow-2xl border-2 border-gray-700">
+        </div>
+      </section>
+
+      <section class="py-20 px-6">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-4">Prospecting is slow and inefficient.</h2>
+          <p class="text-lg text-gray-400 mb-12">Your sales team is spending hundreds of hours on manual research, listening to podcasts, and reading newsletters instead of what they should be doing: selling.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="feature-card p-6 rounded-lg text-center">
+            <i class="fas fa-search text-4xl gradient-text mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">Manual Research</h3>
+            <p class="text-gray-400">Spending hours searching for potential leads with no guarantee of finding a good fit.</p>
           </div>
-          
-          <div class="flex-0 w-full max-w-full lg:w-1/2 flex justify-center items-center p-10">
-            <div class="w-full max-w-sm">
-                <div class="mb-8 text-center">
-                  <h3 class="font-bold text-slate-800 text-2xl">Welcome back</h3>
-                  <p class="text-slate-500">Please enter your details.</p>
-                </div>
-                <div class="flex-auto">
-                  <form role="form" data-ms-form="login">
-                    <div class="mb-4">
-                      <label class="mb-2 ml-1 font-bold text-xs text-slate-700">Email</label>
-                      <input type="email" data-ms-member="email" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" placeholder="you@company.com" aria-label="Email" />
-                    </div>
-                    <div class="mb-4">
-                      <label class="mb-2 ml-1 font-bold text-xs text-slate-700">Password</label>
-                      <input type="password" data-ms-member="password" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" placeholder="Password" aria-label="Password" />
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="inline-block w-full px-6 py-3 mt-6 mb-2 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85">Sign In</button>
-                    </div>
-                  </form>
-                </div>
-                <div class="p-6 px-1 pt-4 text-center">
-                  <p class="mx-auto mb-0 leading-normal text-sm">
-                    Don't have an account?
-                    <a href="#" data-ms-modal="signup" class="font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">Sign up</a>
-                  </p>
-                </div>
-            </div>
+          <div class="feature-card p-6 rounded-lg text-center">
+            <i class="fas fa-bullhorn text-4xl gradient-text mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">Generic Outreach</h3>
+            <p class="text-gray-400">Sending cold emails that don't resonate because you don't know their specific pain points.</p>
+          </div>
+          <div class="feature-card p-6 rounded-lg text-center">
+            <i class="fas fa-clock text-4xl gradient-text mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">Missed Opportunities</h3>
+            <p class="text-gray-400">By the time you find a lead, your competitors have already reached out to them.</p>
           </div>
         </div>
       </section>
+
+      <section id="features" class="py-20 px-6">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-4">Automate your lead generation with AI</h2>
+          <p class="text-lg text-gray-400 mb-12">SignalScout AI acts as your automated sales development rep, listening to thousands of sources and delivering actionable buying signals straight to your dashboard.</p>
+        </div>
+        <div class="mt-12 max-w-5xl mx-auto">
+           <img src="https://via.placeholder.com/1024x640.png/1f2937/808080?text=Feature+Showcase+Image" alt="SignalScout AI Features" class="rounded-xl shadow-2xl border-2 border-gray-700">
+        </div>
+      </section>
+
+      <section id="pricing" class="py-20 px-6">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-4">Pricing that makes sense</h2>
+          <p class="text-lg text-gray-400 mb-12">Choose a plan that works for you. Cancel anytime.</p>
+        </div>
+        <div class="flex justify-center">
+          <div class="feature-card p-8 rounded-lg w-full max-w-sm">
+            <h3 class="text-2xl font-semibold text-white text-center">Pro Plan</h3>
+            <p class="text-center text-gray-400 mb-6">For teams who want to close more deals.</p>
+            <p class="text-5xl font-extrabold text-white text-center mb-6">$99 <span class="text-lg font-medium text-gray-400">/ month</span></p>
+            <ul class="space-y-4 text-gray-300 mb-8">
+              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Unlimited Buying Signals</li>
+              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Podcast & Newsletter Monitoring</li>
+              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> Conference Talk Analysis</li>
+              <li class="flex items-center"><i class="fas fa-check text-cyan-400 mr-3"></i> 5 Team Seats</li>
+            </ul>
+            <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-6 rounded-lg w-full block text-center">Start 14-day free trial</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-20 px-6 text-center">
+        <h2 class="text-4xl font-bold text-white mb-4">Ready to get started?</h2>
+        <p class="text-lg text-gray-400 mb-8">Stop searching. Start selling. Your first 14 days are on us.</p>
+        <a href="#" data-ms-modal="signup" class="cta-button text-white font-bold py-3 px-8 rounded-lg text-lg">Create your account</a>
+      </section>
     </main>
+
+    <footer class="text-center p-6 text-gray-500 text-sm">
+      <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    </footer>
+
   </body>
 </html>
