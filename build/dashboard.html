@@ -25,35 +25,25 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      aside {
-        background-color: #111827;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      .btn-primary {
+          background-image: linear-gradient(to right, #2563eb, #3b82f6, #60a5fa);
+          transition: all 0.3s ease;
+          background-size: 200% auto;
       }
-      aside a span {
-        color: #9ca3af;
-        transition: color 0.2s ease;
+      .btn-primary:hover {
+          background-position: right center;
       }
-      aside a:hover span {
-        color: #ffffff;
+      .btn-secondary {
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: background-color 0.3s ease;
       }
-      aside a.active-nav span {
-        color: #ffffff;
-        font-weight: 600;
-      }
-      aside a.active-nav div {
-        background: linear-gradient(to right, #2563eb, #3b82f6);
-      }
-      aside h6 {
-        color: #6b7280;
-      }
-      nav[navbar-main] {
-        background-color: rgba(17, 24, 39, 0.5);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+      .btn-secondary:hover {
+          background-color: rgba(255, 255, 255, 0.2);
       }
       /* Signal Card Styles */
       .signal-card {
-        background-color: #1E293B; /* A slightly lighter dark blue */
+        background-color: #1E293B;
         border: 1px solid #334155;
         transition: all 0.2s ease-in-out;
       }
@@ -61,13 +51,16 @@
         border-color: #3b82f6;
         transform: translateY(-4px);
       }
+      .signal-card blockquote {
+        border-left: 3px solid #3b82f6;
+        padding-left: 1.5rem;
+        color: #d1d5db;
+        font-style: italic;
+      }
       .signal-type-badge {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
         font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.6rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
         border-radius: 9999px;
         background-color: rgba(59, 130, 246, 0.2);
         color: #60a5fa;
@@ -76,123 +69,30 @@
     </style>
   </head>
 
-  <body class="m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
-    <aside class="max-w-62.5 ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-xl transition-transform duration-200 xl:left-0 xl:translate-x-0">
-      <div class="h-19.5"><i class="absolute top-0 right-0 hidden p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" sidenav-close></i><a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-white" href="javascript:;"><span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand">SignalScout AI</span></a></div>
-      <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      <div class="items-center block w-auto max-h-screen overflow-y-auto h-sidenav grow basis-full">
-        <ul class="flex flex-col pl-0 mb-0">
-          <li class="mt-0.5 w-full"><a class="py-2.7 text-sm my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 transition-colors active-nav" href="#"><div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5"><i class="fas fa-tv text-white"></i></div><span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Dashboard</span></a></li>
-          <li class="w-full mt-4"><h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase">Account pages</h6></li>
-          <li class="mt-0.5 w-full"><a data-ms-action="profile" class="py-2.7 text-sm my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors" href="#"><div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-gray-700 bg-center stroke-0 text-center xl:p-2.5"><i class="fas fa-user-circle text-white"></i></div><span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Account</span></a></li>
-        </ul>
-      </div>
-    </aside>
-
-    <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68">
-      <nav class="relative flex flex-wrap items-center justify-between w-full px-4 py-2 mx-6 mt-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="true">
-        <div class="flex items-center justify-between w-full py-1 mx-auto flex-wrap-inherit">
-          <nav><h6 class="mb-0 font-bold capitalize text-white">Cloud & DevOps Signals Feed</h6></nav>
-          <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-            <div class="flex items-center md:ml-auto md:pr-4"><a href="#" data-ms-action="logout" class="text-sm font-semibold text-gray-400 hover:text-white">Log Out</a></div>
-          </div>
-        </div>
+  <body class="bg-gray-900 text-gray-300">
+    
+    <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
+      <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
+      <nav class="flex items-center space-x-6 text-sm">
+        <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
+        <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
       </nav>
+    </header>
 
-      <div class="w-full px-6 py-6 mx-auto">
-        <div id="signal-feed" class="flex flex-wrap -mx-3">
-            </div>
-      </div>
+    <main class="container mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
+      
+      <div id="signal-feed" class="flex flex-wrap -mx-3">
+          </div>
     </main>
+    
+    <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
+      <div class="space-x-6 mb-4">
+        <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
+        <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
+      </div>
+      <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    </footer>
 
     <script>
-        const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
-        const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
-        const AIRTABLE_TABLE_NAME = 'Signals';
-        
-        const signalFeedContainer = document.querySelector('#signal-feed');
-
-        function createSignalCard(signal) {
-            const person = signal.Person || 'N/A';
-            const title = signal.Title || 'No Title';
-            const company = signal.Company || 'No Company';
-            const quote = signal.Quote || 'No Quote Available';
-            const sourceName = signal['Source Name'] || 'Unknown Source';
-            const sourceUrl = signal['Source URL'] || '#';
-            const sourceType = signal['Source Type'] || '';
-            const publicationDateRaw = signal['Publication Date'];
-            const publicationDate = publicationDateRaw ? new Date(publicationDateRaw).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-
-            return `
-            <div class="w-full sm:w-1/2 lg:w-1/3 px-3 mb-6 signal-card-wrapper">
-                <div class="relative flex flex-col min-w-0 h-full break-words rounded-2xl bg-clip-border signal-card">
-                    <div class="flex-auto p-6">
-                        ${sourceType ? `<div class="signal-type-badge">${sourceType}</div>` : ''}
-                        <div class="mb-4">
-                            <p class="mb-0 font-semibold leading-normal text-sm text-white">${person}</p>
-                            <h5 class="mb-0 font-bold text-gray-300">${title} at ${company}</h5>
-                        </div>
-                        <p class="mb-4 text-base leading-relaxed text-gray-300">"${quote}"</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <a href="${sourceUrl}" target="_blank" class="text-sm font-semibold leading-tight text-blue-400 hover:text-blue-300">
-                                Source: ${sourceName} &rarr;
-                            </a>
-                            ${publicationDate ? `<span class="text-xs text-gray-500">${publicationDate}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-        }
-
-        async function fetchSignals() {
-            if (!signalFeedContainer) { return; }
-            signalFeedContainer.innerHTML = '<p class="w-full px-3 text-white">Loading signals...</p>';
-            
-            const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
-            
-            try {
-                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` } });
-                if (!response.ok) { throw new Error('Network response was not ok'); }
-                const data = await response.json();
-                signalFeedContainer.innerHTML = '';
-                
-                if (data.records && data.records.length > 0) {
-                    data.records.forEach(record => {
-                        const signal = record.fields;
-                        if (Object.keys(signal).length > 0) { 
-                            const cardHTML = createSignalCard(signal);
-                            signalFeedContainer.insertAdjacentHTML('beforeend', cardHTML);
-                        }
-                    });
-
-                    // Initialize Masonry after all cards are added
-                    new Masonry(signalFeedContainer, {
-                        itemSelector: '.signal-card-wrapper',
-                        percentPosition: true,
-                        gutter: 0
-                    });
-
-                } else {
-                    signalFeedContainer.innerHTML = "<p class='w-full px-3 text-white'>No new signals found yet. The AI engines run daily, so check back soon!</p>";
-                }
-            } catch (error) {
-                console.error("Fetch error:", error);
-                signalFeedContainer.innerHTML = "<p class='w-full px-3 text-red-400'>Error loading signals. Please check your Airtable API Key and Base ID in the dashboard.html file.</p>";
-            }
-        }
-
-        // --- Use this block for testing when Memberstack is disabled ---
-        // I have un-commented this line for you to test the page.
-        fetchSignals();
-
-        // --- Use this block for production when Memberstack is enabled ---
-        /*
-        MemberStack.onReady.then(function(member) {
-            if (member.loggedIn) {
-                fetchSignals();
-            }
-        });
-        */
-    </script>
-  </body>
-</html>
+        const AIRTABLE_API_KEY = 'patQ
