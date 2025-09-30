@@ -199,11 +199,8 @@
             }
         }
 
-        MemberStack.onReady.then(function(member) {
-            if (member.loggedIn) {
-                fetchSignals();
-            }
-        });
+        // Run fetch immediately for testing since Memberstack is disabled
+        fetchSignals();
     </script>
   </body>
 </html>
