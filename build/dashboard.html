@@ -173,7 +173,6 @@
             }
         }
 
-        // This is now set for production. It waits for a login before fetching data.
         MemberStack.onReady.then(function(member) {
             if (member.loggedIn) {
                 fetchSignals();
