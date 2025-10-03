@@ -13,7 +13,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
-    <script src="https://static.memberstack.com/scripts/v2/memberstack.js" data-memberstack-id="pk_sb_043046701ca4b0ddf0b"></script>
+    <script>
+    window.MemberStackConfig = {
+      publicKey: "pk_sb_043046701ca4b0ddf0b"
+    };
+    </script>
+    <script src="https://static.memberstack.com/scripts/v2/memberstack.js"></script>
     
     <style>
       body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #cbd5e1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -93,34 +98,47 @@
             }
         } catch (error) {
             console.error("Fetch error:", error);
-            signalFeedContainer.innerHTML = "<div class='w-full text-center p-12 bg-red-900/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>Error Loading Signals</h3><p class='text-red-300 mt-2'>Please check your Airtable API Key and Base ID in the dashboard.html file.</p></div>";
+            signalFeedContainer.innerHTML = "<div class='w-full text-center p-12 bg-red-900/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>Error Loading Signals</h3><p class='text-red-300 mt-2'>Please check your Airtable API Key and Base ID.</p></div>";
         }
     }
 
-    // Wait for Memberstack to load, then check authentication
-    setTimeout(() => {
-        const memberstack = window.$memberstackDom;
+    let checkCount = 0;
+    const maxChecks = 10;
+
+    function checkMemberstackLoaded() {
+        checkCount++;
+        console.log('Checking Memberstack... attempt', checkCount);
         
-        if (memberstack) {
-            memberstack.getCurrentMember()
+        if (window.$memberstackDom) {
+            console.log('Memberstack loaded successfully!');
+            window.$memberstackDom.getCurrentMember()
                 .then(({ data: member }) => {
                     if (member) {
                         console.log('User authenticated:', member);
                         fetchSignals();
                     } else {
-                        console.log('No user found, redirecting to login');
+                        console.log('No user found, redirecting');
                         window.location.href = '/index.html';
                     }
                 })
                 .catch((error) => {
-                    console.error('Auth check error:', error);
+                    console.error('Auth error:', error);
                     window.location.href = '/index.html';
                 });
+        } else if (checkCount < maxChecks) {
+            console.log('Memberstack not ready yet, checking again...');
+            setTimeout(checkMemberstackLoaded, 500);
         } else {
-            console.error('Memberstack not loaded');
-            signalFeedContainer.innerHTML = '<p class="w-full px-3 text-red-500">Authentication system not loaded. Please refresh the page.</p>';
+            console.error('Memberstack failed to load after multiple attempts');
+            signalFeedContainer.innerHTML = '<div class="w-full text-center p-12 bg-red-900/50 rounded-lg"><h3 class="text-xl font-semibold text-white">Authentication Error</h3><p class="text-red-300 mt-2">Unable to load authentication system. Please check your Memberstack configuration.</p></div>';
         }
-    }, 1000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkMemberstackLoaded);
+    } else {
+        checkMemberstackLoaded();
+    }
     </script>
   </body>
 </html>
