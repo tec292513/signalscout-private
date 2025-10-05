@@ -47,10 +47,8 @@
       <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
     </footer>
 
-    <!-- CRITICAL: MemberStack MUST load first -->
     <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
-    <!-- Main dashboard script - loads AFTER MemberStack -->
     <script>
         const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
         const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
@@ -71,13 +69,10 @@
         }
 
         async function fetchSignals() {
-            if (!signalFeedContainer) { 
-                console.error('Signal feed container not found');
-                return; 
-            }
+            if (!signalFeedContainer) return;
             
             signalFeedContainer.innerHTML = '<p class="w-full px-3 text-white">Loading signals...</p>';
-            console.log('Fetching signals from Airtable...');
+            console.log('Fetching signals...');
             
             const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
             
@@ -86,29 +81,23 @@
                     headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` } 
                 });
                 
-                console.log('Response status:', response.status);
-                
                 if (!response.ok) { 
-                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`); 
+                    throw new Error(`HTTP ${response.status}`); 
                 }
                 
                 const data = await response.json();
-                console.log('Received data:', data);
+                console.log('Records received:', data.records?.length || 0);
                 
                 signalFeedContainer.innerHTML = '';
                 
                 if (data.records && data.records.length > 0) {
-                    console.log(`Found ${data.records.length} records`);
-                    
                     data.records.forEach(record => {
                         const signal = record.fields;
                         if (Object.keys(signal).length > 0) { 
-                            const cardHTML = createSignalCard(signal);
-                            signalFeedContainer.insertAdjacentHTML('beforeend', cardHTML);
+                            signalFeedContainer.insertAdjacentHTML('beforeend', createSignalCard(signal));
                         }
                     });
                     
-                    // Initialize Masonry after cards are added
                     setTimeout(() => {
                         new Masonry(signalFeedContainer, { 
                             itemSelector: '.signal-card-wrapper', 
@@ -116,52 +105,20 @@
                         });
                     }, 100);
                 } else {
-                    console.log('No records found');
-                    signalFeedContainer.innerHTML = "<div class='w-full text-center p-12 bg-gray-800/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>No new signals found yet</h3><p class='text-gray-400 mt-2'>The AI engines run daily to find new leads. Please check back soon!</p></div>";
+                    signalFeedContainer.innerHTML = "<div class='w-full text-center p-12 bg-gray-800/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>No new signals found yet</h3><p class='text-gray-400 mt-2'>Check back soon!</p></div>";
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
-                signalFeedContainer.innerHTML = `<div class='w-full text-center p-12 bg-red-900/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>Error Loading Signals</h3><p class='text-red-300 mt-2'>Error: ${error.message}</p><p class='text-red-300 mt-2'>Please check console for details.</p></div>`;
+                console.error("Error:", error);
+                signalFeedContainer.innerHTML = `<div class='w-full text-center p-12 bg-red-900/50 rounded-lg'><h3 class='text-xl font-semibold text-white'>Error Loading Signals</h3><p class='text-red-300 mt-2'>${error.message}</p></div>`;
             }
         }
 
-        // Wait for both DOM and MemberStack to be ready
-        function initializeDashboard() {
-            console.log('Initializing dashboard...');
-            
-            // Check if MemberStack is available
-            if (typeof MemberStack === 'undefined') {
-                console.error('MemberStack is not loaded yet, waiting...');
-                setTimeout(initializeDashboard, 100);
-                return;
-            }
-
-            console.log('MemberStack found, checking authentication...');
-            
-            MemberStack.onReady.then(function(member) {
-                console.log('MemberStack ready. Member:', member);
-                
-                if (member && member.loggedIn) {
-                    console.log('User is logged in');
-                    fetchSignals();
-                } else {
-                    console.log('User is not logged in, redirecting to homepage');
-                    window.location.replace('/');
-                }
-            }).catch(function(error) {
-                console.error('MemberStack error:', error);
-                // If MemberStack fails, still try to fetch signals (for testing)
-                console.log('Attempting to fetch signals anyway...');
-                fetchSignals();
-            });
-        }
-
-        // Start initialization when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeDashboard);
-        } else {
-            initializeDashboard();
-        }
+        // Simple approach - just fetch signals when page loads
+        // Skip MemberStack check for now to test Airtable connection
+        window.addEventListener('load', function() {
+            console.log('Page loaded, fetching signals...');
+            fetchSignals();
+        });
     </script>
   </body>
 </html>
