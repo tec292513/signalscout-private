@@ -113,11 +113,35 @@
             }
         }
 
-        // Simple approach - just fetch signals when page loads
-        // Skip MemberStack check for now to test Airtable connection
+        // Wait for page load, then check auth
         window.addEventListener('load', function() {
-            console.log('Page loaded, fetching signals...');
-            fetchSignals();
+            console.log('Page loaded, checking authentication...');
+            
+            // Give MemberStack time to initialize (max 3 seconds)
+            let checkCount = 0;
+            const checkAuth = setInterval(function() {
+                checkCount++;
+                
+                if (typeof window.MemberStack !== 'undefined') {
+                    clearInterval(checkAuth);
+                    console.log('MemberStack found, verifying login...');
+                    
+                    window.MemberStack.onReady.then(function(member) {
+                        if (member && member.loggedIn) {
+                            console.log('User authenticated, loading signals...');
+                            fetchSignals();
+                        } else {
+                            console.log('Not logged in, redirecting...');
+                            window.location.replace('/');
+                        }
+                    });
+                } else if (checkCount > 30) {
+                    // After 3 seconds, give up and fetch anyway
+                    clearInterval(checkAuth);
+                    console.log('MemberStack timeout, loading signals anyway...');
+                    fetchSignals();
+                }
+            }, 100);
         });
     </script>
   </body>
