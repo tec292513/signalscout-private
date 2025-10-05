@@ -113,36 +113,26 @@
             }
         }
 
-        // Wait for page load, then check auth
-        window.addEventListener('load', function() {
-            console.log('Page loaded, checking authentication...');
-            
-            // Give MemberStack time to initialize (max 3 seconds)
-            let checkCount = 0;
-            const checkAuth = setInterval(function() {
-                checkCount++;
+        // MemberStack V1 authentication check
+        if (typeof MemberStack !== 'undefined') {
+            MemberStack.onReady.then(function(member) {
+                console.log('MemberStack ready, member object:', member);
                 
-                if (typeof window.MemberStack !== 'undefined') {
-                    clearInterval(checkAuth);
-                    console.log('MemberStack found, verifying login...');
-                    
-                    window.MemberStack.onReady.then(function(member) {
-                        if (member && member.loggedIn) {
-                            console.log('User authenticated, loading signals...');
-                            fetchSignals();
-                        } else {
-                            console.log('Not logged in, redirecting...');
-                            window.location.replace('/');
-                        }
-                    });
-                } else if (checkCount > 30) {
-                    // After 3 seconds, give up and fetch anyway
-                    clearInterval(checkAuth);
-                    console.log('MemberStack timeout, loading signals anyway...');
+                if (member && member.loggedIn) {
+                    console.log('✓ User authenticated');
                     fetchSignals();
+                } else {
+                    console.log('✗ Not logged in - redirecting to homepage');
+                    window.location.replace('/index.html');
                 }
-            }, 100);
-        });
+            }).catch(function(err) {
+                console.error('MemberStack error:', err);
+                window.location.replace('/index.html');
+            });
+        } else {
+            console.error('MemberStack not found - redirecting');
+            window.location.replace('/index.html');
+        }
     </script>
   </body>
 </html>
