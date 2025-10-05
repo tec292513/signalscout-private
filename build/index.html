@@ -58,5 +58,19 @@
       <section id="pricing" class="py-20 px-6 container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-2">Choose Your <span class="gradient-text">Competitive Edge</span></h2><p class="text-lg text-gray-400 mb-12">Simple pricing. No hidden fees. 14-day free trial on all plans.</p></div><div class="flex flex-wrap justify-center gap-8"><div class="pricing-card p-8 rounded-lg w-full max-w-sm border-2 border-blue-500"><h3 class="text-xl font-semibold text-white text-center">Pro Plan</h3><p class="text-center text-gray-400 mb-6">For teams ready to dominate their market.</p><p class="text-5xl font-extrabold text-white text-center mb-6">$97 <span class="text-lg font-medium text-gray-400">/ month</span></p><ul class="space-y-4 text-gray-300 mb-8"><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> 500 new signals per month</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Podcast & Newsletter Sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Conference & Webinar Sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Up to 5 users</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Email & Chat Support</li></ul><a href="#" data-ms-modal="signup" data-ms-price:add="pln_pro-plan-qo470iel" class="btn-primary text-white font-bold py-3 px-6 rounded-lg w-full block text-center">Start Free Trial</a></div></div></section>
     </main>
     <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm"><div class="space-x-6 mb-4"><a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a><a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a></div><p>&copy; 2025 SignalScout AI. All rights reserved.</p></footer>
+
+    <script>
+      // Redirect logged-in users to dashboard
+      if (typeof MemberStack !== 'undefined') {
+        MemberStack.onReady.then(function(member) {
+          if (member && member.loggedIn) {
+            console.log('User already logged in, redirecting to dashboard...');
+            window.location.replace('/dashboard.html');
+          }
+        }).catch(function(err) {
+          console.error('MemberStack check error:', err);
+        });
+      }
+    </script>
   </body>
 </html>
