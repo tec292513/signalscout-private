@@ -8,11 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@memberstack/dom@latest/dist/memberstack.js" data-memberstack-id="pk_sb_0430467019ca4b0ddf0b"></script>
@@ -98,22 +96,26 @@
         }
 
         // === FINAL CORRECTED MEMBERSTACK V2 JAVASCRIPT ===
-        const memberstack = window.$memberstackDom;
-        memberstack.getCurrentMember()
-            .then(({ data: member }) => {
-                if (member) {
-                    // User is logged in
-                    fetchSignals();
-                } else {
-                    // User is not logged in, redirect to homepage to log in
-                    window.location.replace('/');
-                }
-            })
-            .catch((error) => {
-                console.error("Memberstack error:", error);
-                // On error, also redirect to homepage
-                window.location.replace('/');
-            });
+        // This robust code waits for the entire window to load before running.
+        window.addEventListener('load', function () {
+            if (window.$memberstackDom) {
+                const memberstack = window.$memberstackDom;
+                memberstack.getCurrentMember()
+                    .then(({ data: member }) => {
+                        if (member) {
+                            fetchSignals();
+                        } else {
+                            window.location.replace('/');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Memberstack error:", error);
+                        window.location.replace('/');
+                    });
+            } else {
+                console.error("Memberstack failed to load.");
+            }
+        });
     </script>
   </body>
 </html>
