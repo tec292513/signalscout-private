@@ -113,25 +113,18 @@
             }
         }
 
-        // MemberStack V1 authentication check
+        // MemberStack V1 - Just load signals, let gated content handle auth
         if (typeof MemberStack !== 'undefined') {
             MemberStack.onReady.then(function(member) {
-                console.log('MemberStack ready, member object:', member);
-                
-                if (member && member.loggedIn) {
-                    console.log('✓ User authenticated');
-                    fetchSignals();
-                } else {
-                    console.log('✗ Not logged in - redirecting to homepage');
-                    window.location.replace('/index.html');
-                }
+                console.log('MemberStack ready, loading signals...');
+                fetchSignals();
             }).catch(function(err) {
                 console.error('MemberStack error:', err);
-                window.location.replace('/index.html');
+                fetchSignals(); // Load anyway, gated content will handle redirect if needed
             });
         } else {
-            console.error('MemberStack not found - redirecting');
-            window.location.replace('/index.html');
+            console.log('MemberStack not loaded, loading signals anyway...');
+            fetchSignals();
         }
     </script>
   </body>
