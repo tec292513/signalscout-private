@@ -5,48 +5,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SignalScout AI Dashboard</title>
-  <link href="style.css" rel="stylesheet">
+  <link href="assets/css/soft-ui-dashboard-tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <header>
-    <h1>SignalScout AI</h1>
-    <nav>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <button>Account</button>
+<body class="bg-slate-900 text-white font-sans">
+
+  <header class="flex justify-between items-center p-6">
+    <h1 class="text-2xl font-bold">SignalScout AI</h1>
+    <nav class="space-x-4">
+      <a href="#" class="text-sm underline">Privacy Policy</a>
+      <a href="#" class="text-sm underline">Terms of Service</a>
+      <button class="bg-slate-700 px-3 py-1 rounded">Account</button>
     </nav>
   </header>
 
-  <main>
-    <h2>Your Signal Feed</h2>
-    <div class="filters">
-      <div>
-        <label for="name">Name</label>
-        <select id="name" multiple>
+  <main class="px-6">
+    <h2 class="text-xl font-semibold mb-6">Your Signal Feed</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="flex flex-col">
+        <label for="name" class="mb-1 text-sm font-medium">Name</label>
+        <select id="name" multiple class="bg-slate-800 border border-slate-600 p-2 rounded">
           <option>Alice</option>
           <option>Bob</option>
           <option>Charlie</option>
         </select>
       </div>
-      <div>
-        <label for="company">Company</label>
-        <select id="company" multiple>
+      <div class="flex flex-col">
+        <label for="company" class="mb-1 text-sm font-medium">Company</label>
+        <select id="company" multiple class="bg-slate-800 border border-slate-600 p-2 rounded">
           <option>Google</option>
           <option>Meta</option>
           <option>OpenAI</option>
         </select>
       </div>
-      <div>
-        <label for="title">Title</label>
-        <select id="title" multiple>
+      <div class="flex flex-col">
+        <label for="title" class="mb-1 text-sm font-medium">Title</label>
+        <select id="title" multiple class="bg-slate-800 border border-slate-600 p-2 rounded">
           <option>Engineer</option>
           <option>Designer</option>
           <option>Manager</option>
         </select>
       </div>
-      <div>
-        <label for="year">Year / Month</label>
-        <select id="year" multiple>
+      <div class="flex flex-col">
+        <label for="year" class="mb-1 text-sm font-medium">Year / Month</label>
+        <select id="year" multiple class="bg-slate-800 border border-slate-600 p-2 rounded">
           <option>2023</option>
           <option>2024</option>
           <option>2025</option>
@@ -54,24 +56,24 @@
       </div>
     </div>
 
-    <div class="results">
-      <div class="card">
-        <h3>Alice - Google</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-slate-800 p-4 rounded-lg shadow text-white">
+        <h3 class="text-lg font-bold">Alice - Google</h3>
         <p>Engineer, 2025</p>
       </div>
-      <div class="card">
-        <h3>Bob - Meta</h3>
+      <div class="bg-slate-800 p-4 rounded-lg shadow text-white">
+        <h3 class="text-lg font-bold">Bob - Meta</h3>
         <p>Designer, 2024</p>
       </div>
-      <div class="card">
-        <h3>Charlie - OpenAI</h3>
+      <div class="bg-slate-800 p-4 rounded-lg shadow text-white">
+        <h3 class="text-lg font-bold">Charlie - OpenAI</h3>
         <p>Manager, 2023</p>
       </div>
     </div>
   </main>
 
-  <footer>
-    <p>© 2025 SignalScout AI. All rights reserved.</p>
+  <footer class="text-sm text-center text-slate-400 mt-10 p-4">
+    © 2025 SignalScout AI. All rights reserved.
   </footer>
 </body>
 </html>
