@@ -1,76 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignalScout AI Dashboard</title>
-    <link href="assets/css/your-new-style.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignalScout AI Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-900 text-white font-sans">
-    <header class="flex justify-between items-center p-6 border-b border-gray-700">
-        <h1 class="text-2xl font-bold">SignalScout AI</h1>
-        <nav class="space-x-6">
-            <a href="#" class="hover:underline">Privacy Policy</a>
-            <a href="#" class="hover:underline">Terms of Service</a>
-            <button class="bg-gray-700 px-4 py-2 rounded">Account</button>
-        </nav>
-    </header>
-
-    <main class="p-6">
-        <h2 class="text-3xl font-bold mb-4">Your Signal Feed</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div>
-                <label class="block mb-1 font-semibold">Name</label>
-                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
-                    <option>Alice</option>
-                    <option>Bob</option>
-                    <option>Charlie</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-1 font-semibold">Company</label>
-                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
-                    <option>Google</option>
-                    <option>Meta</option>
-                    <option>OpenAI</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-1 font-semibold">Title</label>
-                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
-                    <option>Engineer</option>
-                    <option>Designer</option>
-                    <option>Manager</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-1 font-semibold">Year / Month</label>
-                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
-                    <option>2023</option>
-                    <option>2024</option>
-                    <option>2025</option>
-                </select>
-            </div>
-        </div>
-
-        <section id="tiles" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gray-800 p-4 rounded shadow">
-                <h3 class="font-bold text-lg">Alice - Google</h3>
-                <p class="text-sm text-gray-300">Engineer, 2025</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded shadow">
-                <h3 class="font-bold text-lg">Bob - Meta</h3>
-                <p class="text-sm text-gray-300">Designer, 2024</p>
-            </div>
-            <div class="bg-gray-800 p-4 rounded shadow">
-                <h3 class="font-bold text-lg">Charlie - OpenAI</h3>
-                <p class="text-sm text-gray-300">Manager, 2023</p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="mt-10 text-center text-sm text-gray-400">
-        <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
-    </footer>
+<body>
+  <header>
+    <h1>SignalScout AI</h1>
+    <nav>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <button>Account</button>
+    </nav>
+  </header>
+  <main>
+    <h2>Your Signal Feed</h2>
+    <div class="filters">
+      <div class="filter">
+        <label for="nameFilter">Name</label>
+        <select id="nameFilter" multiple>
+          <option>Alice</option>
+          <option>Bob</option>
+          <option>Charlie</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="companyFilter">Company</label>
+        <select id="companyFilter" multiple>
+          <option>Google</option>
+          <option>Meta</option>
+          <option>OpenAI</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="titleFilter">Title</label>
+        <select id="titleFilter" multiple>
+          <option>Engineer</option>
+          <option>Designer</option>
+          <option>Manager</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="yearFilter">Year / Month</label>
+        <select id="yearFilter" multiple>
+          <option>2023</option>
+          <option>2024</option>
+          <option>2025</option>
+        </select>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><h3>Alice - Google</h3><p>Engineer, 2025</p></div>
+      <div class="tile"><h3>Bob - Meta</h3><p>Designer, 2024</p></div>
+      <div class="tile"><h3>Charlie - OpenAI</h3><p>Manager, 2023</p></div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+  </footer>
 </body>
 </html>

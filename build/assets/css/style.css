@@ -1,1 +1,51 @@
-@import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #0d1117;
+  color: #ffffff;
+}
+header, footer {
+  padding: 1rem 2rem;
+  background-color: #0d1117;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav a, nav button {
+  margin-left: 1rem;
+  color: #58a6ff;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+main {
+  padding: 2rem;
+}
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.filter {
+  display: flex;
+  flex-direction: column;
+}
+select {
+  padding: 0.5rem;
+  background-color: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  height: 120px;
+}
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.tile {
+  padding: 1rem;
+  background-color: #1e293b;
+  border-radius: 8px;
+}
