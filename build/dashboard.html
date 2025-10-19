@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SignalScout AI Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -15,50 +16,62 @@
       <button>Account</button>
     </nav>
   </header>
+
   <main>
     <h2>Your Signal Feed</h2>
     <div class="filters">
-      <div class="filter">
-        <label for="nameFilter">Name</label>
-        <select id="nameFilter" multiple>
+      <div>
+        <label for="name">Name</label>
+        <select id="name" multiple>
           <option>Alice</option>
           <option>Bob</option>
           <option>Charlie</option>
         </select>
       </div>
-      <div class="filter">
-        <label for="companyFilter">Company</label>
-        <select id="companyFilter" multiple>
+      <div>
+        <label for="company">Company</label>
+        <select id="company" multiple>
           <option>Google</option>
           <option>Meta</option>
           <option>OpenAI</option>
         </select>
       </div>
-      <div class="filter">
-        <label for="titleFilter">Title</label>
-        <select id="titleFilter" multiple>
+      <div>
+        <label for="title">Title</label>
+        <select id="title" multiple>
           <option>Engineer</option>
           <option>Designer</option>
           <option>Manager</option>
         </select>
       </div>
-      <div class="filter">
-        <label for="yearFilter">Year / Month</label>
-        <select id="yearFilter" multiple>
+      <div>
+        <label for="year">Year / Month</label>
+        <select id="year" multiple>
           <option>2023</option>
           <option>2024</option>
           <option>2025</option>
         </select>
       </div>
     </div>
-    <div class="tiles">
-      <div class="tile"><h3>Alice - Google</h3><p>Engineer, 2025</p></div>
-      <div class="tile"><h3>Bob - Meta</h3><p>Designer, 2024</p></div>
-      <div class="tile"><h3>Charlie - OpenAI</h3><p>Manager, 2023</p></div>
+
+    <div class="results">
+      <div class="card">
+        <h3>Alice - Google</h3>
+        <p>Engineer, 2025</p>
+      </div>
+      <div class="card">
+        <h3>Bob - Meta</h3>
+        <p>Designer, 2024</p>
+      </div>
+      <div class="card">
+        <h3>Charlie - OpenAI</h3>
+        <p>Manager, 2023</p>
+      </div>
     </div>
   </main>
+
   <footer>
-    <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    <p>© 2025 SignalScout AI. All rights reserved.</p>
   </footer>
 </body>
 </html>

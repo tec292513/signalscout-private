@@ -1,51 +1,57 @@
+
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #0d1117;
-  color: #ffffff;
+  background-color: #0f172a;
+  color: white;
 }
-header, footer {
+header {
   padding: 1rem 2rem;
-  background-color: #0d1117;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-nav a, nav button {
-  margin-left: 1rem;
-  color: #58a6ff;
+nav a {
+  margin-right: 1rem;
+  color: #a5b4fc;
   text-decoration: none;
-  background: none;
-  border: none;
-  font-size: 1rem;
+}
+button {
+  padding: 0.3rem 0.7rem;
 }
 main {
   padding: 2rem;
 }
 .filters {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
-.filter {
+.filters div {
   display: flex;
   flex-direction: column;
 }
 select {
+  min-width: 160px;
   padding: 0.5rem;
-  background-color: #1e293b;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  height: 120px;
 }
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.results {
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
-.tile {
-  padding: 1rem;
+.card {
   background-color: #1e293b;
+  padding: 1rem;
   border-radius: 8px;
+  min-width: 200px;
+}
+footer {
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.6;
 }
