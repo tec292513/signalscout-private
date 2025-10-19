@@ -1,53 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SignalScout AI Dashboard</title>
-  <link href="assets/css/soft-ui-dashboard-tailwind.min.css" rel="stylesheet">
+  <link href="https://soft-ui-dashboard-tailwind.netlify.app/assets/css/soft-ui-dashboard-tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-900 text-white font-sans">
-  <header class="flex justify-between items-center p-4 border-b border-slate-700">
-    <h1 class="text-2xl font-bold">SignalScout AI</h1>
-    <nav class="flex gap-4 text-sm">
+<body class="bg-slate-900 text-white font-sans p-6">
+  <header class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">SignalScout AI</h1>
+    <nav class="space-x-4">
       <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a>
       <a href="#" class="text-blue-400 hover:underline">Terms of Service</a>
-      <button class="bg-slate-800 px-3 py-1 rounded-md border border-slate-600 hover:bg-slate-700">Account</button>
+      <button class="bg-slate-700 px-4 py-2 rounded hover:bg-slate-600">Account</button>
     </nav>
   </header>
 
-  <main class="p-6">
-    <h2 class="text-3xl font-semibold mb-6">Your Signal Feed</h2>
-
-    <div class="grid grid-cols-4 gap-4 mb-8">
+  <main>
+    <h2 class="text-2xl font-semibold mb-4">Your Signal Feed</h2>
+    <div class="grid grid-cols-4 gap-4 mb-6">
       <div>
-        <label for="name" class="block mb-2 text-sm font-medium">Name</label>
-        <select id="name" multiple class="w-full p-2 bg-slate-800 border border-slate-700 rounded">
+        <label for="name" class="block mb-2 font-medium">Name</label>
+        <select id="name" multiple class="w-full bg-slate-800 text-white p-2 rounded">
           <option>Alice</option>
           <option>Bob</option>
           <option>Charlie</option>
         </select>
       </div>
       <div>
-        <label for="company" class="block mb-2 text-sm font-medium">Company</label>
-        <select id="company" multiple class="w-full p-2 bg-slate-800 border border-slate-700 rounded">
+        <label for="company" class="block mb-2 font-medium">Company</label>
+        <select id="company" multiple class="w-full bg-slate-800 text-white p-2 rounded">
           <option>Google</option>
           <option>Meta</option>
           <option>OpenAI</option>
         </select>
       </div>
       <div>
-        <label for="title" class="block mb-2 text-sm font-medium">Title</label>
-        <select id="title" multiple class="w-full p-2 bg-slate-800 border border-slate-700 rounded">
+        <label for="title" class="block mb-2 font-medium">Title</label>
+        <select id="title" multiple class="w-full bg-slate-800 text-white p-2 rounded">
           <option>Engineer</option>
           <option>Designer</option>
           <option>Manager</option>
         </select>
       </div>
       <div>
-        <label for="year" class="block mb-2 text-sm font-medium">Year / Month</label>
-        <select id="year" multiple class="w-full p-2 bg-slate-800 border border-slate-700 rounded">
+        <label for="year" class="block mb-2 font-medium">Year / Month</label>
+        <select id="year" multiple class="w-full bg-slate-800 text-white p-2 rounded">
           <option>2023</option>
           <option>2024</option>
           <option>2025</option>
@@ -55,24 +53,24 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="bg-slate-800 p-4 rounded-xl shadow">
-        <h3 class="text-lg font-bold">Alice - Google</h3>
-        <p class="text-sm text-slate-300">Engineer, 2025</p>
+        <h3 class="text-lg font-semibold">Alice - Google</h3>
+        <p>Engineer, 2025</p>
       </div>
       <div class="bg-slate-800 p-4 rounded-xl shadow">
-        <h3 class="text-lg font-bold">Bob - Meta</h3>
-        <p class="text-sm text-slate-300">Designer, 2024</p>
+        <h3 class="text-lg font-semibold">Bob - Meta</h3>
+        <p>Designer, 2024</p>
       </div>
       <div class="bg-slate-800 p-4 rounded-xl shadow">
-        <h3 class="text-lg font-bold">Charlie - OpenAI</h3>
-        <p class="text-sm text-slate-300">Manager, 2023</p>
+        <h3 class="text-lg font-semibold">Charlie - OpenAI</h3>
+        <p>Manager, 2023</p>
       </div>
     </div>
   </main>
 
-  <footer class="text-center p-4 mt-8 text-slate-500 text-sm border-t border-slate-700">
-    © 2025 SignalScout AI. All rights reserved.
+  <footer class="mt-12 text-sm text-gray-400">
+    <p>© 2025 SignalScout AI. All rights reserved.</p>
   </footer>
 </body>
 </html>
