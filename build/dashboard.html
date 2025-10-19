@@ -1,64 +1,101 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SignalScout AI Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0B1120;
+      color: #cbd5e1;
+    }
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background-color 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .signal-card {
+      background-color: #1E293B;
+      border: 1px solid #334155;
+      transition: all 0.2s ease-in-out;
+    }
+    .signal-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-4px);
+    }
+    .signal-card blockquote {
+      border-left: 3px solid #3b82f6;
+      padding-left: 1.5rem;
+      font-style: italic;
+    }
+    .signal-type-badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background-color: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.5);
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-gray-300" data-ms-content="dashboard">
+  <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
+    <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
+    <nav class="flex items-center space-x-6 text-sm">
+      <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
+      <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
+      <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
+      <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
+    </nav>
+  </header>
   <main class="container mx-auto px-6 py-12">
-    <h1 class="text-4xl font-bold text-white mb-6">SignalScout AI Filters</h1>
-
-    <!-- Horizontal Filters -->
-    <div class="flex flex-wrap gap-6 mb-8">
-      <!-- Name Filter -->
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-white font-semibold mb-1">Name Filter</label>
-        <select id="nameFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+    <h1 class="text-4xl font-bold text-white mb-6">Your Signal Feed</h1>
+    <div id="filters" class="flex flex-wrap gap-4 mb-8">
+      <div class="relative">
+        <select id="nameFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
+          <option disabled selected>Name</option>
+        </select>
       </div>
-
-      <!-- Company Filter -->
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-white font-semibold mb-1">Company Filter</label>
-        <select id="companyFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      <div class="relative">
+        <select id="companyFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
+          <option disabled selected>Company</option>
+        </select>
       </div>
-
-      <!-- Title Filter -->
-      <div class="flex-1 min-w-[200px]">
-        <label class="block text-white font-semibold mb-1">Title Filter</label>
-        <select id="titleFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      <div class="relative">
+        <select id="titleFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
+          <option disabled selected>Title</option>
+        </select>
       </div>
-
-      <!-- Year Filter -->
-      <div class="flex-1 min-w-[150px]">
-        <label class="block text-white font-semibold mb-1">Year Filter</label>
-        <select id="yearFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      <div class="relative">
+        <select id="dateFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
+          <option disabled selected>Year / Month</option>
+        </select>
       </div>
     </div>
-
-    <!-- Signal Feed Tiles -->
     <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
   </main>
-
+  <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
+    <div class="space-x-6 mb-4">
+      <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
+      <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
+    </div>
+    <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+  </footer>
+  <script src="https://static.memberstack.com/scripts/v1/memberstack.js" data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6"></script>
   <script>
-    // Sample population logic (replace with actual data loading)
-    const filters = {
-      nameFilter: ['Alice', 'Bob', 'Charlie'],
-      companyFilter: ['OpenAI', 'Google', 'Meta'],
-      titleFilter: ['Engineer', 'Designer', 'Manager'],
-      yearFilter: ['2023', '2024', '2025']
-    };
-
-    for (const [id, options] of Object.entries(filters)) {
-      const select = document.getElementById(id);
-      options.forEach(opt => {
-        const option = document.createElement('option');
-        option.value = opt;
-        option.textContent = opt;
-        select.appendChild(option);
-      });
-    }
+    // Placeholder, JS logic will be added after confirmation.
   </script>
 </body>
 </html>
