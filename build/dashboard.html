@@ -1,83 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SignalScout Filters</title>
-  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-  <style>
-    body {
-      background-color: #0B1120;
-      color: white;
-      font-family: 'Inter', sans-serif;
-      padding: 2rem;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 8px;
-    }
-    .filter-section {
-      margin-bottom: 2rem;
-    }
-  </style>
+  <title>SignalScout AI Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1 class="text-white text-2xl mb-6">SignalScout AI Filters</h1>
+<body class="bg-gray-900 text-white">
+  <main class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-bold text-white mb-6">SignalScout AI Filters</h1>
 
-  <!-- Filter: Name -->
-  <div class="filter-section">
-    <label for="name-filter">Name Filter</label>
-    <select id="name-filter" multiple placeholder="Search names...">
-      <option>Andrew Lee</option>
-      <option>Abhi Kolpewar</option>
-      <option>Aniket Ponkshe</option>
-      <option>Arjun Iyer</option>
-      <option>Margherita Ferragatta</option>
-    </select>
-  </div>
+    <!-- Horizontal Filters -->
+    <div class="flex flex-wrap gap-6 mb-8">
+      <!-- Name Filter -->
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-white font-semibold mb-1">Name Filter</label>
+        <select id="nameFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      </div>
 
-  <!-- Filter: Company -->
-  <div class="filter-section">
-    <label for="company-filter">Company Filter</label>
-    <select id="company-filter" multiple placeholder="Search companies...">
-      <option>Shortwave</option>
-      <option>IDT Solution</option>
-      <option>Canonical</option>
-      <option>Ampere Computing</option>
-      <option>Tasklet</option>
-    </select>
-  </div>
+      <!-- Company Filter -->
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-white font-semibold mb-1">Company Filter</label>
+        <select id="companyFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      </div>
 
-  <!-- Filter: Title -->
-  <div class="filter-section">
-    <label for="title-filter">Title Filter</label>
-    <select id="title-filter" multiple placeholder="Search titles...">
-      <option>CEO</option>
-      <option>CTO</option>
-      <option>CMO</option>
-      <option>Chief Evangelist</option>
-      <option>Head of Partnerships</option>
-    </select>
-  </div>
+      <!-- Title Filter -->
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-white font-semibold mb-1">Title Filter</label>
+        <select id="titleFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      </div>
 
-  <!-- Filter: Year -->
-  <div class="filter-section">
-    <label for="year-filter">Year Filter</label>
-    <select id="year-filter" multiple placeholder="Search years...">
-      <option>2023</option>
-      <option>2024</option>
-      <option>2025</option>
-    </select>
-  </div>
+      <!-- Year Filter -->
+      <div class="flex-1 min-w-[150px]">
+        <label class="block text-white font-semibold mb-1">Year Filter</label>
+        <select id="yearFilter" class="w-full bg-gray-800 text-white border border-gray-600 rounded px-4 py-2" multiple></select>
+      </div>
+    </div>
+
+    <!-- Signal Feed Tiles -->
+    <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
+  </main>
 
   <script>
-    new TomSelect("#name-filter", { plugins: ['remove_button'], maxItems: null });
-    new TomSelect("#company-filter", { plugins: ['remove_button'], maxItems: null });
-    new TomSelect("#title-filter", { plugins: ['remove_button'], maxItems: null });
-    new TomSelect("#year-filter", { plugins: ['remove_button'], maxItems: null });
+    // Sample population logic (replace with actual data loading)
+    const filters = {
+      nameFilter: ['Alice', 'Bob', 'Charlie'],
+      companyFilter: ['OpenAI', 'Google', 'Meta'],
+      titleFilter: ['Engineer', 'Designer', 'Manager'],
+      yearFilter: ['2023', '2024', '2025']
+    };
+
+    for (const [id, options] of Object.entries(filters)) {
+      const select = document.getElementById(id);
+      options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt;
+        option.textContent = opt;
+        select.appendChild(option);
+      });
+    }
   </script>
 </body>
 </html>
