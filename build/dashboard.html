@@ -1,359 +1,83 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SignalScout AI — Dashboard</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SignalScout Filters</title>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
   <style>
-    :root{--bg:#0B1120;--muted:#cbd5e1;--card:#1E293B}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--muted); -webkit-font-smoothing:antialiased}
-    .btn-secondary{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);padding:.5rem .75rem;border-radius:.5rem}
-    .signal-card{background:var(--card);border:1px solid #334155;padding:1.25rem;border-radius:1rem;display:flex;flex-direction:column;gap:.75rem}
-    .signal-card blockquote{border-left:3px solid #3b82f6;padding-left:1rem;margin:0;font-style:italic;color:#d1d5db}
-    .signal-type-badge{font-size:.75rem;padding:.2rem .6rem;border-radius:9999px;background:rgba(59,130,246,.12);color:#7fb7ff;border:1px solid rgba(59,130,246,.24)}
-    .filters-panel{display:grid;grid-template-columns:repeat(1,1fr);gap:1rem}
-    @media(min-width:768px){.filters-panel{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:1024px){.filters-panel{grid-template-columns:repeat(4,1fr)}}
-    .filter-box{background:rgba(255,255,255,0.02);padding:.75rem;border-radius:.5rem;border:1px solid rgba(255,255,255,0.03)}
-    .checkbox-list{max-height:180px;overflow:auto;padding:.5rem .25rem;margin-top:.5rem;border-top:1px dashed rgba(255,255,255,0.02)}
-    .checkbox-item{display:flex;align-items:center;gap:.5rem;padding:.25rem .25rem}
-    #signal-feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-    .small-muted{font-size:.85rem;color:#9ca3af}
+    body {
+      background-color: #0B1120;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      padding: 2rem;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .filter-section {
+      margin-bottom: 2rem;
+    }
   </style>
 </head>
 <body>
-  <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
-    <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
-    <nav class="flex items-center gap-4 text-sm">
-      <a href="./privacy-policy.html" class="small-muted">Privacy Policy</a>
-      <a href="./terms-of-service.html" class="small-muted">Terms</a>
-      <a href="#" class="btn-secondary">Account</a>
-    </nav>
-  </header>
+  <h1 class="text-white text-2xl mb-6">SignalScout AI Filters</h1>
 
-  <main class="container mx-auto px-6 py-8">
-    <h1 class="text-3xl font-bold mb-6">Signal Feed</h1>
+  <!-- Filter: Name -->
+  <div class="filter-section">
+    <label for="name-filter">Name Filter</label>
+    <select id="name-filter" multiple placeholder="Search names...">
+      <option>Andrew Lee</option>
+      <option>Abhi Kolpewar</option>
+      <option>Aniket Ponkshe</option>
+      <option>Arjun Iyer</option>
+      <option>Margherita Ferragatta</option>
+    </select>
+  </div>
 
-    <!-- Filters -->
-    <section class="filters-panel mb-6">
-      <div class="filter-box">
-        <label class="block font-medium mb-2">Name — search + multi-select</label>
-        <input id="nameSearch" placeholder="Search names..." class="w-full px-3 py-2 rounded bg-transparent border border-gray-700" />
-        <div id="nameList" class="checkbox-list mt-2"></div>
-      </div>
+  <!-- Filter: Company -->
+  <div class="filter-section">
+    <label for="company-filter">Company Filter</label>
+    <select id="company-filter" multiple placeholder="Search companies...">
+      <option>Shortwave</option>
+      <option>IDT Solution</option>
+      <option>Canonical</option>
+      <option>Ampere Computing</option>
+      <option>Tasklet</option>
+    </select>
+  </div>
 
-      <div class="filter-box">
-        <label class="block font-medium mb-2">Company — search + multi-select</label>
-        <input id="companySearch" placeholder="Search companies..." class="w-full px-3 py-2 rounded bg-transparent border border-gray-700" />
-        <div id="companyList" class="checkbox-list mt-2"></div>
-      </div>
+  <!-- Filter: Title -->
+  <div class="filter-section">
+    <label for="title-filter">Title Filter</label>
+    <select id="title-filter" multiple placeholder="Search titles...">
+      <option>CEO</option>
+      <option>CTO</option>
+      <option>CMO</option>
+      <option>Chief Evangelist</option>
+      <option>Head of Partnerships</option>
+    </select>
+  </div>
 
-      <div class="filter-box">
-        <label class="block font-medium mb-2">Title — search + multi-select</label>
-        <input id="titleSearch" placeholder="Search titles..." class="w-full px-3 py-2 rounded bg-transparent border border-gray-700" />
-        <div id="titleList" class="checkbox-list mt-2"></div>
-      </div>
-
-      <div class="filter-box">
-        <label class="block font-medium mb-2">Date — Year → Month → Day</label>
-        <div id="yearList" class="checkbox-list"></div>
-        <div id="monthList" class="checkbox-list mt-2"></div>
-        <div id="dayList" class="checkbox-list mt-2"></div>
-      </div>
-    </section>
-
-    <section id="signal-feed" aria-live="polite"></section>
-  </main>
-
-  <footer class="text-center py-8 border-t border-gray-800 small-muted">
-    <div class="mb-3">
-      <a href="./terms-of-service.html" class="mr-4">Terms</a>
-      <a href="./privacy-policy.html">Privacy</a>
-    </div>
-    <div>&copy; 2025 SignalScout AI</div>
-  </footer>
-
-  <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js"></script>
+  <!-- Filter: Year -->
+  <div class="filter-section">
+    <label for="year-filter">Year Filter</label>
+    <select id="year-filter" multiple placeholder="Search years...">
+      <option>2023</option>
+      <option>2024</option>
+      <option>2025</option>
+    </select>
+  </div>
 
   <script>
-    // CONFIG
-    const AIRTABLE_API_KEY = 'patZ3JzM3OPa18JtP.6fc5e908ff1abf0479557fb89f2c785b61fb89c1f94cab9b95870eb21304ec22';
-    const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
-    const AIRTABLE_TABLE_NAME = 'Signals';
-
-    // DOM
-    const feed = document.getElementById('signal-feed');
-    const nameListEl = document.getElementById('nameList');
-    const companyListEl = document.getElementById('companyList');
-    const titleListEl = document.getElementById('titleList');
-    const yearListEl = document.getElementById('yearList');
-    const monthListEl = document.getElementById('monthList');
-    const dayListEl = document.getElementById('dayList');
-    const nameSearch = document.getElementById('nameSearch');
-    const companySearch = document.getElementById('companySearch');
-    const titleSearch = document.getElementById('titleSearch');
-
-    // state
-    let records = [];
-    let unique = { names: [], companies: [], titles: [], years: [] };
-    let ymDayMap = {}; // {year: {month: Set(days)}}
-
-    // helper
-    const iso = d => d ? new Date(d).toISOString().split('T')[0] : '';
-    const yearOf = d => d ? new Date(d).getFullYear().toString() : '';
-    const monthOf = d => d ? (new Date(d).getMonth()+1).toString().padStart(2,'0') : '';
-    const dayOf = d => d ? new Date(d).getDate().toString().padStart(2,'0') : '';
-
-    // fetch
-    async function fetchSignals() {
-      feed.innerHTML = `<div class="small-muted p-4">Loading signals…</div>`;
-      try {
-        const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?pageSize=100&sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
-        const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }});
-        if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
-        const json = await res.json();
-        records = (json.records || []).map(r => r.fields || []);
-        buildUI();
-      } catch (err) {
-        feed.innerHTML = `<div class="small-muted p-4">Error loading signals: ${err.message}</div>`;
-        console.error(err);
-      }
-    }
-
-    // build UI and filters
-    function buildUI() {
-      // reset
-      feed.innerHTML = '';
-      unique = { names: new Set(), companies: new Set(), titles: new Set(), years: new Set() };
-      ymDayMap = {};
-
-      // populate feed and collect uniques
-      records.forEach(r => {
-        const person = r.Person || '';
-        const company = r.Company || '';
-        const title = r.Title || '';
-        const pub = r['Publication Date'] || '';
-        const isoDate = iso(pub);
-        const y = yearOf(pub), m = monthOf(pub), d = dayOf(pub);
-
-        if (person) unique.names.add(person);
-        if (company) unique.companies.add(company);
-        if (title) unique.titles.add(title);
-        if (y) unique.years.add(y);
-
-        // build year->month->day map
-        if (y) {
-          ymDayMap[y] = ymDayMap[y] || {};
-          if (m) {
-            ymDayMap[y][m] = ymDayMap[y][m] || new Set();
-            if (d) ymDayMap[y][m].add(d);
-          }
-        }
-
-        // create card element
-        const card = document.createElement('article');
-        card.className = 'signal-card-wrapper';
-        card.style.width = '100%';
-        card.dataset.person = person;
-        card.dataset.company = company;
-        card.dataset.title = title;
-        card.dataset.date = isoDate;
-        card.innerHTML = `
-          <div class="signal-card">
-            <div class="flex justify-between items-start">
-              <div>
-                <div style="font-weight:700;font-size:1.05rem;color:#fff">${escapeHtml(person)}</div>
-                <div class="small-muted">${escapeHtml(title)} at ${escapeHtml(company)}</div>
-              </div>
-              ${r['Source Type'] ? `<div class="signal-type-badge">${escapeHtml(r['Source Type'])}</div>` : ''}
-            </div>
-            <blockquote>${escapeHtml(r.Quote || '')}</blockquote>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto">
-              <a href="${r['Source URL'] || '#'}" target="_blank" class="small-muted">View Source →</a>
-              ${isoDate ? `<div class="small-muted">${new Date(isoDate).toLocaleDateString()}</div>` : ''}
-            </div>
-          </div>
-        `;
-        feed.appendChild(card);
-      });
-
-      // populate filter lists (sorted)
-      fillCheckboxList(nameListEl, Array.from(unique.names).sort(), 'name-chk');
-      fillCheckboxList(companyListEl, Array.from(unique.companies).sort(), 'company-chk');
-      fillCheckboxList(titleListEl, Array.from(unique.titles).sort(), 'title-chk');
-      fillYearCheckboxes(Array.from(unique.years).sort((a,b)=>b-a));
-
-      // wire search boxes for live filter-in-list
-      nameSearch.addEventListener('input', ()=>filterList(nameListEl, nameSearch.value));
-      companySearch.addEventListener('input', ()=>filterList(companyListEl, companySearch.value));
-      titleSearch.addEventListener('input', ()=>filterList(titleListEl, titleSearch.value));
-
-      // wire checkbox listeners
-      document.querySelectorAll('[data-chk]').forEach(el => el.addEventListener('change', applyFilters));
-    }
-
-    // helpers to render checkbox lists
-    function fillCheckboxList(container, items, baseId) {
-      container.innerHTML = '';
-      if (!items.length) { container.innerHTML = '<div class="small-muted p-2">No items</div>'; return; }
-      items.forEach((it, idx) => {
-        const id = `${baseId}-${idx}`;
-        const wrap = document.createElement('label');
-        wrap.className = 'checkbox-item';
-        wrap.innerHTML = `<input data-chk type="checkbox" data-field="${baseId.split('-')[0]}" value="${escapeHtml(it)}" id="${id}" /> <span style="font-size:.95rem">${escapeHtml(it)}</span>`;
-        container.appendChild(wrap);
-      });
-    }
-
-    function fillYearCheckboxes(years) {
-      yearListEl.innerHTML = '';
-      if (!years.length) { yearListEl.innerHTML = '<div class="small-muted p-2">No dates</div>'; return; }
-      years.forEach((y, i) => {
-        const id = `year-${i}`;
-        const wrap = document.createElement('label');
-        wrap.className = 'checkbox-item';
-        wrap.innerHTML = `<input data-chk type="checkbox" data-field="year" value="${y}" id="${id}" /> <strong>${y}</strong>`;
-        yearListEl.appendChild(wrap);
-      });
-      // when years change update months/days
-      yearListEl.querySelectorAll('input[data-field="year"]').forEach(n => n.addEventListener('change', updateMonthsDays));
-    }
-
-    function updateMonthsDays() {
-      // collect selected years
-      const selectedYears = Array.from(yearListEl.querySelectorAll('input[data-field="year"]:checked')).map(i => i.value);
-      // build months set that exist for selected years (if none selected, use all years)
-      const monthsSet = new Set();
-      const daysMap = {}; // month -> Set(days)
-      const yearsToUse = selectedYears.length ? selectedYears : Object.keys(ymDayMap);
-      yearsToUse.forEach(y=>{
-        const monthsObj = ymDayMap[y] || {};
-        Object.keys(monthsObj).forEach(m=>{
-          monthsSet.add(m);
-          daysMap[m] = daysMap[m] || new Set();
-          monthsObj[m].forEach(d => daysMap[m].add(d));
-        });
-      });
-
-      // render months as checkboxes (formatted 'MM - MonthName')
-      monthListEl.innerHTML = '';
-      const monthsArr = Array.from(monthsSet).sort();
-      monthsArr.forEach((m, i) => {
-        const idx = `month-${m}-${i}`;
-        const wrap = document.createElement('label');
-        wrap.className = 'checkbox-item';
-        const monthName = new Date(`${(monthsArr[0]||'2020')}-${m}-01`).toLocaleString(undefined,{month:'long'});
-        wrap.innerHTML = `<input data-chk type="checkbox" data-field="month" value="${m}" id="${idx}" /> <span>${m} — ${monthName}</span>`;
-        monthListEl.appendChild(wrap);
-      });
-
-      // render days (union of days for selected months; if no months selected show all days from monthsArr)
-      dayListEl.innerHTML = '';
-      const selectedMonths = Array.from(monthListEl.querySelectorAll('input[data-field="month"]:checked')).map(i => i.value);
-      const monthsToUse = selectedMonths.length ? selectedMonths : monthsArr;
-      const daySet = new Set();
-      monthsToUse.forEach(m=>{
-        if (daysMap[m]) daysMap[m].forEach(d=>daySet.add(d));
-      });
-      Array.from(daySet).sort().forEach((d,i)=>{
-        const id = `day-${d}-${i}`;
-        const wrap = document.createElement('label');
-        wrap.className = 'checkbox-item';
-        wrap.innerHTML = `<input data-chk type="checkbox" data-field="day" value="${d}" id="${id}" /> <span>${d}</span>`;
-        dayListEl.appendChild(wrap);
-      });
-
-      // wire month/day checkbox listeners (re-wire months because we re-render them)
-      monthListEl.querySelectorAll('input[data-field="month"]').forEach(n => n.addEventListener('change', updateDaysAfterMonthChange));
-      document.querySelectorAll('[data-chk]').forEach(el => el.addEventListener('change', applyFilters));
-    }
-
-    function updateDaysAfterMonthChange() {
-      // when month selection changes update day list
-      const selectedYears = Array.from(yearListEl.querySelectorAll('input[data-field="year"]:checked')).map(i => i.value);
-      const selectedMonths = Array.from(monthListEl.querySelectorAll('input[data-field="month"]:checked')).map(i => i.value);
-      // build daysSet from ymDayMap
-      const daysSet = new Set();
-      const yearsToUse = selectedYears.length ? selectedYears : Object.keys(ymDayMap);
-      yearsToUse.forEach(y=>{
-        const monthsObj = ymDayMap[y] || {};
-        Object.keys(monthsObj).forEach(m=>{
-          if (!selectedMonths.length || selectedMonths.includes(m)) {
-            monthsObj[m].forEach(d=>daysSet.add(d));
-          }
-        });
-      });
-      dayListEl.innerHTML = '';
-      Array.from(daysSet).sort().forEach((d,i)=>{
-        const id = `day-${d}-${i}`;
-        const wrap = document.createElement('label');
-        wrap.className = 'checkbox-item';
-        wrap.innerHTML = `<input data-chk type="checkbox" data-field="day" value="${d}" id="${id}" /> <span>${d}</span>`;
-        dayListEl.appendChild(wrap);
-      });
-      document.querySelectorAll('[data-chk]').forEach(el => el.addEventListener('change', applyFilters));
-    }
-
-    // filtering logic
-    function applyFilters() {
-      // collect checked values per field
-      const checked = {
-        name: Array.from(nameListEl.querySelectorAll('input[data-field="name"]:checked')).map(i=>i.value),
-        company: Array.from(companyListEl.querySelectorAll('input[data-field="company"]:checked')).map(i=>i.value),
-        title: Array.from(titleListEl.querySelectorAll('input[data-field="title"]:checked')).map(i=>i.value),
-        year: Array.from(yearListEl.querySelectorAll('input[data-field="year"]:checked')).map(i=>i.value),
-        month: Array.from(monthListEl.querySelectorAll('input[data-field="month"]:checked')).map(i=>i.value),
-        day: Array.from(dayListEl.querySelectorAll('input[data-field="day"]:checked')).map(i=>i.value)
-      };
-
-      // text-search-in-list inputs (optional): filter the checkbox lists to help selection
-      // (they do not affect cards directly)
-      // apply cards filtering
-      const wrappers = Array.from(document.querySelectorAll('.signal-card-wrapper'));
-      wrappers.forEach(w => {
-        const p = w.dataset.person || '';
-        const c = w.dataset.company || '';
-        const t = w.dataset.title || '';
-        const isoDate = w.dataset.date || '';
-        const y = isoDate ? isoDate.split('-')[0] : '';
-        const m = isoDate ? isoDate.split('-')[1] : '';
-        const d = isoDate ? isoDate.split('-')[2] : '';
-
-        const namePass = !checked.name.length || checked.name.includes(p);
-        const compPass = !checked.company.length || checked.company.includes(c);
-        const titlePass = !checked.title.length || checked.title.includes(t);
-        const yearPass = !checked.year.length || checked.year.includes(y);
-        const monthPass = !checked.month.length || checked.month.includes(m);
-        const dayPass = !checked.day.length || checked.day.includes(d);
-
-        const show = namePass && compPass && titlePass && yearPass && monthPass && dayPass;
-        w.style.display = show ? '' : 'none';
-      });
-
-      // after toggling, CSS grid reflows automatically. no masonry required.
-    }
-
-    // utility: filter checkbox list UI based on search input
-    function filterList(container, query) {
-      const q = (query||'').toLowerCase().trim();
-      Array.from(container.children).forEach(label=>{
-        const text = label.textContent.toLowerCase();
-        label.style.display = q ? (text.includes(q) ? '' : 'none') : '';
-      });
-    }
-
-    // escape HTML simple
-    function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
-
-    // initial
-    window.addEventListener('DOMContentLoaded', fetchSignals);
+    new TomSelect("#name-filter", { plugins: ['remove_button'], maxItems: null });
+    new TomSelect("#company-filter", { plugins: ['remove_button'], maxItems: null });
+    new TomSelect("#title-filter", { plugins: ['remove_button'], maxItems: null });
+    new TomSelect("#year-filter", { plugins: ['remove_button'], maxItems: null });
   </script>
 </body>
 </html>
