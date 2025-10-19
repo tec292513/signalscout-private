@@ -1,101 +1,76 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignalScout AI Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0B1120;
-      color: #cbd5e1;
-    }
-    .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: background-color 0.3s ease;
-    }
-    .btn-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    .signal-card {
-      background-color: #1E293B;
-      border: 1px solid #334155;
-      transition: all 0.2s ease-in-out;
-    }
-    .signal-card:hover {
-      border-color: #3b82f6;
-      transform: translateY(-4px);
-    }
-    .signal-card blockquote {
-      border-left: 3px solid #3b82f6;
-      padding-left: 1.5rem;
-      font-style: italic;
-    }
-    .signal-type-badge {
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      background-color: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.5);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignalScout AI Dashboard</title>
+    <link href="assets/css/your-new-style.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-gray-300" data-ms-content="dashboard">
-  <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
-    <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
-    <nav class="flex items-center space-x-6 text-sm">
-      <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
-      <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
-      <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
-      <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
-    </nav>
-  </header>
-  <main class="container mx-auto px-6 py-12">
-    <h1 class="text-4xl font-bold text-white mb-6">Your Signal Feed</h1>
-    <div id="filters" class="flex flex-wrap gap-4 mb-8">
-      <div class="relative">
-        <select id="nameFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
-          <option disabled selected>Name</option>
-        </select>
-      </div>
-      <div class="relative">
-        <select id="companyFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
-          <option disabled selected>Company</option>
-        </select>
-      </div>
-      <div class="relative">
-        <select id="titleFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
-          <option disabled selected>Title</option>
-        </select>
-      </div>
-      <div class="relative">
-        <select id="dateFilter" multiple class="w-48 h-28 rounded-lg bg-gray-800 text-white border border-gray-700 p-2">
-          <option disabled selected>Year / Month</option>
-        </select>
-      </div>
-    </div>
-    <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
-  </main>
-  <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
-    <div class="space-x-6 mb-4">
-      <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
-      <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
-    </div>
-    <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
-  </footer>
-  <script src="https://static.memberstack.com/scripts/v1/memberstack.js" data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6"></script>
-  <script>
-    // Placeholder, JS logic will be added after confirmation.
-  </script>
+<body class="bg-gray-900 text-white font-sans">
+    <header class="flex justify-between items-center p-6 border-b border-gray-700">
+        <h1 class="text-2xl font-bold">SignalScout AI</h1>
+        <nav class="space-x-6">
+            <a href="#" class="hover:underline">Privacy Policy</a>
+            <a href="#" class="hover:underline">Terms of Service</a>
+            <button class="bg-gray-700 px-4 py-2 rounded">Account</button>
+        </nav>
+    </header>
+
+    <main class="p-6">
+        <h2 class="text-3xl font-bold mb-4">Your Signal Feed</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div>
+                <label class="block mb-1 font-semibold">Name</label>
+                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
+                    <option>Alice</option>
+                    <option>Bob</option>
+                    <option>Charlie</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 font-semibold">Company</label>
+                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
+                    <option>Google</option>
+                    <option>Meta</option>
+                    <option>OpenAI</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 font-semibold">Title</label>
+                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
+                    <option>Engineer</option>
+                    <option>Designer</option>
+                    <option>Manager</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 font-semibold">Year / Month</label>
+                <select multiple class="w-full h-32 bg-gray-800 text-white rounded p-2">
+                    <option>2023</option>
+                    <option>2024</option>
+                    <option>2025</option>
+                </select>
+            </div>
+        </div>
+
+        <section id="tiles" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-800 p-4 rounded shadow">
+                <h3 class="font-bold text-lg">Alice - Google</h3>
+                <p class="text-sm text-gray-300">Engineer, 2025</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded shadow">
+                <h3 class="font-bold text-lg">Bob - Meta</h3>
+                <p class="text-sm text-gray-300">Designer, 2024</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded shadow">
+                <h3 class="font-bold text-lg">Charlie - OpenAI</h3>
+                <p class="text-sm text-gray-300">Manager, 2023</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-10 text-center text-sm text-gray-400">
+        <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    </footer>
 </body>
 </html>
