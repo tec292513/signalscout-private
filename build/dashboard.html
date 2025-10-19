@@ -67,13 +67,12 @@
     <main class="container mx-auto px-6 py-12">
       <h1 class="text-4xl font-bold text-white mb-6">Your Signal Feed</h1>
 
-      <!-- Filter Input -->
-      <input
-        id="companyFilter"
-        type="text"
-        placeholder="Filter by company name..."
-        class="mb-8 w-full md:w-1/2 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700"
-      />
+      <!-- Multiple Filters -->
+      <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mb-8">
+        <input id="nameFilter" type="text" placeholder="Filter by name..." class="w-full md:w-1/3 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700" />
+        <input id="companyFilter" type="text" placeholder="Filter by company..." class="w-full md:w-1/3 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700" />
+        <input id="titleFilter" type="text" placeholder="Filter by title..." class="w-full md:w-1/3 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700" />
+      </div>
 
       <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
     </main>
@@ -99,7 +98,6 @@
         const title = signal.Title || 'No Title';
         const company = signal.Company || 'No Company';
         const quote = signal.Quote || 'No Quote Available';
-        const sourceName = signal['Source Name'] || 'Unknown Source';
         const sourceUrl = signal['Source URL'] || '#';
         const sourceType = signal['Source Type'] || '';
         const publicationDateRaw = signal['Publication Date'];
@@ -110,15 +108,23 @@
               day: 'numeric',
             })
           : '';
-        return `<div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6 signal-card-wrapper"><div class="relative flex flex-col min-w-0 h-full break-words rounded-2xl bg-clip-border signal-card p-6"><div class="flex justify-between items-start mb-4"><div class="flex-grow"><p class="mb-0 font-bold text-lg text-white">${person}</p><p class="text-sm text-gray-400">${title} at ${company}</p></div>${
-          sourceType
-            ? `<div class="signal-type-badge flex-shrink-0 ml-4">${sourceType}</div>`
-            : ''
-        }</div><blockquote class="mb-4 text-base leading-relaxed text-gray-300">"${quote}"</blockquote><div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-700"><a href="${sourceUrl}" target="_blank" class="text-sm font-semibold text-blue-400 hover:text-blue-300">View Source &rarr;</a>${
-          publicationDate
-            ? `<span class="text-xs text-gray-500">${publicationDate}</span>`
-            : ''
-        }</div></div></div>`;
+
+        return `<div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6 signal-card-wrapper">
+                  <div class="relative flex flex-col min-w-0 h-full break-words rounded-2xl bg-clip-border signal-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                      <div class="flex-grow">
+                        <p class="mb-0 font-bold text-lg text-white">${person}</p>
+                        <p class="text-sm text-gray-400">${title} at ${company}</p>
+                      </div>
+                      ${sourceType ? `<div class="signal-type-badge flex-shrink-0 ml-4">${sourceType}</div>` : ''}
+                    </div>
+                    <blockquote class="mb-4 text-base leading-relaxed text-gray-300">"${quote}"</blockquote>
+                    <div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-700">
+                      <a href="${sourceUrl}" target="_blank" class="text-sm font-semibold text-blue-400 hover:text-blue-300">View Source &rarr;</a>
+                      ${publicationDate ? `<span class="text-xs text-gray-500">${publicationDate}</span>` : ''}
+                    </div>
+                  </div>
+                </div>`;
       }
 
       async function fetchSignals() {
@@ -129,9 +135,7 @@
 
         try {
           const response = await fetch(url, {
-            headers: {
-              Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-            },
+            headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
           });
 
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -147,10 +151,7 @@
             });
 
             setTimeout(() => {
-              new Masonry(signalFeedContainer, {
-                itemSelector: '.signal-card-wrapper',
-                percentPosition: true,
-              });
+              new Masonry(signalFeedContainer, { itemSelector: '.signal-card-wrapper', percentPosition: true });
             }, 100);
           } else {
             signalFeedContainer.innerHTML =
@@ -163,22 +164,33 @@
 
       // Load data via MemberStack or fallback
       if (typeof MemberStack !== 'undefined') {
-        MemberStack.onReady.then(() => {
-          fetchSignals();
-        }).catch(() => {
-          fetchSignals();
-        });
+        MemberStack.onReady.then(() => fetchSignals()).catch(() => fetchSignals());
       } else {
         fetchSignals();
       }
 
-      // Filter logic
-      document.getElementById('companyFilter').addEventListener('input', function (e) {
-        const filter = e.target.value.toLowerCase();
+      // Multi-filter logic
+      function applyFilters() {
+        const nameValue = document.getElementById('nameFilter').value.toLowerCase();
+        const companyValue = document.getElementById('companyFilter').value.toLowerCase();
+        const titleValue = document.getElementById('titleFilter').value.toLowerCase();
+
         document.querySelectorAll('.signal-card-wrapper').forEach((card) => {
-          const companyText = card.querySelector('p.text-sm')?.textContent.toLowerCase() || '';
-          card.style.display = companyText.includes(filter) ? '' : 'none';
+          const nameText = card.querySelector('p.font-bold')?.textContent.toLowerCase() || '';
+          const infoText = card.querySelector('p.text-sm')?.textContent.toLowerCase() || '';
+          const [titleText, companyText] = infoText.split(' at ');
+
+          const show =
+            nameText.includes(nameValue) &&
+            (companyText?.includes(companyValue) || companyValue === '') &&
+            (titleText?.includes(titleValue) || titleValue === '');
+
+          card.style.display = show ? '' : 'none';
         });
+      }
+
+      ['nameFilter', 'companyFilter', 'titleFilter'].forEach((id) => {
+        document.getElementById(id).addEventListener('input', applyFilters);
       });
     </script>
   </body>
