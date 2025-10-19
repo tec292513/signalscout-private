@@ -29,6 +29,8 @@
     <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
       <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
       <nav class="flex items-center space-x-6 text-sm">
+        <a href="privacy-policy.html" class="hover:text-blue-300">Privacy Policy</a>
+        <a href="terms-of-service.html" class="hover:text-blue-300">Terms of Service</a>
         <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
         <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
       </nav>
@@ -113,14 +115,13 @@
             }
         }
 
-        // MemberStack V1 - Just load signals, let gated content handle auth
         if (typeof MemberStack !== 'undefined') {
             MemberStack.onReady.then(function(member) {
                 console.log('MemberStack ready, loading signals...');
                 fetchSignals();
             }).catch(function(err) {
                 console.error('MemberStack error:', err);
-                fetchSignals(); // Load anyway, gated content will handle redirect if needed
+                fetchSignals();
             });
         } else {
             console.log('MemberStack not loaded, loading signals anyway...');
