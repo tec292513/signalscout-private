@@ -2,43 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SignalScout AI Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white">
-  <header class="p-6 border-b border-gray-800 flex justify-between items-center">
-    <h1 class="text-xl font-bold">SignalScout AI</h1>
-    <nav class="space-x-4">
-      <a href="privacy-policy.html" class="hover:underline">Privacy Policy</a>
-      <a href="terms-of-service.html" class="hover:underline">Terms of Service</a>
-      <a href="#" onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</a>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="flex justify-between items-center p-6 border-b border-gray-700">
+    <h1 class="text-2xl font-bold">SignalScout AI</h1>
+    <nav class="flex gap-6 items-center">
+      <a href="#" class="hover:underline">Privacy Policy</a>
+      <a href="#" class="hover:underline">Terms of Service</a>
+      <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
     </nav>
   </header>
 
-  <main class="p-6">
-    <h2 class="text-3xl font-semibold mb-6">Your Signal Feed</h2>
-    <div class="grid gap-6 md:grid-cols-3" id="signal-feed">
-      <div class="p-4 bg-gray-800 rounded shadow">Example Signal 1</div>
-      <div class="p-4 bg-gray-800 rounded shadow">Example Signal 2</div>
-      <div class="p-4 bg-gray-800 rounded shadow">Example Signal 3</div>
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <h2 class="text-3xl font-bold mb-6">Your Signal Feed</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-md">Example Signal 1</div>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-md">Example Signal 2</div>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-md">Example Signal 3</div>
     </div>
   </main>
 
-  <footer class="text-center text-gray-400 text-sm py-4 border-t border-gray-800 mt-6">
-    &copy; 2025 SignalScout AI. All rights reserved.
+  <!-- Footer -->
+  <footer class="text-center text-sm text-gray-400 py-4 border-t border-gray-700">
+    © 2025 SignalScout AI. All rights reserved.
   </footer>
 
-  <script>
-    function logout() {
-      window.location.href = "index.html";
-    }
-
-    // Prevent redirecting from dashboard.html
-    window.addEventListener("DOMContentLoaded", () => {
-      if (window.location.pathname.includes("index.html")) return;
-      history.pushState(null, "", "dashboard.html");
-    });
-  </script>
 </body>
 </html>
