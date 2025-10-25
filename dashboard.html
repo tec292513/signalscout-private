@@ -39,6 +39,77 @@
 
     <main class="container mx-auto px-6 py-12">
       <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
+      <!-- INSERT this section above <div id="signal-feed"> inside <main> -->
+<div class="mb-10">
+  <input type="text" placeholder="Search signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+  <div class="flex flex-wrap gap-4">
+    <!-- Name Filter -->
+    <div>
+      <label class="block text-sm mb-1">Name</label>
+      <select multiple class="bg-gray-800 border border-gray-700 text-white text-sm rounded-md px-3 py-2 w-40">
+        <option>Andrew Lee</option>
+        <option>Holly Novak</option>
+        <option>Sean Varley</option>
+        <option>Margherita Ferragatta</option>
+      </select>
+    </div>
+
+    <!-- Title Filter -->
+    <div>
+      <label class="block text-sm mb-1">Title</label>
+      <select multiple class="bg-gray-800 border border-gray-700 text-white text-sm rounded-md px-3 py-2 w-40">
+        <option>CEO</option>
+        <option>CTO</option>
+        <option>Chief Evangelist</option>
+      </select>
+    </div>
+
+    <!-- Company Filter -->
+    <div>
+      <label class="block text-sm mb-1">Company</label>
+      <select multiple class="bg-gray-800 border border-gray-700 text-white text-sm rounded-md px-3 py-2 w-40">
+        <option>Canonical</option>
+        <option>IDT Solution</option>
+        <option>Jack Henry</option>
+      </select>
+    </div>
+
+    <!-- Source Filter -->
+    <div>
+      <label class="block text-sm mb-1">Source</label>
+      <select multiple class="bg-gray-800 border border-gray-700 text-white text-sm rounded-md px-3 py-2 w-40">
+        <option>TechCrunch</option>
+        <option>LinkedIn</option>
+        <option>Forbes</option>
+      </select>
+    </div>
+
+    <!-- Date Filter -->
+    <div>
+      <label class="block text-sm mb-1">Date</label>
+      <select multiple class="bg-gray-800 border border-gray-700 text-white text-sm rounded-md px-3 py-2 w-48">
+        <optgroup label="2025">
+          <optgroup label="October">
+            <option>Oct 8</option>
+            <option>Oct 7</option>
+          </optgroup>
+          <optgroup label="September">
+            <option>Sep 28</option>
+          </optgroup>
+        </optgroup>
+        <optgroup label="2024">
+          <optgroup label="December">
+            <option>Dec 15</option>
+          </optgroup>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+  <div class="mt-4">
+    <button class="text-sm px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600">Clear Filters</button>
+  </div>
+</div>
+
       <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
     </main>
     
