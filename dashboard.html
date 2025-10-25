@@ -1,200 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Signal Feed</title>
   <style>
     body {
-      background-color: #0c1120;
-      color: #fff;
-      font-family: sans-serif;
-      padding: 2rem;
+      background-color: #0e1320;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
-
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.5em;
+      font-weight: bold;
     }
-
-    .search-bar,
-    select,
-    input[type="text"] {
-      background-color: #1c2333;
-      color: #ccc;
-      border: 1px solid #444;
-      padding: 0.6rem;
-      margin: 0.3rem 0.3rem 1rem 0;
-      border-radius: 4px;
-      width: 100%;
+    input, select {
+      padding: 10px;
+      border: 1px solid #555;
+      background-color: #1c2230;
+      color: white;
+      margin-right: 10px;
+      margin-bottom: 10px;
     }
-
-    .search-bar::placeholder,
-    select,
-    input[type="text"]::placeholder {
-      color: #888;
+    input::placeholder, select option[disabled] {
+      color: #aaa;
     }
-
-    .filters {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.5rem;
+    .filters, .card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-
+    .card {
+      background: #1c2230;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      flex-direction: column;
+    }
     .dropdown {
-      background-color: #1c2333;
-      color: #fff;
-      border: 1px solid #444;
+      background-color: #1c2230;
+      color: white;
     }
-
-    .dropdown option {
-      background-color: #1c2333;
-      color: #fff;
-    }
-
-    .filter-label {
-      font-size: 0.9rem;
-      margin-bottom: 0.2rem;
-      display: block;
-    }
-
-    .clear-btn {
-      background-color: #2e3a55;
+    button {
+      background-color: #3a4255;
       color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 4px;
+      padding: 10px 20px;
       cursor: pointer;
-      margin-top: 0.5rem;
+      margin-top: 10px;
     }
-
-    .card {
-      background: #1a202f;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-
-    .error {
-      background-color: #5c1d1d;
-      color: #ffdddd;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
+    select optgroup {
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-
   <h1>Your Signal Feed</h1>
 
-  <input type="text" class="search-bar" placeholder="Search signals..." id="searchInput">
+  <input id="search" type="text" placeholder="Search signals..." style="width: 100%;" />
 
   <div class="filters">
-    <div>
-      <label class="filter-label" for="name">Name</label>
-      <input type="text" id="name" placeholder="Name">
-    </div>
-    <div>
-      <label class="filter-label" for="title">Title</label>
-      <select id="title" class="dropdown">
-        <option value="">Select title</option>
-        <option>CEO</option>
-        <option>CTO</option>
-        <option>Cloud Architect</option>
-        <!-- Add more -->
-      </select>
-    </div>
-    <div>
-      <label class="filter-label" for="company">Company</label>
-      <select id="company" class="dropdown">
-        <option value="">Select company</option>
-        <option>Canonical</option>
-        <option>GitHub</option>
-        <option>Google</option>
-        <!-- Add more -->
-      </select>
-    </div>
-    <div>
-      <label class="filter-label" for="source">Source</label>
-      <select id="source" class="dropdown">
-        <option value="">Select source</option>
-        <option>Google Cloud Blog</option>
-        <option>DevOps.com</option>
-        <option>The New Stack</option>
-        <!-- Add more -->
-      </select>
-    </div>
-    <div>
-      <label class="filter-label">Date</label>
-      <select id="year" class="dropdown">
-        <option value="">Year</option>
-        <option>2025</option>
-        <option>2024</option>
-      </select>
-      <select id="month" class="dropdown">
-        <option value="">Month</option>
-        <option value="01">01</option>
-        <option value="02">02</option>
-        <!-- up to 12 -->
-        <option value="12">12</option>
-      </select>
-      <select id="day" class="dropdown">
-        <option value="">Day</option>
-        <option value="01">01</option>
-        <option value="02">02</option>
-        <!-- up to 31 -->
-        <option value="31">31</option>
-      </select>
-    </div>
+    <select id="nameSelect">
+      <option disabled selected>Name</option>
+    </select>
+    <select id="titleSelect">
+      <option disabled selected>Select title</option>
+    </select>
+    <select id="companySelect">
+      <option disabled selected>Select company</option>
+    </select>
+    <select id="sourceSelect">
+      <option disabled selected>Select source</option>
+    </select>
+    <select id="dateSelect">
+      <option disabled selected>Select date</option>
+    </select>
   </div>
 
-  <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
+  <button onclick="clearFilters()">Clear Filters</button>
 
-  <div class="card" id="resultCard">
-    <h2>Chief People Officer</h2>
-    <p><strong>Holly Novak</strong> at <strong>Jack Henry</strong></p>
-    <p>Google Cloud Blog – 2025-10-09</p>
-    <p><em>By leveraging Google Cloud Certificates...</em></p>
-  </div>
-
-  <div id="errorBox" class="error" style="display: none;">Error: Invalid time value</div>
+  <div id="results"></div>
 
   <script>
-    function clearFilters() {
-      document.getElementById("name").value = "";
-      document.getElementById("title").value = "";
-      document.getElementById("company").value = "";
-      document.getElementById("source").value = "";
-      document.getElementById("year").value = "";
-      document.getElementById("month").value = "";
-      document.getElementById("day").value = "";
-      document.getElementById("searchInput").value = "";
-      document.getElementById("errorBox").style.display = "none";
+    const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
+    const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
+    const AIRTABLE_TABLE_NAME = 'Signals';
+    const filterElements = ['search', 'nameSelect', 'titleSelect', 'companySelect', 'sourceSelect', 'dateSelect'];
+
+    let allRecords = [];
+
+    async function fetchData() {
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?pageSize=100`;
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
+      });
+      const data = await res.json();
+      allRecords = data.records;
+      populateFilters(allRecords);
+      displayCards(allRecords);
     }
 
-    function parseDate() {
-      const y = document.getElementById("year").value;
-      const m = document.getElementById("month").value;
-      const d = document.getElementById("day").value;
+    function populateFilters(records) {
+      const nameSet = new Set();
+      const titleSet = new Set();
+      const companySet = new Set();
+      const sourceSet = new Set();
+      const dateSet = new Map();
 
-      if (!y || !m || !d) return null;
+      records.forEach(record => {
+        const f = record.fields;
+        if (f.Name) nameSet.add(f.Name);
+        if (f.Title) titleSet.add(f.Title);
+        if (f.Company) companySet.add(f.Company);
+        if (f.Source) sourceSet.add(f.Source);
+        if (f.Date) {
+          const date = new Date(f.Date);
+          const y = date.getFullYear();
+          const m = date.toLocaleString('default', { month: 'long' });
+          const d = date.getDate();
+          if (!dateSet.has(y)) dateSet.set(y, new Map());
+          if (!dateSet.get(y).has(m)) dateSet.get(y).set(m, new Set());
+          dateSet.get(y).get(m).add(d);
+        }
+      });
 
-      const iso = `${y}-${m}-${d}`;
-      const isValid = !isNaN(Date.parse(iso));
-      if (!isValid) {
-        document.getElementById("errorBox").style.display = "block";
-        return null;
+      setOptions('nameSelect', nameSet);
+      setOptions('titleSelect', titleSet);
+      setOptions('companySelect', companySet);
+      setOptions('sourceSelect', sourceSet);
+      setDateDropdown(dateSet);
+    }
+
+    function setOptions(id, values) {
+      const select = document.getElementById(id);
+      [...values].sort().forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+    }
+
+    function setDateDropdown(dateMap) {
+      const select = document.getElementById('dateSelect');
+      for (let [year, months] of [...dateMap.entries()].sort()) {
+        const yGroup = document.createElement('optgroup');
+        yGroup.label = year;
+        for (let [month, days] of [...months.entries()].sort()) {
+          for (let day of [...days].sort((a,b)=>a-b)) {
+            const opt = document.createElement('option');
+            opt.value = `${year}-${month}-${day}`;
+            opt.textContent = `${month} ${day}, ${year}`;
+            yGroup.appendChild(opt);
+          }
+        }
+        select.appendChild(yGroup);
       }
-
-      document.getElementById("errorBox").style.display = "none";
-      return iso;
     }
 
-    // Example usage
-    document.querySelectorAll("select").forEach(sel => {
-      sel.addEventListener("change", parseDate);
-    });
-  </script>
+    function displayCards(records) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      records.forEach(rec => {
+        const f = rec.fields;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${f.Title || ''}</h3>
+          <p><strong>${f.Name || ''}</strong> at <strong>${f.Company || ''}</strong></p>
+          <p>${f.Source || ''} – ${f.Date || ''}</p>
+          <p><em>${f.Content ? f.Content.slice(0, 100) + '...' : ''}</em></p>
+        `;
+        container.appendChild(card);
+      });
+    }
 
+    function clearFilters() {
+      filterElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el.tagName === 'INPUT') el.value = '';
+        else el.selectedIndex = 0;
+      });
+      displayCards(allRecords);
+    }
+
+    filterElements.forEach(id => {
+      document.getElementById(id).addEventListener('input', applyFilters);
+    });
+
+    function applyFilters() {
+      let filtered = allRecords;
+      const name = document.getElementById('nameSelect').value;
+      const title = document.getElementById('titleSelect').value;
+      const company = document.getElementById('companySelect').value;
+      const source = document.getElementById('sourceSelect').value;
+      const date = document.getElementById('dateSelect').value;
+      const search = document.getElementById('search').value.toLowerCase();
+
+      filtered = filtered.filter(rec => {
+        const f = rec.fields;
+        return (!name || f.Name === name)
+          && (!title || f.Title === title)
+          && (!company || f.Company === company)
+          && (!source || f.Source === source)
+          && (!date || f.Date === date || f.Date?.includes(date))
+          && (!search || Object.values(f).some(val => typeof val === 'string' && val.toLowerCase().includes(search)));
+      });
+
+      displayCards(filtered);
+    }
+
+    fetchData();
+  </script>
 </body>
 </html>
