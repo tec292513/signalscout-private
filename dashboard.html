@@ -8,149 +8,169 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-    
+
     <style>
-      body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #cbd5e1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-      .btn-secondary { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); transition: background-color 0.3s ease; }
-      .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.2); }
-      .signal-card { background-color: #1E293B; border: 1px solid #334155; transition: all 0.2s ease-in-out; }
+      body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #cbd5e1; }
+      .btn-secondary { background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); }
+      .btn-secondary:hover { background-color: rgba(255,255,255,0.2); }
+      .signal-card { background-color: #1E293B; border: 1px solid #334155; }
       .signal-card:hover { border-color: #3b82f6; transform: translateY(-4px); }
       .signal-card blockquote { border-left: 3px solid #3b82f6; padding-left: 1.5rem; color: #d1d5db; font-style: italic; }
-      .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); }
+      .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.5); }
     </style>
   </head>
 
   <body class="bg-gray-900 text-gray-300" data-ms-content="dashboard">
-    
-   <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
-     <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
-     <nav class="flex items-center space-x-6 text-sm">
-      <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
-      <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
-      <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
-      <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
-    </nav>
-   </header>
-
+    <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
+      <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
+      <nav class="flex items-center space-x-6 text-sm">
+        <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
+        <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
+        <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
+        <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
+      </nav>
+    </header>
 
     <main class="container mx-auto px-6 py-12">
       <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
-      <!-- INSERT this section above <div id="signal-feed"> inside <main> -->
-<!-- PARTIAL OUTPUT. Full working dashboard with checkbox filters + search + clear. Only HTML & JavaScript. Backend untouched -->
 
-<!-- Insert inside <main> above #signal-feed -->
-<div class="mb-10">
-  <input id="searchInput" type="text" placeholder="Search signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+      <div class="mb-10">
+        <input id="searchInput" type="text" placeholder="Search signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+        <div class="flex flex-wrap gap-6 text-sm">
+          <div><label class="block mb-2 text-white">Name</label><div id="filter-name" class="space-y-1"></div></div>
+          <div><label class="block mb-2 text-white">Title</label><div id="filter-title" class="space-y-1"></div></div>
+          <div><label class="block mb-2 text-white">Company</label><div id="filter-company" class="space-y-1"></div></div>
+          <div><label class="block mb-2 text-white">Source</label><div id="filter-source" class="space-y-1"></div></div>
+          <div><label class="block mb-2 text-white">Date</label><div id="filter-date" class="space-y-1"></div></div>
+        </div>
+        <button id="clearFilters" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
+      </div>
 
-  <div class="flex flex-wrap gap-6 text-sm">
-    <div><label class="block mb-2 text-white">Name</label><div id="filter-name" class="space-y-1"></div></div>
-    <div><label class="block mb-2 text-white">Title</label><div id="filter-title" class="space-y-1"></div></div>
-    <div><label class="block mb-2 text-white">Company</label><div id="filter-company" class="space-y-1"></div></div>
-    <div><label class="block mb-2 text-white">Source</label><div id="filter-source" class="space-y-1"></div></div>
-    <div><label class="block mb-2 text-white">Date</label><div id="filter-date" class="space-y-1"></div></div>
-  </div>
+      <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
+    </main>
 
-  <button id="clearFilters" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
-</div>
+    <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
+      <div class="space-x-6 mb-4">
+        <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
+        <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
+      </div>
+      <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    </footer>
 
-<script>
-let allSignals = [];
+    <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
-function createFilterOptions(signals) {
-  const getUnique = (key) => [...new Set(signals.map(s => s[key]).filter(Boolean))];
-  const formatDate = (raw) => new Date(raw).toISOString().split("T")[0];
-  const dateSet = [...new Set(signals.map(s => s['Publication Date']).filter(Boolean).map(formatDate))];
+    <script>
+      const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
+      const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
+      const AIRTABLE_TABLE_NAME = 'Signals';
+      const signalFeedContainer = document.querySelector('#signal-feed');
+      let allSignals = [];
 
-  const filters = {
-    name: getUnique("Person"),
-    title: getUnique("Title"),
-    company: getUnique("Company"),
-    source: getUnique("Source Name"),
-    date: dateSet
-  };
+      function createSignalCard(signal) {
+        const person = signal.Person || 'N/A';
+        const title = signal.Title || 'No Title';
+        const company = signal.Company || 'No Company';
+        const quote = signal.Quote || 'No Quote Available';
+        const sourceName = signal['Source Name'] || 'Unknown Source';
+        const sourceUrl = signal['Source URL'] || '#';
+        const sourceType = signal['Source Type'] || '';
+        const publicationDateRaw = signal['Publication Date'];
+        const publicationDate = publicationDateRaw ? new Date(publicationDateRaw).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+        return `<div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6 signal-card-wrapper"><div class="relative flex flex-col min-w-0 h-full break-words rounded-2xl bg-clip-border signal-card p-6"><div class="flex justify-between items-start mb-4"><div class="flex-grow"><p class="mb-0 font-bold text-lg text-white">${person}</p><p class="text-sm text-gray-400">${title} at ${company}</p></div>${sourceType ? `<div class="signal-type-badge flex-shrink-0 ml-4">${sourceType}</div>` : ''}</div><blockquote class="mb-4 text-base leading-relaxed text-gray-300">"${quote}"</blockquote><div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-700"><a href="${sourceUrl}" target="_blank" class="text-sm font-semibold text-blue-400 hover:text-blue-300">View Source &rarr;</a>${publicationDate ? `<span class="text-xs text-gray-500">${publicationDate}</span>` : ''}</div></div></div>`;
+      }
 
-  Object.entries(filters).forEach(([key, values]) => {
-    const container = document.querySelector(`#filter-${key}`);
-    container.innerHTML = values.sort().map(v =>
-      `<label class="flex items-center space-x-2"><input type="checkbox" class="filter-${key}" value="${v}" /><span>${v}</span></label>`
-    ).join('');
-  });
-}
+      function createFilterOptions(signals) {
+        const getUnique = (key) => [...new Set(signals.map(s => s[key]).filter(Boolean))];
+        const formatDate = (raw) => new Date(raw).toISOString().split("T")[0];
+        const dateSet = [...new Set(signals.map(s => s['Publication Date']).filter(Boolean).map(formatDate))];
 
-function matchesFilters(signal, active) {
-  for (const key in active) {
-    if (key === 'date') {
-      const formatted = new Date(signal['Publication Date']).toISOString().split("T")[0];
-      if (!active[key].includes(formatted)) return false;
-    } else {
-      if (!active[key].includes(signal[key])) return false;
-    }
-  }
-  return true;
-}
+        const filters = {
+          name: getUnique("Person"),
+          title: getUnique("Title"),
+          company: getUnique("Company"),
+          source: getUnique("Source Name"),
+          date: dateSet
+        };
 
-function matchesSearch(signal, search) {
-  if (!search) return true;
-  const str = JSON.stringify(signal).toLowerCase();
-  return str.includes(search.toLowerCase());
-}
+        Object.entries(filters).forEach(([key, values]) => {
+          const container = document.querySelector(`#filter-${key}`);
+          container.innerHTML = values.sort().map(v =>
+            `<label class="flex items-center space-x-2"><input type="checkbox" class="filter-${key}" value="${v}" /><span>${v}</span></label>`
+          ).join('');
+        });
+      }
 
-function applyFilters() {
-  const searchVal = document.querySelector("#searchInput").value.trim();
+      function matchesFilters(signal, active) {
+        for (const key in active) {
+          if (key === 'date') {
+            const formatted = new Date(signal['Publication Date']).toISOString().split("T")[0];
+            if (!active[key].includes(formatted)) return false;
+          } else {
+            if (!active[key].includes(signal[key])) return false;
+          }
+        }
+        return true;
+      }
 
-  const active = {};
-  ['name', 'title', 'company', 'source', 'date'].forEach(key => {
-    const checkboxes = [...document.querySelectorAll(`.filter-${key}:checked`)];
-    if (checkboxes.length) active[key] = checkboxes.map(c => c.value);
-  });
+      function matchesSearch(signal, search) {
+        if (!search) return true;
+        const str = JSON.stringify(signal).toLowerCase();
+        return str.includes(search.toLowerCase());
+      }
 
-  const filtered = allSignals.filter(s => matchesFilters(s, active) && matchesSearch(s, searchVal));
-  renderSignals(filtered);
-}
+      function applyFilters() {
+        const searchVal = document.querySelector("#searchInput").value.trim();
+        const active = {};
+        ['name', 'title', 'company', 'source', 'date'].forEach(key => {
+          const checkboxes = [...document.querySelectorAll(`.filter-${key}:checked`)];
+          if (checkboxes.length) active[key] = checkboxes.map(c => c.value);
+        });
 
-function renderSignals(signals) {
-  const container = document.querySelector("#signal-feed");
-  container.innerHTML = signals.map(createSignalCard).join("");
+        const filtered = allSignals.filter(s => matchesFilters(s, active) && matchesSearch(s, searchVal));
+        renderSignals(filtered);
+      }
 
-  new Masonry(container, {
-    itemSelector: '.signal-card-wrapper',
-    percentPosition: true
-  });
-}
+      function renderSignals(signals) {
+        signalFeedContainer.innerHTML = signals.map(createSignalCard).join("");
+        new Masonry(signalFeedContainer, { itemSelector: '.signal-card-wrapper', percentPosition: true });
+      }
 
-document.querySelector("#clearFilters").addEventListener("click", () => {
-  document.querySelectorAll("input[type=checkbox]").forEach(c => c.checked = false);
-  document.querySelector("#searchInput").value = "";
-  applyFilters();
-});
+      document.querySelector("#clearFilters").addEventListener("click", () => {
+        document.querySelectorAll("input[type=checkbox]").forEach(c => c.checked = false);
+        document.querySelector("#searchInput").value = "";
+        applyFilters();
+      });
 
-document.querySelector("#searchInput").addEventListener("input", applyFilters);
-document.addEventListener("change", e => {
-  if (e.target.matches("input[type=checkbox]")) applyFilters();
-});
+      document.querySelector("#searchInput").addEventListener("input", applyFilters);
+      document.addEventListener("change", e => {
+        if (e.target.matches("input[type=checkbox]")) applyFilters();
+      });
 
-// Replace fetchSignals to store and build filters
-async function fetchSignals() {
-  if (!signalFeedContainer) return;
-  signalFeedContainer.innerHTML = '<p class="w-full px-3 text-white">Loading signals...</p>';
+      async function fetchSignals() {
+        const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
 
-  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
+        try {
+          const response = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
+          });
 
-  try {
-    const response = await fetch(url, {
-      headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
-    });
+          const data = await response.json();
+          allSignals = data.records.map(r => r.fields);
+          createFilterOptions(allSignals);
+          applyFilters();
+        } catch (err) {
+          signalFeedContainer.innerHTML = `<div class='p-12 bg-red-900/50 text-center rounded-lg'>Error: ${err.message}</div>`;
+        }
+      }
 
-    const data = await response.json();
-    allSignals = data.records.map(r => r.fields);
-    createFilterOptions(allSignals);
-    applyFilters();
-  } catch (err) {
-    signalFeedContainer.innerHTML = `<div class='p-12 bg-red-900/50 text-center rounded-lg'>Error: ${err.message}</div>`;
-  }
+      if (typeof MemberStack !== 'undefined') {
+        MemberStack.onReady.then(() => fetchSignals()).catch(() => fetchSignals());
+      } else {
+        fetchSignals();
+      }
+    </script>
   </body>
 </html>
