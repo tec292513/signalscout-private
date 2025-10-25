@@ -1,184 +1,168 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>SignalScout AI Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignalScout AI Dashboard</title>
 
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Choices.js -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0B1120;
-        color: #cbd5e1;
-      }
-      .btn-secondary {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: background-color 0.3s ease;
-      }
-      .btn-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-      .signal-card {
-        background-color: #1E293B;
-        border: 1px solid #334155;
-        transition: all 0.2s ease-in-out;
-      }
-      .signal-card:hover {
-        border-color: #3b82f6;
-        transform: translateY(-4px);
-      }
-      .signal-card blockquote {
-        border-left: 3px solid #3b82f6;
-        padding-left: 1.5rem;
-        color: #d1d5db;
-        font-style: italic;
-      }
-    </style>
-  </head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
 
-  <body class="bg-gray-900 text-gray-300">
-    <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
-      <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
-      <nav class="flex items-center space-x-6 text-sm">
-        <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
-        <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
-        <a href="#" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
-        <a href="#" class="text-gray-400 hover:text-white">Log Out</a>
-      </nav>
-    </header>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0B1120;
+      color: #cbd5e1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .ts-dropdown, .ts-control, .ts-control input {
+      background-color: #1E293B !important;
+      color: #FFFFFF !important;
+    }
+    .ts-dropdown .option {
+      background-color: #1E293B;
+      color: #FFFFFF;
+    }
+    .ts-dropdown .option:hover {
+      background-color: #334155;
+    }
+    .ts-control .item {
+      background: #334155;
+      border: none;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-300">
+  <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
+    <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
+    <nav class="flex items-center space-x-6 text-sm">
+      <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
+      <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
+      <a href="#" class="py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white">Account</a>
+      <a href="#" class="text-gray-400 hover:text-white">Log Out</a>
+    </nav>
+  </header>
 
-    <main class="container mx-auto px-6 py-12">
-      <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
+  <main class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
 
-      <input id="searchInput" type="text" placeholder="Search signals..." class="w-full mb-6 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+    <div class="mb-10">
+      <input id="searchInput" type="text" placeholder="Search signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
 
-      <div class="grid md:grid-cols-5 gap-4 text-sm mb-6">
-        <select id="filter-name" multiple></select>
-        <select id="filter-title" multiple></select>
-        <select id="filter-company" multiple></select>
-        <select id="filter-source" multiple></select>
-        <select id="filter-date" multiple></select>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+        <select id="filter-name" placeholder="Name" multiple></select>
+        <select id="filter-title" placeholder="Title" multiple></select>
+        <select id="filter-company" placeholder="Company" multiple></select>
+        <select id="filter-source" placeholder="Source" multiple></select>
+        <select id="filter-date" placeholder="Date" multiple></select>
       </div>
 
-      <button id="clearFilters" class="mb-6 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
+      <button id="clearFilters" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
+    </div>
 
-      <div id="signal-feed" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
-    </main>
+    <div id="signal-feed" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+  </main>
 
-    <script>
-      const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
-      const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
-      const AIRTABLE_TABLE_NAME = 'Signals';
+  <script>
+    const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
+    const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
+    const AIRTABLE_TABLE_NAME = 'Signals';
 
-      let allSignals = [];
-      let filterInstances = {};
+    let allSignals = [];
 
-      const fields = {
-        name: "Person",
-        title: "Title",
-        company: "Company",
-        source: "Source Name",
-        date: "Publication Date"
-      };
+    function createSignalCard(signal) {
+      return `
+        <div class="signal-card-wrapper">
+          <div class="signal-card p-6 rounded-xl shadow">
+            <h3 class="text-lg font-semibold text-white mb-1">${signal.Title || ''}</h3>
+            <p class="text-sm text-gray-400 mb-1">
+              <strong>${signal.Person || ''}</strong> at <strong>${signal.Company || ''}</strong>
+            </p>
+            <p class="text-xs text-gray-500 mb-3">${signal['Source Name'] || ''} – ${signal['Publication Date'] || ''}</p>
+            <blockquote class="text-sm">${signal.Description || ''}</blockquote>
+          </div>
+        </div>
+      `;
+    }
 
-      function initDropdowns(options) {
-        Object.entries(fields).forEach(([id, key]) => {
-          const select = document.getElementById(`filter-${id}`);
-          select.innerHTML = options[id].sort().map(val => {
-            return `<option value="${val}">${val}</option>`;
-          }).join("");
-          filterInstances[id] = new Choices(select, {
-            removeItemButton: true,
-            shouldSort: false
-          });
+    function initSelect(id, options) {
+      const select = document.getElementById(id);
+      select.innerHTML = options.sort().map(v => `<option value="${v}">${v}</option>`).join('');
+      new TomSelect(select, { plugins: ['remove_button'], persist: false });
+    }
+
+    function applyFilters() {
+      const searchVal = document.querySelector("#searchInput").value.trim().toLowerCase();
+      const active = ['name','title','company','source','date'].reduce((acc, key) => {
+        const el = document.querySelector(`#filter-${key}`);
+        acc[key] = [...el.selectedOptions].map(o => o.value);
+        return acc;
+      }, {});
+
+      const filtered = allSignals.filter(s => {
+        const textMatch = JSON.stringify(s).toLowerCase().includes(searchVal);
+        const matches = Object.entries(active).every(([key, vals]) => {
+          if (!vals.length) return true;
+          const field = key === 'name' ? s.Person :
+                        key === 'title' ? s.Title :
+                        key === 'company' ? s.Company :
+                        key === 'source' ? s['Source Name'] :
+                        key === 'date' ? (new Date(s['Publication Date'])).toISOString().split('T')[0] : '';
+          return vals.includes(field);
         });
-      }
-
-      function getActiveFilters() {
-        const active = {};
-        Object.entries(filterInstances).forEach(([key, instance]) => {
-          const selected = instance.getValue(true);
-          if (selected.length > 0) active[key] = selected;
-        });
-        return active;
-      }
-
-      function applyFilters() {
-        const searchVal = document.querySelector("#searchInput").value.trim().toLowerCase();
-        const active = getActiveFilters();
-
-        const filtered = allSignals.filter(signal => {
-          for (const key in active) {
-            let val = signal[fields[key]];
-            if (key === "date") {
-              val = new Date(val).toISOString().split("T")[0];
-            }
-            if (!active[key].includes(val)) return false;
-          }
-          if (searchVal && !JSON.stringify(signal).toLowerCase().includes(searchVal)) return false;
-          return true;
-        });
-
-        renderSignals(filtered);
-      }
-
-      function renderSignals(signals) {
-        const container = document.getElementById("signal-feed");
-        container.innerHTML = signals.map(signal => {
-          return `
-            <div class="signal-card p-5 rounded-lg shadow">
-              <h2 class="text-xl font-semibold mb-2 text-white">${signal.Title || "No Title"}</h2>
-              <p class="text-sm text-gray-400 mb-1"><strong>${signal.Person || "No Name"}</strong> at <strong>${signal.Company || "No Company"}</strong></p>
-              <p class="text-sm text-gray-400 mb-1">${signal["Source Name"] || "No Source"} – ${signal["Publication Date"] || "No Date"}</p>
-              <blockquote class="mt-3">${signal.Quote || "No content available."}</blockquote>
-            </div>`;
-        }).join("");
-      }
-
-      document.getElementById("searchInput").addEventListener("input", applyFilters);
-      document.getElementById("clearFilters").addEventListener("click", () => {
-        Object.values(filterInstances).forEach(instance => instance.clearStore());
-        document.querySelector("#searchInput").value = "";
-        applyFilters();
+        return textMatch && matches;
       });
 
-      async function fetchSignals() {
-        const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort[0][field]=Publication%20Date&sort[0][direction]=desc`;
-        try {
-          const response = await fetch(url, {
-            headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
-          });
-          const data = await response.json();
-          allSignals = data.records.map(r => r.fields);
+      renderSignals(filtered);
+    }
 
-          const options = {
-            name: [...new Set(allSignals.map(s => s.Person).filter(Boolean))],
-            title: [...new Set(allSignals.map(s => s.Title).filter(Boolean))],
-            company: [...new Set(allSignals.map(s => s.Company).filter(Boolean))],
-            source: [...new Set(allSignals.map(s => s["Source Name"]).filter(Boolean))],
-            date: [...new Set(allSignals.map(s => s["Publication Date"]).filter(Boolean).map(d => new Date(d).toISOString().split("T")[0]))]
-          };
+    function renderSignals(signals) {
+      const container = document.querySelector("#signal-feed");
+      container.innerHTML = signals.map(createSignalCard).join("");
+      new Masonry(container, { itemSelector: '.signal-card-wrapper', percentPosition: true });
+    }
 
-          initDropdowns(options);
-          applyFilters();
-        } catch (err) {
-          document.getElementById("signal-feed").innerHTML = `<div class='p-12 bg-red-900/50 text-center rounded-lg'>Error: ${err.message}</div>`;
-        }
+    async function fetchSignals() {
+      const signalFeedContainer = document.querySelector("#signal-feed");
+      signalFeedContainer.innerHTML = '<p class="text-white">Loading signals...</p>';
+
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
+
+      try {
+        const res = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
+        });
+        const data = await res.json();
+        allSignals = data.records.map(r => r.fields);
+
+        initSelect('filter-name', [...new Set(allSignals.map(s => s.Person).filter(Boolean))]);
+        initSelect('filter-title', [...new Set(allSignals.map(s => s.Title).filter(Boolean))]);
+        initSelect('filter-company', [...new Set(allSignals.map(s => s.Company).filter(Boolean))]);
+        initSelect('filter-source', [...new Set(allSignals.map(s => s['Source Name']).filter(Boolean))]);
+        initSelect('filter-date', [...new Set(allSignals.map(s => new Date(s['Publication Date']).toISOString().split("T")[0]).filter(Boolean))]);
+
+        applyFilters();
+      } catch (err) {
+        signalFeedContainer.innerHTML = `<div class='p-12 bg-red-900/50 text-center rounded-lg'>Error: ${err.message}</div>`;
       }
+    }
 
-      fetchSignals();
-    </script>
-  </body>
+    document.querySelector("#searchInput").addEventListener("input", applyFilters);
+    document.querySelector("#clearFilters").addEventListener("click", () => {
+      document.querySelector("#searchInput").value = "";
+      document.querySelectorAll("select").forEach(s => s.tomselect.clear());
+      applyFilters();
+    });
+
+    fetchSignals();
+  </script>
+</body>
 </html>
