@@ -1,168 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SignalScout AI Dashboard</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <title>Signal Feed</title>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0B1120;
-      color: #cbd5e1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      background-color: #0c1120;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 2rem;
     }
-    .ts-dropdown, .ts-control, .ts-control input {
-      background-color: #1E293B !important;
-      color: #FFFFFF !important;
+
+    h1 {
+      font-size: 2.5rem;
     }
-    .ts-dropdown .option {
-      background-color: #1E293B;
-      color: #FFFFFF;
+
+    .search-bar,
+    select,
+    input[type="text"] {
+      background-color: #1c2333;
+      color: #ccc;
+      border: 1px solid #444;
+      padding: 0.6rem;
+      margin: 0.3rem 0.3rem 1rem 0;
+      border-radius: 4px;
+      width: 100%;
     }
-    .ts-dropdown .option:hover {
-      background-color: #334155;
+
+    .search-bar::placeholder,
+    select,
+    input[type="text"]::placeholder {
+      color: #888;
     }
-    .ts-control .item {
-      background: #334155;
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .dropdown {
+      background-color: #1c2333;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .dropdown option {
+      background-color: #1c2333;
+      color: #fff;
+    }
+
+    .filter-label {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      display: block;
+    }
+
+    .clear-btn {
+      background-color: #2e3a55;
+      color: white;
       border: none;
-      color: #FFFFFF;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .card {
+      background: #1a202f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .error {
+      background-color: #5c1d1d;
+      color: #ffdddd;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
     }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-300">
-  <header class="w-full p-6 flex justify-between items-center container mx-auto border-b border-gray-800">
-    <a href="/" class="text-xl font-bold text-white">SignalScout AI</a>
-    <nav class="flex items-center space-x-6 text-sm">
-      <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
-      <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
-      <a href="#" class="py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white">Account</a>
-      <a href="#" class="text-gray-400 hover:text-white">Log Out</a>
-    </nav>
-  </header>
+<body>
 
-  <main class="container mx-auto px-6 py-12">
-    <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
+  <h1>Your Signal Feed</h1>
 
-    <div class="mb-10">
-      <input id="searchInput" type="text" placeholder="Search signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+  <input type="text" class="search-bar" placeholder="Search signals..." id="searchInput">
 
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
-        <select id="filter-name" placeholder="Name" multiple></select>
-        <select id="filter-title" placeholder="Title" multiple></select>
-        <select id="filter-company" placeholder="Company" multiple></select>
-        <select id="filter-source" placeholder="Source" multiple></select>
-        <select id="filter-date" placeholder="Date" multiple></select>
-      </div>
-
-      <button id="clearFilters" class="mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
+  <div class="filters">
+    <div>
+      <label class="filter-label" for="name">Name</label>
+      <input type="text" id="name" placeholder="Name">
     </div>
+    <div>
+      <label class="filter-label" for="title">Title</label>
+      <select id="title" class="dropdown">
+        <option value="">Select title</option>
+        <option>CEO</option>
+        <option>CTO</option>
+        <option>Cloud Architect</option>
+        <!-- Add more -->
+      </select>
+    </div>
+    <div>
+      <label class="filter-label" for="company">Company</label>
+      <select id="company" class="dropdown">
+        <option value="">Select company</option>
+        <option>Canonical</option>
+        <option>GitHub</option>
+        <option>Google</option>
+        <!-- Add more -->
+      </select>
+    </div>
+    <div>
+      <label class="filter-label" for="source">Source</label>
+      <select id="source" class="dropdown">
+        <option value="">Select source</option>
+        <option>Google Cloud Blog</option>
+        <option>DevOps.com</option>
+        <option>The New Stack</option>
+        <!-- Add more -->
+      </select>
+    </div>
+    <div>
+      <label class="filter-label">Date</label>
+      <select id="year" class="dropdown">
+        <option value="">Year</option>
+        <option>2025</option>
+        <option>2024</option>
+      </select>
+      <select id="month" class="dropdown">
+        <option value="">Month</option>
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <!-- up to 12 -->
+        <option value="12">12</option>
+      </select>
+      <select id="day" class="dropdown">
+        <option value="">Day</option>
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <!-- up to 31 -->
+        <option value="31">31</option>
+      </select>
+    </div>
+  </div>
 
-    <div id="signal-feed" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
-  </main>
+  <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
+
+  <div class="card" id="resultCard">
+    <h2>Chief People Officer</h2>
+    <p><strong>Holly Novak</strong> at <strong>Jack Henry</strong></p>
+    <p>Google Cloud Blog – 2025-10-09</p>
+    <p><em>By leveraging Google Cloud Certificates...</em></p>
+  </div>
+
+  <div id="errorBox" class="error" style="display: none;">Error: Invalid time value</div>
 
   <script>
-    const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
-    const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
-    const AIRTABLE_TABLE_NAME = 'Signals';
-
-    let allSignals = [];
-
-    function createSignalCard(signal) {
-      return `
-        <div class="signal-card-wrapper">
-          <div class="signal-card p-6 rounded-xl shadow">
-            <h3 class="text-lg font-semibold text-white mb-1">${signal.Title || ''}</h3>
-            <p class="text-sm text-gray-400 mb-1">
-              <strong>${signal.Person || ''}</strong> at <strong>${signal.Company || ''}</strong>
-            </p>
-            <p class="text-xs text-gray-500 mb-3">${signal['Source Name'] || ''} – ${signal['Publication Date'] || ''}</p>
-            <blockquote class="text-sm">${signal.Description || ''}</blockquote>
-          </div>
-        </div>
-      `;
+    function clearFilters() {
+      document.getElementById("name").value = "";
+      document.getElementById("title").value = "";
+      document.getElementById("company").value = "";
+      document.getElementById("source").value = "";
+      document.getElementById("year").value = "";
+      document.getElementById("month").value = "";
+      document.getElementById("day").value = "";
+      document.getElementById("searchInput").value = "";
+      document.getElementById("errorBox").style.display = "none";
     }
 
-    function initSelect(id, options) {
-      const select = document.getElementById(id);
-      select.innerHTML = options.sort().map(v => `<option value="${v}">${v}</option>`).join('');
-      new TomSelect(select, { plugins: ['remove_button'], persist: false });
-    }
+    function parseDate() {
+      const y = document.getElementById("year").value;
+      const m = document.getElementById("month").value;
+      const d = document.getElementById("day").value;
 
-    function applyFilters() {
-      const searchVal = document.querySelector("#searchInput").value.trim().toLowerCase();
-      const active = ['name','title','company','source','date'].reduce((acc, key) => {
-        const el = document.querySelector(`#filter-${key}`);
-        acc[key] = [...el.selectedOptions].map(o => o.value);
-        return acc;
-      }, {});
+      if (!y || !m || !d) return null;
 
-      const filtered = allSignals.filter(s => {
-        const textMatch = JSON.stringify(s).toLowerCase().includes(searchVal);
-        const matches = Object.entries(active).every(([key, vals]) => {
-          if (!vals.length) return true;
-          const field = key === 'name' ? s.Person :
-                        key === 'title' ? s.Title :
-                        key === 'company' ? s.Company :
-                        key === 'source' ? s['Source Name'] :
-                        key === 'date' ? (new Date(s['Publication Date'])).toISOString().split('T')[0] : '';
-          return vals.includes(field);
-        });
-        return textMatch && matches;
-      });
-
-      renderSignals(filtered);
-    }
-
-    function renderSignals(signals) {
-      const container = document.querySelector("#signal-feed");
-      container.innerHTML = signals.map(createSignalCard).join("");
-      new Masonry(container, { itemSelector: '.signal-card-wrapper', percentPosition: true });
-    }
-
-    async function fetchSignals() {
-      const signalFeedContainer = document.querySelector("#signal-feed");
-      signalFeedContainer.innerHTML = '<p class="text-white">Loading signals...</p>';
-
-      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
-
-      try {
-        const res = await fetch(url, {
-          headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
-        });
-        const data = await res.json();
-        allSignals = data.records.map(r => r.fields);
-
-        initSelect('filter-name', [...new Set(allSignals.map(s => s.Person).filter(Boolean))]);
-        initSelect('filter-title', [...new Set(allSignals.map(s => s.Title).filter(Boolean))]);
-        initSelect('filter-company', [...new Set(allSignals.map(s => s.Company).filter(Boolean))]);
-        initSelect('filter-source', [...new Set(allSignals.map(s => s['Source Name']).filter(Boolean))]);
-        initSelect('filter-date', [...new Set(allSignals.map(s => new Date(s['Publication Date']).toISOString().split("T")[0]).filter(Boolean))]);
-
-        applyFilters();
-      } catch (err) {
-        signalFeedContainer.innerHTML = `<div class='p-12 bg-red-900/50 text-center rounded-lg'>Error: ${err.message}</div>`;
+      const iso = `${y}-${m}-${d}`;
+      const isValid = !isNaN(Date.parse(iso));
+      if (!isValid) {
+        document.getElementById("errorBox").style.display = "block";
+        return null;
       }
+
+      document.getElementById("errorBox").style.display = "none";
+      return iso;
     }
 
-    document.querySelector("#searchInput").addEventListener("input", applyFilters);
-    document.querySelector("#clearFilters").addEventListener("click", () => {
-      document.querySelector("#searchInput").value = "";
-      document.querySelectorAll("select").forEach(s => s.tomselect.clear());
-      applyFilters();
+    // Example usage
+    document.querySelectorAll("select").forEach(sel => {
+      sel.addEventListener("change", parseDate);
     });
-
-    fetchSignals();
   </script>
+
 </body>
 </html>
