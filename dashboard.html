@@ -25,13 +25,19 @@
     /* Enhanced Choices.js styling for dark theme */
     .choices__inner { 
       background-color: #1E293B; 
-      color: #e2e8f0; 
+      color: #64748b; 
       border-color: #475569;
       padding: 0.5rem 0.75rem;
     }
     .choices__inner:focus-within {
       border-color: #3b82f6;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .choices__input {
+      color: #64748b;
+    }
+    .choices__input::placeholder {
+      color: #64748b;
     }
     .choices__list--dropdown, 
     .choices__list[aria-expanded] { 
@@ -49,12 +55,12 @@
       cursor: pointer;
     }
     .choices__item--selectable:hover {
-      background-color: #1e293b;
-      color: #60a5fa;
+      background-color: #3b82f6;
+      color: #ffffff;
     }
     .choices__item--selectable.is-highlighted {
-      background-color: #1e293b;
-      color: #60a5fa;
+      background-color: #3b82f6;
+      color: #ffffff;
     }
     .choices__item.is-selected {
       background-color: rgba(59, 130, 246, 0.3);
@@ -202,7 +208,7 @@
       const sourceType = signal['Source Type'] || '';
       const rawDate = signal['Publication Date'];
       const pubDate = rawDate ? new Date(rawDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-      const signalId = signal.id || Math.random().toString(36).substr(2, 9);
+      const signalId = signal.id;
       const isFavorited = favorites.has(signalId);
 
       return `<div class="w-full md:w-1/2 lg:w-1/3 px-3 mb-6 signal-card-wrapper">
@@ -215,7 +221,7 @@
             <div class="flex items-center gap-2">
               ${sourceType ? `<div class="signal-type-badge">${sourceType}</div>` : ''}
               <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" onclick="toggleFavorite('${signalId}')" title="Add to favorites">
-                <i class="fas ${isFavorited ? 'fa-star' : 'fa-star'}" style="opacity: ${isFavorited ? '1' : '0.4'}"></i>
+                <i class="fas fa-star" style="opacity: ${isFavorited ? '1' : '0.4'}"></i>
               </button>
             </div>
           </div>
@@ -292,7 +298,7 @@
 
       // Apply favorites filter
       if (showFavoritesOnly) {
-        filtered = filtered.filter(d => favorites.has(d.id || Math.random().toString(36).substr(2, 9)));
+        filtered = filtered.filter(d => favorites.has(d.id));
       }
 
       renderCards(filtered);
@@ -330,7 +336,7 @@
       const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?sort[0][field]=Publication%20Date&sort[0][direction]=desc`;
       const res = await fetch(url, { headers: { Authorization: `Bearer ${API_KEY}` } });
       const json = await res.json();
-      const records = json.records.map(r => r.fields);
+      const records = json.records.map(r => ({ ...r.fields, id: r.id }));
       allData = records;
       renderCards(records);
       setupFilters(records);
