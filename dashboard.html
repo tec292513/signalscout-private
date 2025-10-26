@@ -16,15 +16,48 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #cbd5e1; }
-    .signal-card { background-color: #1E293B; border: 1px solid #334155; }
-    .signal-card:hover { border-color: #3b82f6; transform: translateY(-4px); transition: all 0.2s; }
-    .signal-card blockquote { border-left: 3px solid #3b82f6; padding-left: 1.5rem; color: #d1d5db; font-style: italic; }
-    .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); }
-    .choices__inner { background-color: #1E293B; color: white; border-color: #334155; }
-    .choices__list--dropdown, .choices__list[aria-expanded] { background-color: #1E293B; color: white; }
-    .choices__item--selectable { color: white; }
-    .filter-group label { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.25rem; display: block; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0B1120;
+      color: #cbd5e1;
+    }
+    .signal-card {
+      background-color: #1E293B;
+      border: 1px solid #334155;
+    }
+    .signal-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-4px);
+      transition: all 0.2s;
+    }
+    .signal-card blockquote {
+      border-left: 3px solid #3b82f6;
+      padding-left: 1.5rem;
+      color: #d1d5db;
+      font-style: italic;
+    }
+    .signal-type-badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background-color: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.5);
+    }
+    .choices__inner,
+    .choices__list--dropdown,
+    .choices__item,
+    .choices__input {
+      background-color: #1E293B !important;
+      color: white !important;
+    }
+    .filter-group label {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -41,7 +74,6 @@
   <main class="container mx-auto px-6 py-10">
     <h1 class="text-4xl font-bold text-white mb-8">Your Signal Feed</h1>
 
-    <!-- Filters -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6" id="filters"></div>
 
     <div class="mb-6">
@@ -59,7 +91,6 @@
     <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
   </footer>
 
-  <!-- MemberStack script must come before usage -->
   <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
   <script>
@@ -122,7 +153,21 @@
           select.appendChild(opt);
         });
 
-        const choice = new Choices(select, { removeItemButton: true, placeholder: true, placeholderValue: `Select ${field}` });
+        const choice = new Choices(select, {
+          removeItemButton: true,
+          placeholder: true,
+          placeholderValue: `Select ${field}`,
+          searchEnabled: true,
+          searchPlaceholderValue: 'Search...',
+          classNames: {
+            containerOuter: 'choices bg-[#1E293B] text-white',
+            input: 'text-white bg-[#1E293B]',
+            listDropdown: 'bg-[#1E293B] text-white',
+            item: 'text-white bg-[#1E293B]',
+            selectedState: 'bg-blue-600'
+          }
+        });
+
         choicesInstances[field] = choice;
         select.addEventListener('change', applyFilters);
       });
@@ -155,10 +200,7 @@
     }
 
     if (window.MemberStack && MemberStack.onReady) {
-      MemberStack.onReady.then(member => {
-        console.log("MemberStack ready");
-        fetchSignals();
-      });
+      MemberStack.onReady.then(fetchSignals);
     } else {
       console.warn("MemberStack not available, loading anyway");
       fetchSignals();
