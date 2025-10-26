@@ -175,6 +175,13 @@
     </div>
 
     <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="mt-12 flex justify-center items-center gap-4 pb-10">
+      <button onclick="previousPage()" id="prev-btn" class="text-sm text-blue-400 border border-blue-400 px-4 py-2 rounded hover:bg-blue-400 hover:text-white">← Previous</button>
+      <span id="page-info" class="text-gray-400 text-sm">Page 1 of 1</span>
+      <button onclick="nextPage()" id="next-btn" class="text-sm text-blue-400 border border-blue-400 px-4 py-2 rounded hover:bg-blue-400 hover:text-white">Next →</button>
+    </div>
   </main>
 
   <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
@@ -243,6 +250,49 @@
       new Masonry(container, { itemSelector: '.signal-card-wrapper', percentPosition: true });
     }
 
+    const CARDS_PER_PAGE = 36;
+    let currentPage = 1;
+    let filteredData = [];
+
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredData.length / CARDS_PER_PAGE);
+      const startIdx = (currentPage - 1) * CARDS_PER_PAGE;
+      const endIdx = startIdx + CARDS_PER_PAGE;
+      const pageData = filteredData.slice(startIdx, endIdx);
+      
+      renderCards(pageData);
+      
+      const pageInfo = document.getElementById('page-info');
+      pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
+      
+      document.getElementById('prev-btn').disabled = currentPage === 1;
+      document.getElementById('next-btn').disabled = currentPage === totalPages;
+      document.getElementById('prev-btn').style.opacity = currentPage === 1 ? '0.5' : '1';
+      document.getElementById('next-btn').style.opacity = currentPage === totalPages ? '0.5' : '1';
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(filteredData.length / CARDS_PER_PAGE);
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function renderCards(data) {
+      container.innerHTML = data.map(createSignalCard).join('');
+      new Masonry(container, { itemSelector: '.signal-card-wrapper', percentPosition: true });
+    }
+
     function setupFilters(data) {
       filtersDiv.innerHTML = '';
       fieldsToFilter.forEach(field => {
@@ -302,7 +352,9 @@
         filtered = filtered.filter(d => favorites.has(d.id));
       }
 
-      renderCards(filtered);
+      filteredData = filtered;
+      currentPage = 1;
+      updatePagination();
     }
 
     function toggleFavorite(signalId) {
