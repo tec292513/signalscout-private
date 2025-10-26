@@ -137,6 +137,36 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
     
+    .date-input {
+      background-color: #1E293B;
+      border: 1px solid #475569;
+      color: #e2e8f0;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      width: 100%;
+    }
+    .date-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .date-range-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .date-range-group input {
+      flex: 1;
+    }
+    
+    .date-range-separator {
+      color: #64748b;
+      font-weight: 500;
+      min-width: max-content;
+    }
+    
     .favorite-btn {
       background: none;
       border: none;
@@ -182,10 +212,20 @@
     <!-- Filters -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6" id="filters"></div>
 
+    <!-- Date Range Filter -->
+    <div class="mb-6 filter-group">
+      <label>Publication Date Range</label>
+      <div class="date-range-group">
+        <input type="date" id="date-from" class="date-input" />
+        <span class="date-range-separator">to</span>
+        <input type="date" id="date-to" class="date-input" />
+      </div>
+    </div>
+
     <div class="mb-6 flex gap-3 items-center flex-wrap">
       <button onclick="clearFilters()" class="text-sm text-blue-400 border border-blue-400 px-4 py-2 rounded hover:bg-blue-400 hover:text-white">Clear Filters</button>
       <button id="favorites-only-btn" onclick="toggleFavoritesOnly()" class="text-sm text-amber-400 border border-amber-400 px-4 py-2 rounded hover:bg-amber-400 hover:text-white">Show Favorites Only</button>
-      <span class="text-sm text-gray-400"><span id="total-results">0</span> results found</span>
+      <span class="text-sm text-gray-400">Showing <span id="showing-results">0</span> of <span id="total-results">0</span> results</span>
     </div>
 
     <div id="signal-feed" class="flex flex-wrap -mx-3"></div>
@@ -226,6 +266,8 @@
     const CARDS_PER_PAGE = 36;
     let currentPage = 1;
     let filteredData = [];
+    let dateFromInput = document.getElementById('date-from');
+    let dateToInput = document.getElementById('date-to');
 
     function createSignalCard(signal) {
       const person = signal.Person || 'N/A';
@@ -287,6 +329,10 @@
       
       // Update results counter
       document.getElementById('total-results').textContent = totalResults;
+      
+      // Update showing results (current page showing count)
+      const showingCount = Math.min(CARDS_PER_PAGE, totalResults - startIdx);
+      document.getElementById('showing-results').textContent = showingCount;
       
       // Render cards for current page only
       renderCards(pageData);
@@ -381,6 +427,29 @@
         filtered = filtered.filter(d => favorites.has(d.id));
       }
 
+      // Apply date range filter
+      const dateFrom = dateFromInput.value ? new Date(dateFromInput.value) : null;
+      const dateTo = dateToInput.value ? new Date(dateToInput.value) : null;
+      
+      if (dateFrom || dateTo) {
+        filtered = filtered.filter(d => {
+          const pubDate = d['Publication Date'] ? new Date(d['Publication Date']) : null;
+          if (!pubDate) return false;
+          
+          let isInRange = true;
+          if (dateFrom) {
+            isInRange = isInRange && pubDate >= dateFrom;
+          }
+          if (dateTo) {
+            // Add 1 day to include the entire "to" date
+            const dateToWithEnd = new Date(dateTo);
+            dateToWithEnd.setDate(dateToWithEnd.getDate() + 1);
+            isInRange = isInRange && pubDate < dateToWithEnd;
+          }
+          return isInRange;
+        });
+      }
+
       filteredData = filtered;
       currentPage = 1;
       updatePagination();
@@ -411,6 +480,8 @@
     function clearFilters() {
       Object.values(choicesInstances).forEach(c => c.clearStore());
       searchInput.value = '';
+      dateFromInput.value = '';
+      dateToInput.value = '';
       showFavoritesOnly = false;
       document.getElementById('favorites-only-btn').classList.remove('bg-amber-400', 'text-gray-900');
       document.getElementById('favorites-only-btn').classList.add('text-amber-400', 'border-amber-400');
@@ -432,8 +503,10 @@
       }
     }
 
-    // Event listener for search input
+    // Event listeners for filters
     searchInput.addEventListener('input', applyFilters);
+    dateFromInput.addEventListener('change', applyFilters);
+    dateToInput.addEventListener('change', applyFilters);
 
     if (window.MemberStack && MemberStack.onReady) {
       MemberStack.onReady.then(member => {
