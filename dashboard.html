@@ -154,7 +154,15 @@
       setupFilters(records);
     }
 
-    MemberStack.onReady.then(fetchSignals);
+    if (window.MemberStack && MemberStack.onReady) {
+  MemberStack.onReady.then(member => {
+    console.log("MemberStack ready");
+    fetchSignals();
+  });
+} else {
+  console.warn("MemberStack not available, loading anyway");
+  fetchSignals();
+}
   </script>
 </body>
 </html>
