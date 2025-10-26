@@ -2,221 +2,187 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Signal Feed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signal Feed Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #0f121a;
-      color: #fff;
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      padding: 2rem;
-    }
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    select, input[type="text"] {
-      background-color: #1d232f;
-      color: #fff;
-      border: 1px solid #444;
-      border-radius: 4px;
-      padding: 0.5rem;
-      width: 180px;
-    }
-    select[multiple] {
-      height: 120px;
-    }
-    .filter-label {
-      display: flex;
-      flex-direction: column;
-    }
-    .card {
-      background-color: #1d232f;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .card h2 {
-      margin: 0;
-      font-size: 1.25rem;
-    }
-    .card p {
-      margin: 0.5rem 0;
-    }
-    .clear-btn {
-      background-color: #2e3b55;
-      border: none;
-      color: #fff;
-      padding: 0.6rem 1.2rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .dropdown-hierarchy {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    body { background-color: #0B1120; color: #cbd5e1; }
+    .dropdown-panel { background-color: #1E293B; border: 1px solid #334155; padding: 0.5rem; border-radius: 0.375rem; }
+    .dropdown-panel label { display: block; margin-bottom: 0.25rem; }
+    .dropdown-panel input[type="checkbox"] { margin-right: 0.5rem; }
+    .dropdown-container:hover .dropdown-panel { display: block; }
+    .dropdown-panel { display: none; position: absolute; z-index: 10; max-height: 300px; overflow-y: auto; }
+    .signal-card blockquote { border-left: 3px solid #3b82f6; padding-left: 1.5rem; font-style: italic; }
+    .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Your Signal Feed</h1>
-    <div class="filters">
-      <div class="filter-label">
-        <label for="name">Name</label>
-        <select id="name" multiple></select>
+  <div class="p-6">
+    <h1 class="text-3xl font-bold mb-6 text-white">Signal Feed</h1>
+    <input id="searchInput" type="text" placeholder="Search Signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+
+    <div class="flex flex-wrap gap-4 mb-6 relative">
+      <div class="dropdown-container relative">
+        <button class="px-4 py-2 rounded bg-gray-700">Name</button>
+        <div class="dropdown-panel" id="filter-name"></div>
       </div>
-      <div class="filter-label">
-        <label for="title">Title</label>
-        <select id="title" multiple></select>
+      <div class="dropdown-container relative">
+        <button class="px-4 py-2 rounded bg-gray-700">Title</button>
+        <div class="dropdown-panel" id="filter-title"></div>
       </div>
-      <div class="filter-label">
-        <label for="company">Company</label>
-        <select id="company" multiple></select>
+      <div class="dropdown-container relative">
+        <button class="px-4 py-2 rounded bg-gray-700">Company</button>
+        <div class="dropdown-panel" id="filter-company"></div>
       </div>
-      <div class="filter-label">
-        <label for="source">Source</label>
-        <select id="source" multiple></select>
+      <div class="dropdown-container relative">
+        <button class="px-4 py-2 rounded bg-gray-700">Source</button>
+        <div class="dropdown-panel" id="filter-source"></div>
       </div>
-      <div class="filter-label">
-        <label for="dateYear">Date</label>
-        <div class="dropdown-hierarchy">
-          <select id="dateYear"></select>
-          <select id="dateMonth"></select>
-          <select id="dateDay"></select>
-        </div>
+      <div class="dropdown-container relative">
+        <button class="px-4 py-2 rounded bg-gray-700">Date</button>
+        <div class="dropdown-panel" id="filter-date"></div>
       </div>
     </div>
-    <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
+    <button id="clearFilters" class="mb-6 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
 
-    <div id="cardContainer"></div>
+    <div id="signal-feed" class="grid gap-4"></div>
   </div>
 
   <script>
-    const data = [
-      {
-        title: "Sr Director of Cloud Engineering",
-        name: "Jane Doe",
-        company: "Sprinklr",
-        source: "TechCrunch",
-        date: "2025-09-19",
-        description: "Led cloud infrastructure modernization."
-      },
-      {
-        title: "Senior Product Manager",
-        name: "John Smith",
-        company: "AWS",
-        source: "AWS Blog",
-        date: "2025-10-04",
-        description: "Managed launch of new EC2 features."
-      },
-      {
-        title: "Chief People Officer",
-        name: "Holly Novak",
-        company: "Jack Henry",
-        source: "Google Cloud Blog",
-        date: "2025-10-09",
-        description: "By leveraging Google Cloud Certificates..."
-      }
-    ];
+    const API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
+    const BASE_ID = 'appLmGqJQ0olQo4es';
+    const TABLE = 'Signals';
 
-    const nameSelect = document.getElementById("name");
-    const titleSelect = document.getElementById("title");
-    const companySelect = document.getElementById("company");
-    const sourceSelect = document.getElementById("source");
-    const yearSelect = document.getElementById("dateYear");
-    const monthSelect = document.getElementById("dateMonth");
-    const daySelect = document.getElementById("dateDay");
-    const cardContainer = document.getElementById("cardContainer");
+    let allSignals = [];
 
-    const uniqueValues = (key) => [...new Set(data.map(d => d[key]))].sort();
-
-    const populateSelect = (select, values, placeholder) => {
-      select.innerHTML = "";
-      if (!select.multiple) {
-        const opt = document.createElement("option");
-        opt.value = "";
-        opt.textContent = placeholder;
-        select.appendChild(opt);
-      }
-      values.forEach(val => {
-        const opt = document.createElement("option");
-        opt.value = val;
-        opt.textContent = val;
-        select.appendChild(opt);
-      });
+    const filters = ['name', 'title', 'company', 'source', 'date'];
+    const mappings = {
+      name: 'Person',
+      title: 'Title',
+      company: 'Company',
+      source: 'Source Name',
+      date: 'Publication Date'
     };
 
-    function populateFilters() {
-      populateSelect(nameSelect, uniqueValues("name"), "Select name");
-      populateSelect(titleSelect, uniqueValues("title"), "Select title");
-      populateSelect(companySelect, uniqueValues("company"), "Select company");
-      populateSelect(sourceSelect, uniqueValues("source"), "Select source");
+    const searchInput = document.getElementById('searchInput');
+    const signalFeed = document.getElementById('signal-feed');
 
-      const years = [...new Set(data.map(d => d.date.split("-")[0]))].sort();
-      populateSelect(yearSelect, years, "Year");
-      populateSelect(monthSelect, ["01","02","03","04","05","06","07","08","09","10","11","12"], "Month");
-      populateSelect(daySelect, Array.from({length:31},(_,i)=>(i+1).toString().padStart(2,"0")), "Day");
+    const getUnique = (arr) => [...new Set(arr)].filter(Boolean);
+
+    function buildDateHierarchy(dates) {
+      const tree = {};
+      dates.forEach(dateStr => {
+        const [y, m, d] = dateStr.split('-');
+        tree[y] = tree[y] || {};
+        tree[y][m] = tree[y][m] || new Set();
+        tree[y][m].add(d);
+      });
+      return tree;
     }
 
-    function getSelected(select) {
-      return Array.from(select.selectedOptions).map(o => o.value);
-    }
-
-    function filterData() {
-      const names = getSelected(nameSelect);
-      const titles = getSelected(titleSelect);
-      const companies = getSelected(companySelect);
-      const sources = getSelected(sourceSelect);
-      const y = yearSelect.value;
-      const m = monthSelect.value;
-      const d = daySelect.value;
-      const dateFilter = `${y}-${m}-${d}`;
-
-      return data.filter(d => {
-        const match = (list, value) => list.length === 0 || list.includes(value);
-        let matchDate = true;
-        if (y && m && d) matchDate = d.date === dateFilter;
-        else if (y && m) matchDate = d.date.startsWith(`${y}-${m}`);
-        else if (y) matchDate = d.date.startsWith(`${y}-`);
-        return match(names, d.name) && match(titles, d.title) && match(companies, d.company) && match(sources, d.source) && matchDate;
+    function renderDateDropdown(container, tree) {
+      container.innerHTML = '';
+      Object.keys(tree).sort().forEach(year => {
+        const yearDiv = document.createElement('div');
+        yearDiv.innerHTML = `<label><input type='checkbox' data-date='${year}'> <strong>${year}</strong></label>`;
+        Object.keys(tree[year]).sort().forEach(month => {
+          const monthDiv = document.createElement('div');
+          monthDiv.style.marginLeft = '1rem';
+          monthDiv.innerHTML = `<label><input type='checkbox' data-date='${year}-${month}'> ${month}</label>`;
+          tree[year][month].forEach(day => {
+            const dayDiv = document.createElement('div');
+            dayDiv.style.marginLeft = '2rem';
+            dayDiv.innerHTML = `<label><input type='checkbox' data-date='${year}-${month}-${day}'> ${day}</label>`;
+            monthDiv.appendChild(dayDiv);
+          });
+          yearDiv.appendChild(monthDiv);
+        });
+        container.appendChild(yearDiv);
       });
     }
 
-    function renderCards() {
-      const filtered = filterData();
-      cardContainer.innerHTML = "";
-      filtered.forEach(d => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <h2>${d.title}</h2>
-          <p><strong>${d.name}</strong> at <strong>${d.company}</strong></p>
-          <p>${d.source} &mdash; ${d.date}</p>
-          <p><em>${d.description}</em></p>
-        `;
-        cardContainer.appendChild(card);
+    function buildFilters(signals) {
+      filters.forEach(key => {
+        const container = document.getElementById(`filter-${key}`);
+        if (key === 'date') {
+          const formatted = signals.map(s => new Date(s[mappings[key]]).toISOString().split('T')[0]);
+          const tree = buildDateHierarchy(formatted);
+          renderDateDropdown(container, tree);
+        } else {
+          const values = getUnique(signals.map(s => s[mappings[key]])).sort();
+          container.innerHTML = values.map(v => `<label><input type='checkbox' value="${v}" class='filter-${key}' /> ${v}</label>`).join('');
+        }
       });
     }
 
-    function clearFilters() {
-      [nameSelect, titleSelect, companySelect, sourceSelect].forEach(s => s.selectedIndex = -1);
-      yearSelect.value = "";
-      monthSelect.value = "";
-      daySelect.value = "";
-      renderCards();
+    function matchFilter(signal, active) {
+      for (const key in active) {
+        if (key === 'date') {
+          const pub = new Date(signal[mappings.date]).toISOString().split('T')[0];
+          if (!active.date.some(sel => pub.startsWith(sel))) return false;
+        } else {
+          if (!active[key].includes(signal[mappings[key]])) return false;
+        }
+      }
+      return true;
     }
 
-    [nameSelect, titleSelect, companySelect, sourceSelect, yearSelect, monthSelect, daySelect]
-      .forEach(el => el.addEventListener("change", renderCards));
+    function matchSearch(signal, keyword) {
+      return !keyword || JSON.stringify(signal).toLowerCase().includes(keyword.toLowerCase());
+    }
 
-    populateFilters();
-    renderCards();
+    function renderSignals(signals) {
+      signalFeed.innerHTML = signals.map(s => `
+        <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+          <div class="mb-2 flex flex-wrap items-center gap-2">
+            <span class="text-blue-400 font-semibold">${s['Title'] || ''}</span>
+            <span class="text-sm text-gray-400">${s['Company'] || ''}</span>
+            <span class="text-sm bg-blue-900/40 border border-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">${s['Source Name'] || ''}</span>
+          </div>
+          <blockquote class="text-sm text-gray-300">${s['Summary'] || ''}</blockquote>
+          <div class="text-xs text-gray-400 mt-2">Published: ${s['Publication Date'] || ''}</div>
+        </div>`).join('');
+    }
+
+    function getFilters() {
+      const active = {};
+      filters.forEach(k => {
+        const checked = [...document.querySelectorAll(`#filter-${k} input[type=checkbox]:checked`)];
+        if (checked.length) {
+          active[k] = checked.map(cb => cb.value || cb.dataset.date);
+        }
+      });
+      return active;
+    }
+
+    function applyFilters() {
+      const active = getFilters();
+      const keyword = searchInput.value.trim();
+      const filtered = allSignals.filter(s => matchFilter(s, active) && matchSearch(s, keyword));
+      renderSignals(filtered);
+    }
+
+    document.addEventListener('change', applyFilters);
+    document.getElementById('clearFilters').onclick = () => {
+      document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      searchInput.value = '';
+      applyFilters();
+    };
+
+    searchInput.addEventListener('input', applyFilters);
+
+    async function fetchSignals() {
+      const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${API_KEY}` }
+      });
+      const json = await res.json();
+      allSignals = json.records.map(r => r.fields);
+      buildFilters(allSignals);
+      applyFilters();
+    }
+
+    fetchSignals();
   </script>
 </body>
 </html>
