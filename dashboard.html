@@ -1,186 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Signal Feed Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <style>
-    body { background-color: #0B1120; color: #cbd5e1; }
-    .dropdown-panel { background-color: #1E293B; border: 1px solid #334155; padding: 0.5rem; border-radius: 0.375rem; }
-    .dropdown-panel label { display: block; margin-bottom: 0.25rem; }
-    .dropdown-panel input[type="checkbox"] { margin-right: 0.5rem; }
-    .dropdown-container:hover .dropdown-panel { display: block; }
-    .dropdown-panel { display: none; position: absolute; z-index: 10; max-height: 300px; overflow-y: auto; }
-    .signal-card blockquote { border-left: 3px solid #3b82f6; padding-left: 1.5rem; font-style: italic; }
-    .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); }
+    body {
+      background-color: #0B1120;
+      color: #cbd5e1;
+      font-family: 'Inter', sans-serif;
+    }
+    .signal-card {
+      background-color: #1E293B;
+      border: 1px solid #334155;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      transition: 0.2s;
+    }
+    .signal-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-4px);
+    }
+    .signal-card blockquote {
+      border-left: 4px solid #3b82f6;
+      padding-left: 1rem;
+      color: #d1d5db;
+      font-style: italic;
+    }
+    .dropdown {
+      background-color: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .dropdown label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .filter-header {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .dropdown-toggle {
+      background-color: #1E293B;
+      color: #94a3b8;
+      padding: 0.5rem;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      width: 200px;
+      text-align: left;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      z-index: 10;
+      margin-top: 0.25rem;
+    }
+    .dropdown-wrapper {
+      position: relative;
+    }
+    .dropdown-wrapper.open .dropdown-menu {
+      display: block;
+    }
   </style>
 </head>
-<body>
-  <div class="p-6">
-    <h1 class="text-3xl font-bold mb-6 text-white">Signal Feed</h1>
-    <input id="searchInput" type="text" placeholder="Search Signals..." class="w-full mb-4 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+<body class="px-6 py-10">
 
-    <div class="flex flex-wrap gap-4 mb-6 relative">
-      <div class="dropdown-container relative">
-        <button class="px-4 py-2 rounded bg-gray-700">Name</button>
-        <div class="dropdown-panel" id="filter-name"></div>
-      </div>
-      <div class="dropdown-container relative">
-        <button class="px-4 py-2 rounded bg-gray-700">Title</button>
-        <div class="dropdown-panel" id="filter-title"></div>
-      </div>
-      <div class="dropdown-container relative">
-        <button class="px-4 py-2 rounded bg-gray-700">Company</button>
-        <div class="dropdown-panel" id="filter-company"></div>
-      </div>
-      <div class="dropdown-container relative">
-        <button class="px-4 py-2 rounded bg-gray-700">Source</button>
-        <div class="dropdown-panel" id="filter-source"></div>
-      </div>
-      <div class="dropdown-container relative">
-        <button class="px-4 py-2 rounded bg-gray-700">Date</button>
-        <div class="dropdown-panel" id="filter-date"></div>
-      </div>
+  <input id="searchInput" type="text" placeholder="Search Signals..." class="w-full mb-6 px-4 py-2 rounded-md bg-gray-800 text-white border border-gray-700" />
+
+  <div class="flex flex-wrap gap-4 mb-6">
+    <div class="dropdown-wrapper" data-key="name">
+      <div class="dropdown-toggle">Name</div>
+      <div class="dropdown-menu dropdown" id="filter-name"></div>
     </div>
-    <button id="clearFilters" class="mb-6 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm">Clear Filters</button>
-
-    <div id="signal-feed" class="grid gap-4"></div>
+    <div class="dropdown-wrapper" data-key="title">
+      <div class="dropdown-toggle">Title</div>
+      <div class="dropdown-menu dropdown" id="filter-title"></div>
+    </div>
+    <div class="dropdown-wrapper" data-key="company">
+      <div class="dropdown-toggle">Company</div>
+      <div class="dropdown-menu dropdown" id="filter-company"></div>
+    </div>
+    <div class="dropdown-wrapper" data-key="source">
+      <div class="dropdown-toggle">Source</div>
+      <div class="dropdown-menu dropdown" id="filter-source"></div>
+    </div>
+    <div class="dropdown-wrapper" data-key="date">
+      <div class="dropdown-toggle">Date</div>
+      <div class="dropdown-menu dropdown" id="filter-date"></div>
+    </div>
   </div>
 
+  <button id="clearFilters" class="mb-10 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600">Clear Filters</button>
+
+  <div id="signal-feed" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
   <script>
-    const API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
-    const BASE_ID = 'appLmGqJQ0olQo4es';
-    const TABLE = 'Signals';
+    const AIRTABLE_API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
+    const AIRTABLE_BASE_ID = 'appLmGqJQ0olQo4es';
+    const AIRTABLE_TABLE_NAME = 'Signals';
 
     let allSignals = [];
 
-    const filters = ['name', 'title', 'company', 'source', 'date'];
-    const mappings = {
-      name: 'Person',
-      title: 'Title',
-      company: 'Company',
-      source: 'Source Name',
-      date: 'Publication Date'
-    };
-
-    const searchInput = document.getElementById('searchInput');
-    const signalFeed = document.getElementById('signal-feed');
-
-    const getUnique = (arr) => [...new Set(arr)].filter(Boolean);
-
-    function buildDateHierarchy(dates) {
-      const tree = {};
-      dates.forEach(dateStr => {
-        const [y, m, d] = dateStr.split('-');
-        tree[y] = tree[y] || {};
-        tree[y][m] = tree[y][m] || new Set();
-        tree[y][m].add(d);
-      });
-      return tree;
+    function formatDate(d) {
+      return new Date(d).toISOString().split("T")[0];
     }
 
-    function renderDateDropdown(container, tree) {
-      container.innerHTML = '';
-      Object.keys(tree).sort().forEach(year => {
-        const yearDiv = document.createElement('div');
-        yearDiv.innerHTML = `<label><input type='checkbox' data-date='${year}'> <strong>${year}</strong></label>`;
-        Object.keys(tree[year]).sort().forEach(month => {
-          const monthDiv = document.createElement('div');
-          monthDiv.style.marginLeft = '1rem';
-          monthDiv.innerHTML = `<label><input type='checkbox' data-date='${year}-${month}'> ${month}</label>`;
-          tree[year][month].forEach(day => {
-            const dayDiv = document.createElement('div');
-            dayDiv.style.marginLeft = '2rem';
-            dayDiv.innerHTML = `<label><input type='checkbox' data-date='${year}-${month}-${day}'> ${day}</label>`;
-            monthDiv.appendChild(dayDiv);
+    function groupDates(dates) {
+      const map = {};
+      dates.forEach(date => {
+        const [y, m, d] = date.split("-");
+        if (!map[y]) map[y] = {};
+        if (!map[y][m]) map[y][m] = [];
+        map[y][m].push(d);
+      });
+      return map;
+    }
+
+    function renderDateFilter(dates) {
+      const grouped = groupDates(dates);
+      const container = document.getElementById("filter-date");
+      container.innerHTML = "";
+      Object.keys(grouped).sort().forEach(y => {
+        const yDiv = document.createElement("div");
+        yDiv.classList.add("mb-1");
+        const yLabel = document.createElement("div");
+        yLabel.textContent = y;
+        yLabel.classList.add("filter-header");
+        yDiv.appendChild(yLabel);
+        Object.keys(grouped[y]).sort().forEach(m => {
+          const mDiv = document.createElement("div");
+          mDiv.style.marginLeft = "1rem";
+          const mLabel = document.createElement("div");
+          mLabel.textContent = m;
+          mLabel.classList.add("filter-header");
+          mDiv.appendChild(mLabel);
+          grouped[y][m].sort().forEach(d => {
+            const full = `${y}-${m}-${d}`;
+            const lbl = document.createElement("label");
+            lbl.innerHTML = `<input type="checkbox" class="filter-date" value="${full}"> ${d}`;
+            mDiv.appendChild(lbl);
           });
-          yearDiv.appendChild(monthDiv);
+          yDiv.appendChild(mDiv);
         });
-        container.appendChild(yearDiv);
+        container.appendChild(yDiv);
       });
     }
 
-    function buildFilters(signals) {
-      filters.forEach(key => {
-        const container = document.getElementById(`filter-${key}`);
-        if (key === 'date') {
-          const formatted = signals.map(s => new Date(s[mappings[key]]).toISOString().split('T')[0]);
-          const tree = buildDateHierarchy(formatted);
-          renderDateDropdown(container, tree);
-        } else {
-          const values = getUnique(signals.map(s => s[mappings[key]])).sort();
-          container.innerHTML = values.map(v => `<label><input type='checkbox' value="${v}" class='filter-${key}' /> ${v}</label>`).join('');
-        }
-      });
+    function renderFilterOptions(key, values) {
+      const container = document.getElementById(`filter-${key}`);
+      container.innerHTML = values.sort().map(v =>
+        `<label><input type="checkbox" class="filter-${key}" value="${v}"> ${v}</label>`
+      ).join('');
     }
 
-    function matchFilter(signal, active) {
+    function matchesFilters(signal, active) {
       for (const key in active) {
         if (key === 'date') {
-          const pub = new Date(signal[mappings.date]).toISOString().split('T')[0];
-          if (!active.date.some(sel => pub.startsWith(sel))) return false;
+          const formatted = formatDate(signal['Publication Date']);
+          if (!active[key].includes(formatted)) return false;
         } else {
-          if (!active[key].includes(signal[mappings[key]])) return false;
+          if (!active[key].includes(signal[key])) return false;
         }
       }
       return true;
     }
 
-    function matchSearch(signal, keyword) {
-      return !keyword || JSON.stringify(signal).toLowerCase().includes(keyword.toLowerCase());
-    }
-
-    function renderSignals(signals) {
-      signalFeed.innerHTML = signals.map(s => `
-        <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
-          <div class="mb-2 flex flex-wrap items-center gap-2">
-            <span class="text-blue-400 font-semibold">${s['Title'] || ''}</span>
-            <span class="text-sm text-gray-400">${s['Company'] || ''}</span>
-            <span class="text-sm bg-blue-900/40 border border-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full">${s['Source Name'] || ''}</span>
-          </div>
-          <blockquote class="text-sm text-gray-300">${s['Summary'] || ''}</blockquote>
-          <div class="text-xs text-gray-400 mt-2">Published: ${s['Publication Date'] || ''}</div>
-        </div>`).join('');
-    }
-
-    function getFilters() {
-      const active = {};
-      filters.forEach(k => {
-        const checked = [...document.querySelectorAll(`#filter-${k} input[type=checkbox]:checked`)];
-        if (checked.length) {
-          active[k] = checked.map(cb => cb.value || cb.dataset.date);
-        }
-      });
-      return active;
+    function matchesSearch(signal, search) {
+      if (!search) return true;
+      const str = JSON.stringify(signal).toLowerCase();
+      return str.includes(search.toLowerCase());
     }
 
     function applyFilters() {
-      const active = getFilters();
-      const keyword = searchInput.value.trim();
-      const filtered = allSignals.filter(s => matchFilter(s, active) && matchSearch(s, keyword));
+      const searchVal = document.querySelector("#searchInput").value.trim();
+      const active = {};
+      ['name', 'title', 'company', 'source', 'date'].forEach(key => {
+        const checked = [...document.querySelectorAll(`.filter-${key}:checked`)];
+        if (checked.length) active[key] = checked.map(i => i.value);
+      });
+      const filtered = allSignals.filter(s => matchesFilters(s, active) && matchesSearch(s, searchVal));
       renderSignals(filtered);
     }
 
-    document.addEventListener('change', applyFilters);
-    document.getElementById('clearFilters').onclick = () => {
-      document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-      searchInput.value = '';
-      applyFilters();
-    };
+    function createSignalCard(data) {
+      const date = formatDate(data["Publication Date"]);
+      return `
+        <div class="signal-card">
+          <h2 class="text-xl font-bold mb-2">${data.Title || "No Title"}</h2>
+          <p class="text-sm mb-1"><strong>${data.Person || "Unknown"}</strong> at <strong>${data.Company || "Unknown"}</strong></p>
+          <p class="text-xs mb-2 text-blue-300">${data["Source Name"] || ""} — ${date}</p>
+          <blockquote class="text-sm">${data.Description || ""}</blockquote>
+        </div>
+      `;
+    }
 
-    searchInput.addEventListener('input', applyFilters);
+    function renderSignals(data) {
+      const container = document.getElementById("signal-feed");
+      container.innerHTML = data.map(d => `<div>${createSignalCard(d)}</div>`).join('');
+      new Masonry(container, { itemSelector: 'div', percentPosition: true });
+    }
 
     async function fetchSignals() {
-      const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}?sort%5B0%5D%5Bfield%5D=Publication%20Date&sort%5B0%5D%5Bdirection%5D=desc`;
       const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_KEY}` }
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
       });
       const json = await res.json();
       allSignals = json.records.map(r => r.fields);
-      buildFilters(allSignals);
-      applyFilters();
+
+      const getUniques = key => [...new Set(allSignals.map(s => s[key]).filter(Boolean))];
+      renderFilterOptions("name", getUniques("Person"));
+      renderFilterOptions("title", getUniques("Title"));
+      renderFilterOptions("company", getUniques("Company"));
+      renderFilterOptions("source", getUniques("Source Name"));
+      renderDateFilter(allSignals.map(s => formatDate(s["Publication Date"])).filter(Boolean));
+
+      renderSignals(allSignals);
     }
+
+    document.querySelectorAll(".dropdown-toggle").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const parent = btn.closest(".dropdown-wrapper");
+        parent.classList.toggle("open");
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("clearFilters").addEventListener("click", () => {
+      document.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = false);
+      document.getElementById("searchInput").value = "";
+      renderSignals(allSignals);
+    });
+    document.addEventListener("change", e => {
+      if (e.target.matches("input[type=checkbox]")) applyFilters();
+    });
 
     fetchSignals();
   </script>
