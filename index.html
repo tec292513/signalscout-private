@@ -62,72 +62,61 @@
     <script src="https://static.memberstack.com/scripts/v1/memberstack.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-          console.log('Checking for MemberStack...');
-          console.log('window.MemberStack:', window.MemberStack);
+      setTimeout(() => {
+        if (window.MemberStack) {
+          console.log('MemberStack found');
           
-          if (window.MemberStack) {
-            console.log('MemberStack found');
+          MemberStack.onReady.then(async function(member) {
+            console.log('MemberStack ready');
             
-            MemberStack.onReady.then(async function(member) {
-              console.log('MemberStack ready');
-              
-              if (member && member.loggedIn) {
-                console.log('User logged in, redirecting to dashboard');
-                window.location.replace('/dashboard.html');
-              }
+            if (member && member.loggedIn) {
+              window.location.replace('/dashboard.html');
+            }
 
-              try {
-                console.log('Fetching pricing data...');
-                const response = await fetch('https://api.memberstack.io/v1/products', {
-                  headers: {
-                    'Authorization': 'Bearer pk_sb_0430467019ca4b0ddf0b'
-                  }
-                });
+            try {
+              const response = await fetch('https://api.memberstack.io/v1/products', {
+                headers: {
+                  'Authorization': 'Bearer pk_sb_0430467019ca4b0ddf0b'
+                }
+              });
+              
+              const data = await response.json();
+              console.log('Products:', data);
+              
+              if (data.products && data.products.length > 0) {
+                const proProduct = data.products.find(p => p.name && p.name.toLowerCase().includes('pro'));
                 
-                const data = await response.json();
-                console.log('Pricing response:', data);
-                
-                if (data.products && data.products.length > 0) {
-                  const proProduct = data.products.find(p => p.name && p.name.toLowerCase().includes('pro'));
+                if (proProduct && proProduct.plans) {
+                  const monthlyPlan = proProduct.plans.find(p => p.interval === 'month');
                   
-                  if (proProduct && proProduct.plans) {
-                    const monthlyPlan = proProduct.plans.find(p => p.interval === 'month');
+                  if (monthlyPlan) {
+                    const price = (monthlyPlan.amount / 100).toFixed(2);
+                    const trialDays = monthlyPlan.trialDays || 14;
                     
-                    if (monthlyPlan) {
-                      const price = (monthlyPlan.amount / 100).toFixed(2);
-                      const trialDays = monthlyPlan.trialDays || 14;
-                      
-                      console.log('Found pricing - Price:', price, 'Trial:', trialDays);
-                      
-                      document.getElementById('pricing-amount').textContent = `$${price}`;
-                      document.getElementById('trial-offer').textContent = `${trialDays}-day free trial. No credit card required.`;
-                      document.getElementById('trial-info').textContent = `${trialDays}-day free trial. No credit card required.`;
-                      
-                      document.getElementById('signup-btn').setAttribute('data-ms-price:add', monthlyPlan.id);
-                      return;
-                    }
+                    console.log('Price found:', price);
+                    
+                    document.getElementById('pricing-amount').textContent = `${price}`;
+                    document.getElementById('trial-offer').textContent = `${trialDays}-day free trial. No credit card required.`;
+                    document.getElementById('trial-info').textContent = `${trialDays}-day free trial. No credit card required.`;
+                    
+                    document.getElementById('signup-btn').setAttribute('data-ms-price:add', monthlyPlan.id);
                   }
                 }
-                
-                console.log('Could not find Pro plan, using fallback');
-                throw new Error('Pro plan not found');
-              } catch (err) {
-                console.error('Error fetching pricing:', err);
-                document.getElementById('pricing-amount').textContent = '$97';
-                document.getElementById('trial-offer').textContent = '14-day free trial. No credit card required.';
-                document.getElementById('trial-info').textContent = '14-day free trial. No credit card required.';
               }
-            });
-          } else {
-            console.log('MemberStack NOT found - using fallback pricing');
-            document.getElementById('pricing-amount').textContent = '$97';
-            document.getElementById('trial-info').textContent = '14-day free trial. No credit card required.';
-            document.getElementById('trial-offer').textContent = '14-day free trial. No credit card required.';
-          }
-        }, 3000);
-      });
+            } catch (err) {
+              console.error('Error:', err);
+              document.getElementById('pricing-amount').textContent = '$97';
+              document.getElementById('trial-offer').textContent = '14-day free trial. No credit card required.';
+              document.getElementById('trial-info').textContent = '14-day free trial. No credit card required.';
+            }
+          });
+        } else {
+          console.log('MemberStack not found');
+          document.getElementById('pricing-amount').textContent = '$97';
+          document.getElementById('trial-info').textContent = '14-day free trial. No credit card required.';
+          document.getElementById('trial-offer').textContent = '14-day free trial. No credit card required.';
+        }
+      }, 2000);
     </script>
   </body>
 </html>
