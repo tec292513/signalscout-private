@@ -76,7 +76,7 @@
               if (proPlan && proPlan.prices && proPlan.prices.length > 0) {
                 const monthlyPrice = proPlan.prices[0];
                 const price = Math.floor(monthlyPrice.amount);
-                const trialDays = monthlyPrice.trialDays || 14;
+                const trialDays = 2;
                 
                 console.log('Pro plan found - Price:', price, 'Trial:', trialDays);
                 
