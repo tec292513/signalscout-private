@@ -491,19 +491,28 @@
     }
 
     async function fetchSignals() {
-      try {
-        const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?sort[0][field]=Publication%20Date&sort[0][direction]=desc`;
-        const res = await fetch(url, { headers: { Authorization: `Bearer ${API_KEY}` } });
-        const json = await res.json();
-        const records = json.records.map(r => ({ ...r.fields, id: r.id }));
-        allData = records;
-        filteredData = records;
-        setupFilters(records);
-        updatePagination();
-      } catch (error) {
-        console.error('Error fetching signals:', error);
-      }
-    }
+  try {
+    let allRecords = [];
+    let offset = null;
+    
+    do {
+      let url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?sort[0][field]=Publication%20Date&sort[0][direction]=desc`;
+      if (offset) url += `&offset=${offset}`;
+      
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${API_KEY}` } });
+      const json = await res.json();
+      allRecords = allRecords.concat(json.records.map(r => ({ ...r.fields, id: r.id })));
+      offset = json.offset;
+    } while (offset);
+    
+    allData = allRecords;
+    filteredData = allRecords;
+    setupFilters(allRecords);
+    updatePagination();
+  } catch (error) {
+    console.error('Error fetching signals:', error);
+  }
+}
 
     // Event listeners for filters
     searchInput.addEventListener('input', applyFilters);
