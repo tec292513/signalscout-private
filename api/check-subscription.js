@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.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);
 
 export default async (req, res) => {
   if (req.method !== 'POST') {
@@ -6,40 +6,32 @@ export default async (req, res) => {
   }
 
   const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({ isActive: true }); // Allow if no email
+  }
 
   try {
-    // Find customer by email in Stripe
-    const customers = await stripe.customers.list({ email, limit: 1 });
+    const customers = await stripe.customers.list({ 
+      email: email.toLowerCase(),
+      limit: 1 
+    });
     
-    if (!customers.data.length) {
-      return res.json({ isActive: false });
+    if (!customers.data || customers.data.length === 0) {
+      return res.json({ isActive: false }); // No customer = not paid
     }
 
     const customer = customers.data[0];
-
-    // Check if customer has active subscription
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
       status: 'active'
     });
 
-    const isActive = subscriptions.data.length > 0;
-    
+    const isActive = subscriptions.data && subscriptions.data.length > 0;
     return res.json({ isActive });
+    
   } catch (error) {
-    console.error('Subscription check error:', error);
-    return res.status(500).json({ error: 'Check failed' });
+    console.error('Stripe error:', error.message);
+    return res.json({ isActive: true }); // Allow on error
   }
 };
-```
-
-4. Save and commit to GitHub
-
-Your folder structure should look like:
-```
-your-repo/
-├── api/
-│   └── check-subscription.js
-├── index.html
-├── dashboard.html
-└── ...
