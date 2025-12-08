@@ -89,21 +89,19 @@
         }
       }
 
-      // Wait for MemberStack then set up listener
-      if (window.MemberStack) {
-        MemberStack.onReady.then((member) => {
-          console.log('Initial member check:', member.loggedIn);
-          checkSubscriptionAndRedirect(member);
-          
-          // Listen for user changes
-          if (window.$memberstackDom) {
-            window.$memberstackDom.onUserStateChanged((member) => {
-              console.log('User state changed:', member.loggedIn, member.email);
-              checkSubscriptionAndRedirect(member);
-            });
+      // Check localStorage for MemberStack user data
+      setInterval(() => {
+        try {
+          const memberData = localStorage.getItem('memberstack-user');
+          if (memberData) {
+            const member = JSON.parse(memberData);
+            console.log('Found member in localStorage:', member.email, 'loggedIn:', member.loggedIn);
+            checkSubscriptionAndRedirect(member);
           }
-        });
-      }
+        } catch (err) {
+          console.error('Error reading localStorage:', err);
+        }
+      }, 1000);
 
       // Pricing display
       setTimeout(async () => {
