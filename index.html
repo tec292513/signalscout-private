@@ -89,8 +89,11 @@
         }
       }
 
-      // Check localStorage for MemberStack user data
+      // Check localStorage for MemberStack user data - only once
+      let hasChecked = false;
       setInterval(() => {
+        if (hasChecked) return; // Don't check again
+        
         try {
           const memberData = localStorage.getItem('_ms-mem');
           if (memberData) {
@@ -98,6 +101,7 @@
             const email = member.auth?.email;
             console.log('Found member in localStorage:', email);
             if (email) {
+              hasChecked = true; // Mark as checked
               checkSubscriptionAndRedirect({ loggedIn: true, email: email });
             }
           }
