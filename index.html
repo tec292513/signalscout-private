@@ -92,11 +92,14 @@
       // Check localStorage for MemberStack user data
       setInterval(() => {
         try {
-          const memberData = localStorage.getItem('memberstack-user');
+          const memberData = localStorage.getItem('_ms-mem');
           if (memberData) {
             const member = JSON.parse(memberData);
-            console.log('Found member in localStorage:', member.email, 'loggedIn:', member.loggedIn);
-            checkSubscriptionAndRedirect(member);
+            const email = member.auth?.email;
+            console.log('Found member in localStorage:', email);
+            if (email) {
+              checkSubscriptionAndRedirect({ loggedIn: true, email: email });
+            }
           }
         } catch (err) {
           console.error('Error reading localStorage:', err);
