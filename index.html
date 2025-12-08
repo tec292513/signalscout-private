@@ -62,33 +62,34 @@
     <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm"><div class="space-x-6 mb-4"><a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a><a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a></div><p>&copy; 2025 SignalScout AI. All rights reserved.</p></footer>
 
     <script>
-      // ===== ADD THIS NEW CODE =====
-      // Check if user just signed up or is logging in
-      if (window.MemberStack) {
-  MemberStack.onReady.then(async member => {
-    // Add 1 second delay for MemberStack to fully process login
-    setTimeout(async () => {
-      if (member && member.loggedIn) {
-        const response = await fetch('/api/check-subscription', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: member.email })
-        });
+      // Listen for when user completes signup/login
+      document.addEventListener('memberstack.user.updated', async (event) => {
+        const member = event.detail;
+        
+        if (member && member.loggedIn) {
+          console.log('User logged in:', member.email);
+          
+          // Now check subscription
+          const response = await fetch('/api/check-subscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: member.email })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
+          console.log('Subscription check:', data);
 
-        if (data.isActive === false) {
-          window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-        } else {
-          window.location.replace('/dashboard.html');
+          if (data.isActive === false) {
+            console.log('No subscription - redirecting to Stripe');
+            window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+          } else {
+            console.log('Has subscription - redirecting to dashboard');
+            window.location.replace('/dashboard.html');
+          }
         }
-      }
-    }, 6000); // 6 seconds delay
-  });
-}
-      }
-      // ===== END NEW CODE =====
+      });
 
+      // Pricing display
       setTimeout(async () => {
         try {
           if (window.$memberstackDom) {
@@ -113,8 +114,6 @@
                 document.getElementById('trial-offer').textContent = `${trialDays}-day free trial. No credit card required.`;
                 document.getElementById('trial-info').textContent = `${trialDays}-day free trial. No credit card required.`;
                 
-                // Set the plan ID for signup
-                document.getElementById('signup-btn').setAttribute('data-ms-price:add', monthlyPrice.id);
                 return;
               }
             }
@@ -128,8 +127,8 @@
           console.error('Error fetching pricing:', err);
           // Fallback to default pricing
           document.getElementById('pricing-amount').textContent = '$97';
-          document.getElementById('trial-offer').textContent = '14-day free trial. No credit card required.';
-          document.getElementById('trial-info').textContent = '14-day free trial. No credit card required.';
+          document.getElementById('trial-offer').textContent = '2-day free trial. No credit card required.';
+          document.getElementById('trial-info').textContent = '2-day free trial. No credit card required.';
         }
       }, 5000);
     </script>
