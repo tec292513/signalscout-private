@@ -62,32 +62,44 @@
     <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm"><div class="space-x-6 mb-4"><a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a><a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a></div><p>&copy; 2025 SignalScout AI. All rights reserved.</p></footer>
 
     <script>
-      // Listen for when user completes signup/login
-      document.addEventListener('memberstack.user.updated', async (event) => {
-        const member = event.detail;
-        
-        if (member && member.loggedIn) {
-          console.log('User logged in:', member.email);
-          
-          // Now check subscription
-          const response = await fetch('/api/check-subscription', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: member.email })
-          });
+      // Check subscription whenever page loads or user changes
+      async function checkAndRedirect() {
+        if (window.MemberStack) {
+          try {
+            MemberStack.onReady.then(async (member) => {
+              if (member && member.loggedIn && member.email) {
+                console.log('User logged in:', member.email);
+                
+                // Check subscription
+                const response = await fetch('/api/check-subscription', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: member.email })
+                });
 
-          const data = await response.json();
-          console.log('Subscription check:', data);
+                const data = await response.json();
+                console.log('Subscription check:', data);
 
-          if (data.isActive === false) {
-            console.log('No subscription - redirecting to Stripe');
-            window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-          } else {
-            console.log('Has subscription - redirecting to dashboard');
-            window.location.replace('/dashboard.html');
+                if (data.isActive === false) {
+                  console.log('No subscription - redirecting to Stripe');
+                  window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+                } else {
+                  console.log('Has subscription - redirecting to dashboard');
+                  window.location.replace('/dashboard.html');
+                }
+              }
+            });
+          } catch (err) {
+            console.error('Error checking subscription:', err);
           }
         }
-      });
+      }
+
+      // Run check on page load
+      checkAndRedirect();
+
+      // Also check every 2 seconds in case modal closes with delay
+      setInterval(checkAndRedirect, 2000);
 
       // Pricing display
       setTimeout(async () => {
