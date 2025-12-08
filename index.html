@@ -65,26 +65,27 @@
       // ===== ADD THIS NEW CODE =====
       // Check if user just signed up or is logging in
       if (window.MemberStack) {
-        MemberStack.onReady.then(async member => {
-          if (member && member.loggedIn) {
-            // User is logged in - check subscription
-            const response = await fetch('/api/check-subscription', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: member.email })
-            });
-
-            const data = await response.json();
-
-            if (data.isActive === false) {
-              // No subscription - send to Stripe
-              window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-            } else {
-              // Has subscription - go to dashboard
-              window.location.replace('/dashboard.html');
-            }
-          }
+  MemberStack.onReady.then(async member => {
+    // Add 1 second delay for MemberStack to fully process login
+    setTimeout(async () => {
+      if (member && member.loggedIn) {
+        const response = await fetch('/api/check-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: member.email })
         });
+
+        const data = await response.json();
+
+        if (data.isActive === false) {
+          window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+        } else {
+          window.location.replace('/dashboard.html');
+        }
+      }
+    }, 1000); // 1 second delay
+  });
+}
       }
       // ===== END NEW CODE =====
 
