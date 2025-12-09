@@ -266,10 +266,13 @@
           .then(r => r.json())
           .then(data => {
             console.log('Dashboard subscription check:', data);
+            console.log('isActive value:', data.isActive);
             
             if (data.isActive === false) {
               console.log('No active subscription - redirecting to Stripe');
               window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+            } else {
+              console.log('Subscription is active or no data');
             }
           })
           .catch(err => console.error('Subscription check error:', err));
