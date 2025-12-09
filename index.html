@@ -62,56 +62,7 @@
     <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm"><div class="space-x-6 mb-4"><a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a><a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a></div><p>&copy; 2025 SignalScout AI. All rights reserved.</p></footer>
 
     <script>
-      async function checkSubscriptionAndRedirect(member) {
-        if (member && member.loggedIn && member.email) {
-          console.log('User logged in:', member.email);
-          
-          try {
-            const response = await fetch('/api/check-subscription', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: member.email })
-            });
-
-            const data = await response.json();
-            console.log('Subscription check:', data);
-
-            if (data.isActive === false) {
-              console.log('No subscription - redirecting to Stripe');
-              sessionStorage.setItem('redirecting', 'true');
-              window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-            } else {
-              console.log('Has subscription - redirecting to dashboard');
-              sessionStorage.setItem('redirecting', 'true');
-              window.location.replace('/dashboard.html');
-            }
-          } catch (err) {
-            console.error('Error checking subscription:', err);
-          }
-        }
-      }
-
-      // Check if already redirecting
-      if (sessionStorage.getItem('redirecting') === 'true') {
-        console.log('Already redirecting, stopping check');
-      } else {
-        // Check localStorage for MemberStack user data
-        try {
-          const memberData = localStorage.getItem('_ms-mem');
-          if (memberData) {
-            const member = JSON.parse(memberData);
-            const email = member.auth?.email;
-            console.log('Found member in localStorage:', email);
-            if (email) {
-              checkSubscriptionAndRedirect({ loggedIn: true, email: email });
-            }
-          }
-        } catch (err) {
-          console.error('Error reading localStorage:', err);
-        }
-      }
-
-      // Pricing display
+      // Pricing display ONLY
       setTimeout(async () => {
         try {
           if (window.$memberstackDom) {
@@ -132,7 +83,7 @@
                 
                 console.log('Pro plan found - Price:', price, 'Trial:', trialDays);
                 
-                document.getElementById('pricing-amount').textContent = `$${price}`;
+                document.getElementById('pricing-amount').textContent = `${price}`;
                 document.getElementById('trial-offer').textContent = `${trialDays}-day free trial. No credit card required.`;
                 document.getElementById('trial-info').textContent = `${trialDays}-day free trial. No credit card required.`;
                 
