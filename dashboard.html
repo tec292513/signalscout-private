@@ -265,6 +265,7 @@
       });
 
       const data = await response.json();
+      console.log('Dashboard subscription check:', data);
 
       if (data.isActive === false) {
         window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
