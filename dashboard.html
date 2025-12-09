@@ -251,29 +251,47 @@
   // Clear redirecting flag when dashboard loads successfully
   sessionStorage.removeItem('redirecting');
 
-  if (window.MemberStack) {
-    MemberStack.onReady.then(async member => {
-      if (!member || !member.loggedIn) {
-        window.location.replace('/');
-        return;
-      }
-
-      const response = await fetch('/api/check-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: member.email })
-      });
-
-      const data = await response.json();
-      console.log('Dashboard subscription check:', data);
-
-      if (data.isActive === false) {
-        window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+  // Check localStorage for email (MemberStack stores it there)
+  try {
+    const memberData = localStorage.getItem('_ms-mem');
+    if (memberData) {
+      const member = JSON.parse(memberData);
+      const email = member.auth?.email;
+      console.log('Dashboard found email:', email);
+      
+      if (email) {
+        // Check subscription
+        fetch('/api/check-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        })
+        .then(r => r.json())
+        .then(data => {
+          console.log('Dashboard subscription check:', data);
+          
+          if (data.isActive === false) {
+            console.log('Redirecting to Stripe - no active subscription');
+            window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
+          } else {
+            console.log('Subscription active - showing dashboard');
+            document.body.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error('Subscription check error:', err);
+          document.body.style.display = 'block'; // Show anyway on error
+        });
       } else {
-        document.body.style.display = 'block';
+        console.log('No email found - redirecting to index');
+        window.location.replace('/');
       }
-    });
-  } else {
+    } else {
+      console.log('No member data - redirecting to index');
+      window.location.replace('/');
+    }
+  } catch (err) {
+    console.error('Error:', err);
     window.location.replace('/');
   }
 </script>
