@@ -246,54 +246,8 @@
   <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
   <script>
-  document.body.style.display = 'none';
-  
-  // Clear redirecting flag when dashboard loads successfully
-  sessionStorage.removeItem('redirecting');
-
-  // Check localStorage for email (MemberStack stores it there)
-  try {
-    const memberData = localStorage.getItem('_ms-mem');
-    if (memberData) {
-      const member = JSON.parse(memberData);
-      const email = member.auth?.email;
-      console.log('Dashboard found email:', email);
-      
-      if (email) {
-        // Check subscription
-        fetch('/api/check-subscription', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email })
-        })
-        .then(r => r.json())
-        .then(data => {
-          console.log('Dashboard subscription check:', data);
-          
-          if (data.isActive === false) {
-            console.log('Redirecting to Stripe - no active subscription');
-            window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-          } else {
-            console.log('Subscription active - showing dashboard');
-            document.body.style.display = 'block';
-          }
-        })
-        .catch(err => {
-          console.error('Subscription check error:', err);
-          document.body.style.display = 'block'; // Show anyway on error
-        });
-      } else {
-        console.log('No email found - redirecting to index');
-        window.location.replace('/');
-      }
-    } else {
-      console.log('No member data - redirecting to index');
-      window.location.replace('/');
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    window.location.replace('/');
-  }
+  // Simply show the dashboard - MemberStack will handle auth
+  document.body.style.display = 'block';
 </script>
 
   <script>
