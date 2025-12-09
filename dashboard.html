@@ -247,6 +247,9 @@
 
   <script>
   document.body.style.display = 'none';
+  
+  // Clear redirecting flag when dashboard loads successfully
+  sessionStorage.removeItem('redirecting');
 
   if (window.MemberStack) {
     MemberStack.onReady.then(async member => {

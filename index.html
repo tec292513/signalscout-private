@@ -78,9 +78,11 @@
 
             if (data.isActive === false) {
               console.log('No subscription - redirecting to Stripe');
+              sessionStorage.setItem('redirecting', 'true');
               window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
             } else {
               console.log('Has subscription - redirecting to dashboard');
+              sessionStorage.setItem('redirecting', 'true');
               window.location.replace('/dashboard.html');
             }
           } catch (err) {
@@ -89,11 +91,11 @@
         }
       }
 
-      // Check localStorage for MemberStack user data - only once
-      let hasChecked = false;
-      setInterval(() => {
-        if (hasChecked) return; // Don't check again
-        
+      // Check if already redirecting
+      if (sessionStorage.getItem('redirecting') === 'true') {
+        console.log('Already redirecting, stopping check');
+      } else {
+        // Check localStorage for MemberStack user data
         try {
           const memberData = localStorage.getItem('_ms-mem');
           if (memberData) {
@@ -101,14 +103,13 @@
             const email = member.auth?.email;
             console.log('Found member in localStorage:', email);
             if (email) {
-              hasChecked = true; // Mark as checked
               checkSubscriptionAndRedirect({ loggedIn: true, email: email });
             }
           }
         } catch (err) {
           console.error('Error reading localStorage:', err);
         }
-      }, 1000);
+      }
 
       // Pricing display
       setTimeout(async () => {
