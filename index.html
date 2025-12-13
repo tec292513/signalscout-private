@@ -41,7 +41,7 @@
         <a href="#features" class="hover:text-white">Features</a>
         <a href="#pricing" class="hover:text-white">Pricing</a>
         <a href="#" data-ms-modal="login" class="btn-secondary py-2 px-4 rounded-lg">Sign In</a>
-        <a href="#" data-ms-modal="signup" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</a>
+        <button onclick="startTrial()" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</button>
       </nav>
       <div class="md:hidden"><a href="#" data-ms-modal="login" class="font-semibold text-white">Sign In</a></div>
     </header>
@@ -50,60 +50,43 @@
         <div class="hero-content">
           <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Stop Losing Deals to Faster Competitors</h1>
           <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">SignalScout AI is an AI-powered sales intelligence platform that automatically finds qualified <strong class="text-white">Cloud & DevOps leads</strong> for your team by detecting buying signals from podcasts, newsletters, social media, and more.</p>
-          <a href="#" data-ms-modal="signup" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg">Start Free Trial</a>
-          <p class="text-gray-500 mt-3 text-sm" id="trial-info">Loading offer details...</p>
+          <button onclick="startTrial()" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg">Start Free Trial</button>
+          <p class="text-gray-500 mt-3 text-sm">2 days free. Credit card required. No commitment.</p>
         </div>
       </section>
       <section class="py-20 px-6 container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-2">Your Sales Team is Fighting an<br> <span class="gradient-text">Impossible Battle</span></h2></div><div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12"><div class="info-card"><h3 class="text-xl font-semibold text-white mb-2">Manual Research is Slow</h3><p class="text-gray-400">Teams waste countless hours listening to podcasts and reading newsletters searching for a single lead.</p></div><div class="info-card"><h3 class="text-xl font-semibold text-white mb-2">Outreach is Ineffective</h3><p class="text-gray-400">A majority of sales time is wasted on unproductive prospecting with generic, cold emails.</p></div><div class="info-card"><h3 class="text-xl font-semibold text-white mb-2">Opportunities are Missed</h3><p class="text-gray-400">The majority of the buyer's journey is now done digitally, often before they ever contact a vendor.</p></div></div></section>
       <section class="py-20 px-6 bg-black bg-opacity-20"><div class="container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-2">SignalScout AI: Your<br> <span class="gradient-text">Unfair Advantage</span></h2><p class="text-lg text-gray-400 mb-12">Our AI engine listens to thousands of sources 24/7 to deliver actionable buying signals straight to your dashboard.</p></div><div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-center"><div><div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div><h3 class="text-xl font-semibold text-white mb-2">We Listen</h3><p class="text-gray-400">Our AI monitors podcasts, conference talks, and newsletters in the Cloud & DevOps space.</p></div><div><div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div><h3 class="text-xl font-semibold text-white mb-2">AI Analyzes</h3><p class="text-gray-400">We identify key decision-makers (VPs, Directors) talking about specific pain points.</p></div><div><div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div><h3 class="text-xl font-semibold text-white mb-2">You Get Leads</h3><p class="text-gray-400">You receive a daily feed of actionable leads with the person, company, and their exact quote.</p></div></div></div></section>
       <section id="features" class="py-20 px-6 container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-12">Everything You Need to<br> <span class="gradient-text">Dominate Your Market</span></h2></div><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"><div class="feature-card p-6"><i class="fas fa-robot text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">AI-Powered Signal Detection</h3><p class="text-sm text-gray-400">Our AI is trained to understand the nuances of technical pain points in the DevOps space.</p></div><div class="feature-card p-6"><i class="far fa-list-alt text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">Daily Lead Feed</h3><p class="text-sm text-gray-400">Log in to a fresh list of qualified, actionable leads every single morning.</p></div><div class="feature-card p-6"><i class="fas fa-bullseye text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">Quality Over Quantity</h3><p class="text-sm text-gray-400">We focus on high-intent signals from decision-makers, not just random keyword mentions.</p></div><div class="feature-card p-6"><i class="fas fa-microphone-alt text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">Podcast Monitoring</h3><p class="text-sm text-gray-400">We transcribe and analyze hundreds of industry podcasts to find hidden gems.</p></div><div class="feature-card p-6"><i class="far fa-newspaper text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">Newsletter Intelligence</h3><p class="text-sm text-gray-400">Stay ahead of the market by getting signals from influential newsletters.</p></div><div class="feature-card p-6"><i class="fas fa-chalkboard-teacher text-2xl gradient-text mb-4"></i><h3 class="text-lg font-semibold text-white mb-2">Conference & Webinar Insights</h3><p class="text-sm text-gray-400">Get key quotes and pain points from talks given by tech leaders.</p></div></div></section>
-      <section id="pricing" class="py-20 px-6 container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-2">Choose Your <span class="gradient-text">Competitive Edge</span></h2><p class="text-lg text-gray-400 mb-12">Simple pricing. No hidden fees.</p></div><div class="flex flex-wrap justify-center gap-8"><div class="pricing-card p-8 rounded-lg w-full max-w-sm border-2 border-blue-500"><h3 class="text-xl font-semibold text-white text-center">Pro Plan</h3><p class="text-center text-gray-400 mb-6">For teams ready to dominate their market.</p><p class="text-5xl font-extrabold text-white text-center mb-2" id="pricing-amount">Loading...</p><p class="text-center text-gray-400 mb-2" id="pricing-interval">per month</p><p class="text-center text-gray-400 mb-6" id="trial-offer">Loading trial info...</p><ul class="space-y-4 text-gray-300 mb-8"><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Real-time signals from industry leaders</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Multiple content sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Direct access to original sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Email & Chat Support</li></ul><a href="https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg">Start Free Trial</a></div></div></section>
+      <section id="pricing" class="py-20 px-6 container mx-auto"><div class="text-center max-w-3xl mx-auto"><h2 class="text-4xl font-bold text-white mb-2">Choose Your <span class="gradient-text">Competitive Edge</span></h2><p class="text-lg text-gray-400 mb-12">Simple pricing. No hidden fees.</p></div><div class="flex flex-wrap justify-center gap-8"><div class="pricing-card p-8 rounded-lg w-full max-w-sm border-2 border-blue-500"><h3 class="text-xl font-semibold text-white text-center">Pro Plan</h3><p class="text-center text-gray-400 mb-6">For teams ready to dominate their market.</p><p class="text-5xl font-extrabold text-white text-center mb-2">$500</p><p class="text-center text-gray-400 mb-2">per month</p><p class="text-center text-gray-400 mb-6">2 days free. Credit card required.</p><ul class="space-y-4 text-gray-300 mb-8"><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Real-time signals from industry leaders</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Multiple content sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Direct access to original sources</li><li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Email & Chat Support</li></ul><button onclick="startTrial()" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg w-full">Start Free Trial</button></div></div></section>
     </main>
     <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm"><div class="space-x-6 mb-4"><a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a><a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a></div><p>&copy; 2025 SignalScout AI. All rights reserved.</p></footer>
 
     <script>
-      // Pricing display ONLY
-      setTimeout(async () => {
+      async function startTrial() {
         try {
-          if (window.$memberstackDom) {
-            console.log('MemberStack DOM found');
-            
-            // Get all plans from MemberStack
-            let allPlans = await window.$memberstackDom.getPlans();
-            console.log('All plans:', allPlans);
-            
-            if (allPlans && allPlans.data && allPlans.data.length > 0) {
-              // Find Pro Plan
-              const proPlan = allPlans.data.find(p => p.name && p.name.toLowerCase().includes('pro'));
-              
-              if (proPlan && proPlan.prices && proPlan.prices.length > 0) {
-                const monthlyPrice = proPlan.prices[0];
-                const price = Math.floor(monthlyPrice.amount);
-                const trialDays = 2;
-                
-                console.log('Pro plan found - Price:', price, 'Trial:', trialDays);
-                
-                document.getElementById('pricing-amount').textContent = `${price}`;
-                document.getElementById('trial-offer').textContent = `${trialDays}-day free trial. No credit card required.`;
-                document.getElementById('trial-info').textContent = `${trialDays}-day free trial. No credit card required.`;
-                
-                return;
-              }
-            }
-            
-            throw new Error('Pro plan not found');
-          } else {
-            console.log('MemberStack DOM not available');
-            throw new Error('MemberStack not initialized');
+          const member = await MemberStack.getCurrentMember();
+          if (!member) {
+            MemberStack.openModal('signup');
+            return;
           }
-        } catch (err) {
-          console.error('Error fetching pricing:', err);
-          // Fallback to default pricing
-          document.getElementById('pricing-amount').textContent = '$97';
-          document.getElementById('trial-offer').textContent = '2-day free trial. No credit card required.';
-          document.getElementById('trial-info').textContent = '2-day free trial. No credit card required.';
+          
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: member.auth.email,
+              memberId: member.id,
+              priceId: 'price_1SWNv5K6XKSvejaaQf2fx4NW'
+            })
+          });
+          
+          const session = await response.json();
+          window.location.href = session.url;
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Something went wrong. Please try again.');
         }
-      }, 5000);
+      }
     </script>
   </body>
 </html>
