@@ -4,13 +4,11 @@ export default async (req, res) => {
   const { email, memberId, priceId } = req.body;
 
   try {
-    // Create new customer (fresh every time - this forces payment collection)
     const customer = await stripe.customers.create({
       email: email.toLowerCase(),
       metadata: { memberId: memberId }
     });
 
-    // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customer.id,
       payment_method_types: ['card'],
@@ -26,8 +24,8 @@ export default async (req, res) => {
       subscription_data: {
         trial_period_days: 2
       },
-      success_url: `${process.env.BASE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/?canceled=true`
+      success_url: 'https://aisignalscout.com/dashboard?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'https://aisignalscout.com/?canceled=true'
     });
 
     return res.json({ url: session.url });
