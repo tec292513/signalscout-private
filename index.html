@@ -173,53 +173,23 @@
     </footer>
 
     <script>
-      // Wait for MemberStack to be ready
-      async function waitForMemberStack(maxAttempts = 10) {
-        for (let i = 0; i < maxAttempts; i++) {
-          if (window.MemberStack) {
-            return true;
-          }
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        return false;
-      }
-
       async function startTrial() {
         try {
           console.log('startTrial clicked');
           
-          // Wait for MemberStack to load
-          const msReady = await waitForMemberStack();
-          if (!msReady) {
-            alert('Authentication system failed to load. Please refresh the page and try again.');
-            return;
-          }
-
-          console.log('MemberStack is ready');
+          // Generate random test email
+          const randomId = Math.random().toString(36).substring(7);
+          const email = `user-${randomId}@test.com`;
           
-          const member = await window.MemberStack.getCurrentMember();
-          
-          if (!member) {
-            console.log('No member, opening signup modal');
-            window.MemberStack.openModal('signup');
-            return;
-          }
-
-          const email = member.auth?.email;
           console.log('Email:', email);
-
-          if (!email) {
-            alert('Error: No email found');
-            return;
-          }
-
           console.log('Calling create-checkout-session API...');
+          
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: email,
-              memberId: member.id,
+              memberId: `test-${randomId}`,
               priceId: 'price_1SdhtJK6XKSvejaahm5qDdyu'
             })
           });
