@@ -177,19 +177,38 @@
         try {
           console.log('startTrial clicked');
           
-          // Generate random email for now (temporary)
-          const randomId = Math.random().toString(36).substring(7);
-          const email = `user-${randomId}@test.com`;
+          // Get current member from MemberStack
+          const member = await window.MemberStack.getCurrentMember();
           
-          console.log('Email:', email);
-          console.log('Calling create-checkout-session API...');
+          if (!member || !member.auth?.email) {
+            console.log('No logged-in member, showing signup modal');
+            // Open signup modal if not logged in
+            window.MemberStack.showSignup();
+            return;
+          }
+
+          const email = member.auth.email;
+          console.log('Member email:', email);
+          
+          // Proceed to checkout with real email
+          await goToCheckout(email);
+
+        } catch (error) {
+          console.error('Full Error:', error);
+          alert('Error: ' + error.message);
+        }
+      }
+
+      async function goToCheckout(email) {
+        try {
+          console.log('Creating checkout session with email:', email);
           
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: email,
-              memberId: `test-${randomId}`,
+              memberId: `member-${Date.now()}`,
               priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
             })
           });
@@ -216,9 +235,19 @@
           window.location.href = session.url;
 
         } catch (error) {
-          console.error('Full Error:', error);
+          console.error('Checkout Error:', error);
           alert('Error: ' + error.message);
         }
+      }
+
+      // Listen for successful signup and automatically proceed to checkout
+      if (window.MemberStack) {
+        window.MemberStack.onSignup = async (member) => {
+          console.log('User signed up:', member);
+          if (member.auth?.email) {
+            await goToCheckout(member.auth.email);
+          }
+        };
       }
     </script>
   </body>
