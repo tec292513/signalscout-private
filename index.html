@@ -179,26 +179,27 @@
           
           // Check if MemberStack is loaded
           if (!window.MemberStack) {
-            console.log('MemberStack not loaded yet, waiting...');
-            setTimeout(startTrial, 500);
+            console.log('MemberStack not available, opening signup anyway');
+            alert('MemberStack is loading, please try again in a moment');
             return;
           }
           
-          // Get current member from MemberStack
-          const member = await window.MemberStack.getCurrentMember();
-          
-          if (!member || !member.auth?.email) {
-            console.log('No logged-in member, showing signup modal');
-            // Open signup modal if not logged in
-            window.MemberStack.showSignup();
-            return;
+          // Try to get current member
+          try {
+            const member = await window.MemberStack.getCurrentMember();
+            
+            if (member && member.auth?.email) {
+              console.log('Member logged in:', member.auth.email);
+              await goToCheckout(member.auth.email);
+              return;
+            }
+          } catch (err) {
+            console.log('Not logged in or error:', err.message);
           }
-
-          const email = member.auth.email;
-          console.log('Member email:', email);
           
-          // Proceed to checkout with real email
-          await goToCheckout(email);
+          // Not logged in - show signup modal
+          console.log('Showing signup modal');
+          window.MemberStack.showSignup();
 
         } catch (error) {
           console.error('Full Error:', error);
@@ -247,14 +248,21 @@
         }
       }
 
-      // Listen for successful signup and automatically proceed to checkout
-      if (window.MemberStack) {
-        window.MemberStack.onSignup = async (member) => {
-          console.log('User signed up:', member);
-          if (member.auth?.email) {
-            await goToCheckout(member.auth.email);
-          }
-        };
+      // Wait for MemberStack to be ready
+      if (window.MemberStack && window.MemberStack.onReady) {
+        window.MemberStack.onReady.then(() => {
+          console.log('MemberStack ready');
+          
+          // Listen for successful signup
+          window.MemberStack.onSignup = async (member) => {
+            console.log('User signed up:', member);
+            if (member.auth?.email) {
+              await goToCheckout(member.auth.email);
+            }
+          };
+        });
+      } else {
+        console.warn('MemberStack onReady not available');
       }
     </script>
   </body>
