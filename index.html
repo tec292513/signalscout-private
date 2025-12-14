@@ -173,38 +173,32 @@
     </footer>
 
     <script>
-      let memberStackLoaded = false;
+      let memberStackReady = false;
 
-      // Wait for MemberStack to fully initialize
-      const checkMemberStack = setInterval(() => {
-        if (typeof window.MemberStack !== 'undefined') {
-          console.log('✓ MemberStack initialized');
-          memberStackLoaded = true;
-          clearInterval(checkMemberStack);
-        }
-      }, 100);
-
-      // Give it max 10 seconds
-      setTimeout(() => {
-        if (!memberStackLoaded) {
-          console.warn('MemberStack timeout');
-        }
-      }, 10000);
+      // Use the same pattern as dashboard - wait for MemberStack.onReady
+      if (typeof MemberStack !== 'undefined' && MemberStack.onReady) {
+        MemberStack.onReady.then(() => {
+          console.log('✓ MemberStack ready on index');
+          memberStackReady = true;
+        });
+      } else {
+        console.warn('MemberStack.onReady not available');
+      }
 
       async function startTrial() {
         try {
-          console.log('Start Trial clicked, memberStackLoaded:', memberStackLoaded);
+          console.log('Start Trial clicked');
           
-          if (!memberStackLoaded) {
-            alert('Loading MemberStack... please try again in a moment');
+          if (!memberStackReady) {
+            alert('Loading... please try again');
             return;
           }
           
           console.log('Opening MemberStack modal');
-          const result = await window.MemberStack.openModal();
+          const result = await MemberStack.openModal();
           
           if (result && result.user && result.user.email) {
-            console.log('User signed up:', result.user.email);
+            console.log('User from modal:', result.user.email);
             await goToCheckout(result.user.email);
           } else {
             console.log('User closed modal');
