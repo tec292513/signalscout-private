@@ -3,11 +3,3 @@
     "stripe": "latest"
   }
 }
-```
-
-4. Save (Ctrl+S)
-5. Run in terminal:
-```
-   git add package.json
-   git commit -m "Fix package.json syntax"
-   git push
