@@ -249,40 +249,9 @@
   // Show dashboard immediately
   document.body.style.display = 'block';
   
-  // Check subscription after a short delay to allow localStorage to be ready
-  setTimeout(() => {
-    try {
-      const memberData = localStorage.getItem('_ms-mem');
-      if (memberData) {
-        const member = JSON.parse(memberData);
-        const email = member.auth?.email;
-        
-        if (email) {
-          fetch('/api/check-subscription', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email })
-          })
-          .then(r => r.json())
-          .then(data => {
-            console.log('Dashboard subscription check:', data);
-            console.log('isActive value:', data.isActive);
-            
-            if (data.isActive === false) {
-              console.log('No active subscription - redirecting to Stripe');
-              window.location.replace('https://buy.stripe.com/8x2aEYc3dcAjcLTbg48EM00');
-            } else {
-              console.log('Subscription is active or no data');
-            }
-          })
-          .catch(err => console.error('Subscription check error:', err));
-        }
-      }
-    } catch (err) {
-      console.error('Error checking subscription:', err);
-    }
-  }, 500); // 500ms delay to ensure localStorage is ready
-</script>
+  // Subscription check disabled temporarily - allowing all users to access dashboard
+  console.log('Dashboard loaded - subscription check disabled for testing');
+  </script>
 
   <script>
     const API_KEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
