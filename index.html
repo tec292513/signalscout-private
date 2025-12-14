@@ -177,9 +177,13 @@
         try {
           console.log('startTrial clicked');
           
-          // Generate random test email
-          const randomId = Math.random().toString(36).substring(7);
-          const email = `user-${randomId}@test.com`;
+                    // Get real email from MemberStack
+const member = await window.MemberStack.getCurrentMember();
+if (!member || !member.auth?.email) {
+  alert('Error: Not logged in');
+  return;
+}
+const email = member.auth.email;
           
           console.log('Email:', email);
           console.log('Calling create-checkout-session API...');
