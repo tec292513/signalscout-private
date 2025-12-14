@@ -1,15 +1,11 @@
 {
-  "type": "module",
   "dependencies": {
     "stripe": "latest"
   }
 }
 ```
 
-**Key points:**
-- Commas after each line (except the last)
-- All quotes are straight quotes `"`, not curly quotes
-- No extra characters or spaces
+**That's it. No `"type": "module"` line.**
 
 3. Save it
 4. Run:
