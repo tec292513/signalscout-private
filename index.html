@@ -173,50 +173,55 @@
     </footer>
 
     <script>
-      // Wait for MemberStack to load
-      function waitForMemberStack(callback, attempts = 0) {
-        if (window.MemberStack) {
-          console.log('MemberStack loaded!');
-          callback();
-        } else if (attempts < 20) {
-          setTimeout(() => waitForMemberStack(callback, attempts + 1), 250);
-        } else {
-          console.error('MemberStack failed to load after 5 seconds');
-        }
-      }
+      let memberStackReady = false;
+
+      // Wait for page to fully load, THEN check for MemberStack
+      window.addEventListener('load', () => {
+        console.log('Page loaded, checking for MemberStack...');
+        
+        // Give MemberStack script time to initialize
+        setTimeout(() => {
+          if (window.MemberStack) {
+            console.log('✓ MemberStack is ready!');
+            memberStackReady = true;
+          } else {
+            console.warn('✗ MemberStack still not available');
+          }
+        }, 1000);
+      });
 
       async function startTrial() {
         try {
-          console.log('startTrial clicked');
+          console.log('startTrial clicked, memberStackReady:', memberStackReady);
           
-          // Wait for MemberStack to be available
-          waitForMemberStack(async () => {
-            try {
-              // Try to get current user
-              const { user } = await window.MemberStack.getUser();
-              
-              if (user && user.email) {
-                console.log('User already logged in:', user.email);
-                await goToCheckout(user.email);
-                return;
-              }
-            } catch (err) {
-              console.log('User not logged in');
-            }
+          if (!memberStackReady || !window.MemberStack) {
+            console.log('Waiting for MemberStack...');
+            alert('Loading... please try again in a moment');
+            return;
+          }
+          
+          try {
+            // Try to get current user
+            const { user } = await window.MemberStack.getUser();
             
-            // Open auth modal
-            console.log('Opening MemberStack auth modal');
-            try {
-              const { user } = await window.MemberStack.openModal();
-              
-              if (user && user.email) {
-                console.log('User authenticated:', user.email);
-                await goToCheckout(user.email);
-              }
-            } catch (err) {
-              console.error('Modal error:', err);
+            if (user && user.email) {
+              console.log('User already logged in:', user.email);
+              await goToCheckout(user.email);
+              return;
             }
-          });
+          } catch (err) {
+            console.log('Not logged in, opening modal');
+          }
+          
+          // Open auth modal
+          const { user } = await window.MemberStack.openModal();
+          
+          if (user && user.email) {
+            console.log('User from modal:', user.email);
+            await goToCheckout(user.email);
+          } else {
+            console.log('User closed modal');
+          }
 
         } catch (error) {
           console.error('Error:', error);
