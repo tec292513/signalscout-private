@@ -173,36 +173,20 @@
     </footer>
 
     <script>
-      let memberStackReady = false;
-
-      // Wait for page to fully load, THEN check for MemberStack
-      window.addEventListener('load', () => {
-        console.log('Page loaded, checking for MemberStack...');
-        
-        // Give MemberStack script time to initialize
-        setTimeout(() => {
-          if (window.MemberStack) {
-            console.log('✓ MemberStack is ready!');
-            memberStackReady = true;
-          } else {
-            console.warn('✗ MemberStack still not available');
-          }
-        }, 1000);
-      });
-
       async function startTrial() {
         try {
-          console.log('startTrial clicked, memberStackReady:', memberStackReady);
+          console.log('startTrial clicked');
           
-          if (!memberStackReady || !window.MemberStack) {
-            console.log('Waiting for MemberStack...');
-            alert('Loading... please try again in a moment');
+          // Check if MemberStack is ready (same pattern as dashboard)
+          if (typeof MemberStack === 'undefined') {
+            console.error('MemberStack not loaded');
+            alert('Loading... please try again');
             return;
           }
           
           try {
             // Try to get current user
-            const { user } = await window.MemberStack.getUser();
+            const { user } = await MemberStack.getUser();
             
             if (user && user.email) {
               console.log('User already logged in:', user.email);
@@ -214,13 +198,12 @@
           }
           
           // Open auth modal
-          const { user } = await window.MemberStack.openModal();
+          console.log('Opening MemberStack modal');
+          const { user } = await MemberStack.openModal();
           
           if (user && user.email) {
             console.log('User from modal:', user.email);
             await goToCheckout(user.email);
-          } else {
-            console.log('User closed modal');
           }
 
         } catch (error) {
@@ -243,8 +226,6 @@
             })
           });
 
-          console.log('API Response status:', response.status);
-
           if (!response.ok) {
             const errorData = await response.json();
             console.error('API Error:', errorData);
@@ -253,15 +234,13 @@
           }
 
           const session = await response.json();
-          console.log('Session:', session);
-
           if (!session.url) {
-            console.error('No URL in response:', session);
+            console.error('No URL in response');
             alert('Error: No checkout URL returned');
             return;
           }
 
-          console.log('Redirecting to:', session.url);
+          console.log('Redirecting to Stripe');
           window.location.href = session.url;
 
         } catch (error) {
@@ -270,8 +249,12 @@
         }
       }
 
-      // MemberStack v5 is ready, listen for signup
-      // (handled in startTrial function)
+      // Wait for MemberStack to be ready (same pattern as dashboard)
+      if (typeof MemberStack !== 'undefined' && MemberStack.onReady) {
+        MemberStack.onReady.then(member => {
+          console.log("MemberStack ready on index");
+        });
+      }
     </script>
   </body>
 </html>
