@@ -186,27 +186,35 @@
         }
       });
 
-      // Listen for MemberStack user signup
+      // Listen for MemberStack user signup - check frequently
       if (typeof window !== 'undefined') {
-        // Monitor for user being set in MemberStack
-        const originalSetItem = Storage.prototype.setItem;
-        Storage.prototype.setItem = function(key, value) {
-          originalSetItem.apply(this, arguments);
-          
-          if (key === '_ms-mem' && isTrialMode) {
-            console.log('User created in localStorage');
+        const checkInterval = setInterval(() => {
+          if (isTrialMode) {
             try {
-              const userData = JSON.parse(value);
-              if (userData.auth && userData.auth.email) {
-                console.log('Captured email from localStorage:', userData.auth.email);
-                isTrialMode = false;
-                goToCheckout(userData.auth.email);
+              const memberData = localStorage.getItem('_ms-mem');
+              if (memberData) {
+                const userData = JSON.parse(memberData);
+                if (userData.auth && userData.auth.email) {
+                  console.log('Captured email from localStorage:', userData.auth.email);
+                  isTrialMode = false;
+                  clearInterval(checkInterval);
+                  
+                  // Small delay to ensure modal is closed
+                  setTimeout(() => {
+                    goToCheckout(userData.auth.email);
+                  }, 500);
+                }
               }
             } catch (e) {
               console.error('Error parsing user data:', e);
             }
           }
-        };
+        }, 200);
+
+        // Stop checking after 30 seconds
+        setTimeout(() => {
+          clearInterval(checkInterval);
+        }, 30000);
       }
 
       async function goToCheckout(email) {
@@ -237,7 +245,7 @@
             return;
           }
 
-          console.log('Redirecting to Stripe');
+          console.log('Redirecting to Stripe:', session.url);
           window.location.href = session.url;
 
         } catch (error) {
