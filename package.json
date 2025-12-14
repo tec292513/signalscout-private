@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "stripe": "latest"
-  }
-}
+     "type": "module",
+     "dependencies": {
+       "stripe": "latest"
+     }
+   }
+```
+
+4. Save it
+5. Run in terminal:
+```
+   git add package.json
+   git commit -m "Add type module"
+   git push
