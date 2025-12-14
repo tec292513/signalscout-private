@@ -29,7 +29,7 @@ export default async (req, res) => {
       subscription_data: {
         trial_period_days: 2
       },
-      success_url: 'https://aisignalscout.com/dashboard?session_id={CHECKOUT_SESSION_ID}',
+      success_url: 'https://aisignalscout.com/?success=true',
       cancel_url: 'https://aisignalscout.com/?canceled=true'
     });
     
