@@ -173,54 +173,45 @@
     </footer>
 
     <script>
-      let signupEmail = null;
+      let memberStackLoaded = false;
 
-      // Listen for MemberStack signup completion
-      if (window.MemberStack && window.MemberStack.onReady) {
-        window.MemberStack.onReady.then(() => {
-          console.log('MemberStack is ready');
-          
-          // Intercept signup success
-          const originalSignup = window.MemberStack.openModal;
-          if (originalSignup) {
-            window.MemberStack.openModal = async function(...args) {
-              const result = await originalSignup.apply(this, args);
-              
-              // User signed up or logged in
-              if (result && result.user && result.user.email) {
-                console.log('User completed auth:', result.user.email);
-                signupEmail = result.user.email;
-                
-                // Auto redirect to Stripe
-                setTimeout(() => goToCheckout(signupEmail), 500);
-              }
-              
-              return result;
-            };
-          }
-        });
-      }
+      // Wait for MemberStack to fully initialize
+      const checkMemberStack = setInterval(() => {
+        if (typeof window.MemberStack !== 'undefined') {
+          console.log('✓ MemberStack initialized');
+          memberStackLoaded = true;
+          clearInterval(checkMemberStack);
+        }
+      }, 100);
+
+      // Give it max 10 seconds
+      setTimeout(() => {
+        if (!memberStackLoaded) {
+          console.warn('MemberStack timeout');
+        }
+      }, 10000);
 
       async function startTrial() {
         try {
-          console.log('Start Trial clicked');
+          console.log('Start Trial clicked, memberStackLoaded:', memberStackLoaded);
           
-          // Open MemberStack signup modal
-          if (window.MemberStack) {
-            console.log('Opening MemberStack modal');
-            const result = await window.MemberStack.openModal();
-            
-            if (result && result.user && result.user.email) {
-              console.log('User signed up:', result.user.email);
-              signupEmail = result.user.email;
-              await goToCheckout(signupEmail);
-            }
+          if (!memberStackLoaded) {
+            alert('Loading MemberStack... please try again in a moment');
+            return;
+          }
+          
+          console.log('Opening MemberStack modal');
+          const result = await window.MemberStack.openModal();
+          
+          if (result && result.user && result.user.email) {
+            console.log('User signed up:', result.user.email);
+            await goToCheckout(result.user.email);
           } else {
-            console.error('MemberStack not available');
-            alert('MemberStack is loading, please try again');
+            console.log('User closed modal');
           }
         } catch (error) {
           console.error('Error:', error);
+          alert('Error: ' + error.message);
         }
       }
 
