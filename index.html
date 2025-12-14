@@ -177,6 +177,13 @@
         try {
           console.log('startTrial clicked');
           
+          // Check if MemberStack is loaded
+          if (!window.MemberStack) {
+            console.log('MemberStack not loaded yet, waiting...');
+            setTimeout(startTrial, 500);
+            return;
+          }
+          
           // Get current member from MemberStack
           const member = await window.MemberStack.getCurrentMember();
           
