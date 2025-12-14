@@ -182,6 +182,18 @@
     .favorite-btn.favorited {
       color: #fbbf24;
     }
+    
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -192,7 +204,7 @@
     <nav class="flex items-center space-x-6 text-sm">
       <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy</a>
       <a href="terms-of-service.html" class="text-gray-400 hover:text-white">T&C</a>
-      <a href="#" data-ms-action="profile" class="btn-secondary py-2 px-4 rounded-lg">Account</a>
+      <button onclick="openCustomerPortal()" class="btn-secondary">Account</button>
       <a href="#" data-ms-action="logout" class="text-gray-400 hover:text-white">Log Out</a>
     </nav>
   </header>
@@ -251,6 +263,35 @@
   
   // Subscription check disabled temporarily - allowing all users to access dashboard
   console.log('Dashboard loaded - subscription check disabled for testing');
+  
+  // Open Stripe Customer Portal
+  function openCustomerPortal() {
+    // Get user email from MemberStack
+    if (window.MemberStack) {
+      window.MemberStack.getCurrentMember().then(member => {
+        if (member && member.auth && member.auth.email) {
+          // Call API to get Stripe customer portal URL
+          fetch('/api/stripe-portal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: member.auth.email })
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.url) {
+              window.location.href = data.url;
+            } else {
+              alert('Error: Could not open subscription portal');
+            }
+          })
+          .catch(err => {
+            console.error('Error:', err);
+            alert('Error opening subscription portal');
+          });
+        }
+      });
+    }
+  }
   </script>
 
   <script>
