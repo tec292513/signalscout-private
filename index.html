@@ -41,7 +41,7 @@
         <a href="#features" class="hover:text-white">Features</a>
         <a href="#pricing" class="hover:text-white">Pricing</a>
         <a href="#" data-ms-modal="login" class="btn-secondary py-2 px-4 rounded-lg">Sign In</a>
-        <button onclick="startTrial()" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</button>
+        <button id="startTrialBtn" onclick="startTrial()" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</button>
       </nav>
       <div class="md:hidden"><a href="#" data-ms-modal="login" class="font-semibold text-white">Sign In</a></div>
     </header>
@@ -173,50 +173,43 @@
     </footer>
 
     <script>
-      let userSignupEmail = null;
-
-      // Listen for MemberStack signup/login success
-      if (typeof MemberStack !== 'undefined') {
-        // Hook into MemberStack's internal signup event
-        window.addEventListener('message', (event) => {
-          if (event.data && event.data.type === 'memberstack-user-set') {
-            console.log('User signed up/logged in:', event.data);
-            if (event.data.user && event.data.user.email) {
-              userSignupEmail = event.data.user.email;
-              console.log('Captured email:', userSignupEmail);
-              // Auto redirect to checkout
-              goToCheckout(userSignupEmail);
-            }
-          }
-        });
-      }
-
       async function startTrial() {
         try {
-          console.log('Start Trial clicked');
+          console.log('Start Trial clicked - opening signup modal');
           
-          // Try to use MemberStack if available
-          if (typeof MemberStack !== 'undefined') {
-            console.log('Using MemberStack.openModal()');
-            const result = await MemberStack.openModal();
-            
-            if (result && result.user && result.user.email) {
-              console.log('User signed up:', result.user.email);
-              await goToCheckout(result.user.email);
-              return;
-            }
-          }
-          
-          // Fallback: trigger the modal via data attribute
-          console.log('Triggering signup via data-ms-modal');
-          const signupBtn = document.createElement('button');
+          // Create a hidden signup button and click it
+          const signupBtn = document.createElement('a');
+          signupBtn.href = '#';
           signupBtn.setAttribute('data-ms-modal', 'login');
+          signupBtn.style.display = 'none';
           document.body.appendChild(signupBtn);
           signupBtn.click();
-          signupBtn.remove();
+          
+          // Wait for user to complete signup, then check for email
+          setTimeout(() => {
+            checkUserAndProceed();
+          }, 1000);
           
         } catch (error) {
           console.error('Error:', error);
+        }
+      }
+
+      function checkUserAndProceed() {
+        try {
+          // Check if MemberStack user exists
+          if (typeof MemberStack !== 'undefined') {
+            MemberStack.getUser().then((response) => {
+              if (response.user && response.user.email) {
+                console.log('User signed up/logged in:', response.user.email);
+                goToCheckout(response.user.email);
+              }
+            }).catch(err => {
+              console.log('User not signed up yet');
+            });
+          }
+        } catch (error) {
+          console.error('Error checking user:', error);
         }
       }
 
