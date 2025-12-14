@@ -177,33 +177,37 @@
         try {
           console.log('startTrial clicked');
           
-          // Check if MemberStack is loaded
+          // For MemberStack v5
           if (!window.MemberStack) {
-            console.log('MemberStack not available, opening signup anyway');
-            alert('MemberStack is loading, please try again in a moment');
+            console.log('MemberStack loading...');
+            alert('Please wait, MemberStack is loading...');
             return;
           }
           
-          // Try to get current member
           try {
-            const member = await window.MemberStack.getCurrentMember();
+            // Try to get current member
+            const { user } = await window.MemberStack.getUser();
             
-            if (member && member.auth?.email) {
-              console.log('Member logged in:', member.auth.email);
-              await goToCheckout(member.auth.email);
+            if (user && user.email) {
+              console.log('User logged in:', user.email);
+              await goToCheckout(user.email);
               return;
             }
           } catch (err) {
-            console.log('Not logged in or error:', err.message);
+            console.log('Not logged in:', err.message);
           }
           
-          // Not logged in - show signup modal
-          console.log('Showing signup modal');
-          window.MemberStack.showSignup();
+          // Not logged in - open modal
+          console.log('Opening MemberStack modal');
+          const { user } = await window.MemberStack.openModal();
+          
+          if (user && user.email) {
+            console.log('User signed up/logged in:', user.email);
+            await goToCheckout(user.email);
+          }
 
         } catch (error) {
-          console.error('Full Error:', error);
-          alert('Error: ' + error.message);
+          console.error('Error:', error);
         }
       }
 
@@ -248,22 +252,8 @@
         }
       }
 
-      // Wait for MemberStack to be ready
-      if (window.MemberStack && window.MemberStack.onReady) {
-        window.MemberStack.onReady.then(() => {
-          console.log('MemberStack ready');
-          
-          // Listen for successful signup
-          window.MemberStack.onSignup = async (member) => {
-            console.log('User signed up:', member);
-            if (member.auth?.email) {
-              await goToCheckout(member.auth.email);
-            }
-          };
-        });
-      } else {
-        console.warn('MemberStack onReady not available');
-      }
+      // MemberStack v5 is ready, listen for signup
+      // (handled in startTrial function)
     </script>
   </body>
 </html>
