@@ -174,6 +174,16 @@
 
     <script>
       let isTrialMode = false;
+      let previousEmail = null;
+
+      // Get initial email (if any)
+      try {
+        const memberData = localStorage.getItem('_ms-mem');
+        if (memberData) {
+          const userData = JSON.parse(memberData);
+          previousEmail = userData.auth?.email;
+        }
+      } catch (e) {}
 
       // Intercept the Start Trial link to set a flag
       document.addEventListener('DOMContentLoaded', () => {
@@ -186,7 +196,7 @@
         }
       });
 
-      // Listen for MemberStack user signup - check frequently
+      // Monitor localStorage for NEW user signup (email changed)
       if (typeof window !== 'undefined') {
         const checkInterval = setInterval(() => {
           if (isTrialMode) {
@@ -194,27 +204,31 @@
               const memberData = localStorage.getItem('_ms-mem');
               if (memberData) {
                 const userData = JSON.parse(memberData);
-                if (userData.auth && userData.auth.email) {
-                  console.log('Captured email from localStorage:', userData.auth.email);
+                const currentEmail = userData.auth?.email;
+                
+                // Check if email changed (new signup)
+                if (currentEmail && currentEmail !== previousEmail) {
+                  console.log('NEW signup detected:', currentEmail);
+                  console.log('Previous email was:', previousEmail);
                   isTrialMode = false;
                   clearInterval(checkInterval);
                   
-                  // Small delay to ensure modal is closed
+                  // Wait for modal to close
                   setTimeout(() => {
-                    goToCheckout(userData.auth.email);
-                  }, 500);
+                    goToCheckout(currentEmail);
+                  }, 1000);
                 }
               }
             } catch (e) {
-              console.error('Error parsing user data:', e);
+              console.error('Error:', e);
             }
           }
-        }, 200);
+        }, 500);
 
-        // Stop checking after 30 seconds
+        // Stop checking after 60 seconds
         setTimeout(() => {
           clearInterval(checkInterval);
-        }, 30000);
+        }, 60000);
       }
 
       async function goToCheckout(email) {
