@@ -5,11 +5,9 @@
 }
 ```
 
-**That's it. No `"type": "module"` line.**
-
-3. Save it
-4. Run:
+4. Save (Ctrl+S)
+5. Run in terminal:
 ```
    git add package.json
-   git commit -m "Fix package.json"
+   git commit -m "Fix package.json syntax"
    git push
