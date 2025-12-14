@@ -173,6 +173,24 @@
     </footer>
 
     <script>
+      let userSignupEmail = null;
+
+      // Listen for MemberStack signup/login success
+      if (typeof MemberStack !== 'undefined') {
+        // Hook into MemberStack's internal signup event
+        window.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'memberstack-user-set') {
+            console.log('User signed up/logged in:', event.data);
+            if (event.data.user && event.data.user.email) {
+              userSignupEmail = event.data.user.email;
+              console.log('Captured email:', userSignupEmail);
+              // Auto redirect to checkout
+              goToCheckout(userSignupEmail);
+            }
+          }
+        });
+      }
+
       async function startTrial() {
         try {
           console.log('Start Trial clicked');
@@ -193,7 +211,9 @@
           console.log('Triggering signup via data-ms-modal');
           const signupBtn = document.createElement('button');
           signupBtn.setAttribute('data-ms-modal', 'login');
+          document.body.appendChild(signupBtn);
           signupBtn.click();
+          signupBtn.remove();
           
         } catch (error) {
           console.error('Error:', error);
