@@ -261,43 +261,53 @@
   // Show dashboard immediately
   document.body.style.display = 'block';
   
-  // Subscription check disabled temporarily - allowing all users to access dashboard
-  console.log('Dashboard loaded - subscription check disabled for testing');
-  
-  // Open Stripe Customer Portal
-  function openCustomerPortal() {
-  try {
-    const memberData = localStorage.getItem('_ms-mem');
-    if (memberData) {
-      const member = JSON.parse(memberData);
-      const email = member.auth?.email;
-      
-      if (email) {
-        fetch('/api/stripe-portal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.url) {
-            window.location.href = data.url;
-          } else {
-            alert('Error opening subscription portal');
-          }
-        })
-        .catch(err => console.error('Error:', err));
-      } else {
-        alert('Error: Email not found');
-      }
-    } else {
-      alert('Error: Not logged in');
-    }
-  } catch (err) {
-    console.error('Error:', err);
-    alert('Error opening subscription portal');
+  // STEP 2: Store email from checkout redirect
+  const urlParams = new URLSearchParams(window.location.search);
+  const checkoutEmail = urlParams.get('email');
+  if (checkoutEmail) {
+    localStorage.setItem('checkout_email', decodeURIComponent(checkoutEmail));
   }
-}
+  
+  console.log('Dashboard loaded');
+  
+  // STEP 3: Open Stripe Customer Portal
+  function openCustomerPortal() {
+    let email = localStorage.getItem('checkout_email');
+    
+    if (!email) {
+      const memberData = localStorage.getItem('_ms-mem');
+      if (memberData) {
+        try {
+          const member = JSON.parse(memberData);
+          email = member.auth?.email;
+        } catch (err) {
+          console.error('Error parsing member data:', err);
+        }
+      }
+    }
+    
+    if (email) {
+      fetch('/api/stripe-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Error: ' + (data.error || 'Could not open portal'));
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        alert('Error opening portal');
+      });
+    } else {
+      alert('Error: Email not found');
+    }
+  }
   </script>
 
   <script>
