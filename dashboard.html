@@ -1,3 +1,30 @@
+// Check if trial signup just completed
+if (localStorage.getItem('trialSignupInProgress') === 'true') {
+  const pendingEmail = localStorage.getItem('pendingCheckoutEmail');
+  if (pendingEmail) {
+    console.log('Trial signup complete - redirecting to checkout');
+    localStorage.removeItem('trialSignupInProgress');
+    localStorage.removeItem('pendingCheckoutEmail');
+    
+    // Create checkout session
+    fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: pendingEmail,
+        memberId: `member-${Date.now()}`,
+        priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    })
+    .catch(err => console.error('Error:', err));
+  }
+}
 <!DOCTYPE html>
 <html>
 <head>
