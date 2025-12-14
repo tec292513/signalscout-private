@@ -173,39 +173,30 @@
     </footer>
 
     <script>
-      let memberStackReady = false;
-
-      // Use the same pattern as dashboard - wait for MemberStack.onReady
-      if (typeof MemberStack !== 'undefined' && MemberStack.onReady) {
-        MemberStack.onReady.then(() => {
-          console.log('✓ MemberStack ready on index');
-          memberStackReady = true;
-        });
-      } else {
-        console.warn('MemberStack.onReady not available');
-      }
-
       async function startTrial() {
         try {
           console.log('Start Trial clicked');
           
-          if (!memberStackReady) {
-            alert('Loading... please try again');
-            return;
+          // Try to use MemberStack if available
+          if (typeof MemberStack !== 'undefined') {
+            console.log('Using MemberStack.openModal()');
+            const result = await MemberStack.openModal();
+            
+            if (result && result.user && result.user.email) {
+              console.log('User signed up:', result.user.email);
+              await goToCheckout(result.user.email);
+              return;
+            }
           }
           
-          console.log('Opening MemberStack modal');
-          const result = await MemberStack.openModal();
+          // Fallback: trigger the modal via data attribute
+          console.log('Triggering signup via data-ms-modal');
+          const signupBtn = document.createElement('button');
+          signupBtn.setAttribute('data-ms-modal', 'login');
+          signupBtn.click();
           
-          if (result && result.user && result.user.email) {
-            console.log('User from modal:', result.user.email);
-            await goToCheckout(result.user.email);
-          } else {
-            console.log('User closed modal');
-          }
         } catch (error) {
           console.error('Error:', error);
-          alert('Error: ' + error.message);
         }
       }
 
