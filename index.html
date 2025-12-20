@@ -198,11 +198,10 @@
         const startTrialLink = document.getElementById('startTrialLink');
         if (startTrialLink) {
           startTrialLink.addEventListener('click', (e) => {
-            console.log('Start Trial clicked - setting trial mode');
-            isTrialMode = true;
-            // Set flag so we know to go to Stripe after signup
-            localStorage.setItem('trialSignupInProgress', 'true');
-          });
+  console.log('Start Trial clicked - setting trial mode');
+  isTrialMode = true;
+  localStorage.setItem('trialMode', 'true');
+});
         }
       });
 
