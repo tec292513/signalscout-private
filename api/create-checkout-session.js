@@ -1,21 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const fs = require('fs').promises;
-const path = require('path');
 
-const CUSTOMERS_FILE = path.join(process.cwd(), 'customers.json');
-
-async function loadCustomers() {
-  try {
-    const data = await fs.readFile(CUSTOMERS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    return {};
-  }
-}
-
-async function saveCustomers(customers) {
-  await fs.writeFile(CUSTOMERS_FILE, JSON.stringify(customers, null, 2));
-}
+// In-memory storage (for testing only)
+let customersMap = {};
 
 export default async (req, res) => {
   const { email, memberId, priceId } = req.body;
@@ -23,13 +9,10 @@ export default async (req, res) => {
   console.log('API called with:', { email, memberId, priceId });
 
   try {
-    // Load existing customers
-    let customers = await loadCustomers();
-
     // Check if customer already exists for this memberId
     let stripeCustomerId = null;
-    if (customers[memberId]) {
-      stripeCustomerId = customers[memberId].stripeCustomerId;
+    if (customersMap[memberId]) {
+      stripeCustomerId = customersMap[memberId].stripeCustomerId;
       console.log('Found existing Stripe customer:', stripeCustomerId);
     } else {
       // Create new Stripe customer
@@ -41,14 +24,13 @@ export default async (req, res) => {
       stripeCustomerId = customer.id;
       console.log('Stripe customer created:', stripeCustomerId);
 
-      // Save to customers.json
-      customers[memberId] = {
+      // Store in memory
+      customersMap[memberId] = {
         email: email.toLowerCase(),
         stripeCustomerId: stripeCustomerId,
         createdAt: new Date().toISOString()
       };
-      await saveCustomers(customers);
-      console.log('Saved to customers.json');
+      console.log('Stored in memory');
     }
 
     // Create checkout session

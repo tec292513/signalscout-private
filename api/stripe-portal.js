@@ -1,25 +1,13 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const fs = require('fs').promises;
-const path = require('path');
 
-const CUSTOMERS_FILE = path.join(process.cwd(), 'customers.json');
-
-async function loadCustomers() {
-  try {
-    const data = await fs.readFile(CUSTOMERS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    return {};
-  }
-}
+// In-memory storage (shared across requests in same instance)
+let customersMap = {};
 
 export default async (req, res) => {
   const { memberId } = req.body;
 
   try {
-    // Load customers mapping
-    const customers = await loadCustomers();
-    const customerData = customers[memberId];
+    const customerData = customersMap[memberId];
     
     if (!customerData || !customerData.stripeCustomerId) {
       return res.status(404).json({ error: 'Customer not found' });
