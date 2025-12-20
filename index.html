@@ -174,95 +174,42 @@
 
     <script>
       let memberStackToken = null;
-      let isTrialMode = false;
-      let previousEmail = null;
 
-      // Get MemberStack token
+      // Listen for MemberStack signup/login
       if (window.MemberStack) {
         MemberStack.onReady.then(member => {
           memberStackToken = member.getToken();
-          console.log('MemberStack token obtained:', memberStackToken);
+          console.log('MemberStack token obtained');
           
-          try {
+          // Listen for user auth changes
+          member.onAuthStateChange(() => {
+            console.log('Auth state changed');
             const memberData = localStorage.getItem('_ms-mem');
             if (memberData) {
               const userData = JSON.parse(memberData);
-              previousEmail = userData.auth?.email;
-              console.log('Initial email set to:', previousEmail);
+              const email = userData.auth?.email;
+              const memberId = userData.id;
+              
+              if (email && memberId) {
+                console.log('User logged in:', email);
+                goToCheckout(email, memberId);
+              }
             }
-          } catch (e) {
-            console.log('No initial member data');
-          }
+          });
         });
       }
 
-      // Intercept Start Trial click
-      document.addEventListener('DOMContentLoaded', () => {
-        const startTrialLink = document.getElementById('startTrialLink');
-        if (startTrialLink) {
-          startTrialLink.addEventListener('click', (e) => {
-            console.log('Start Trial clicked - setting trial mode');
-            isTrialMode = true;
-            localStorage.setItem('trialMode', 'true');
-          });
-        }
-      });
-
-      // Monitor for new signup
-      const checkInterval = setInterval(() => {
-        if (isTrialMode) {
-          try {
-            const memberData = localStorage.getItem('_ms-mem');
-            if (memberData) {
-              const userData = JSON.parse(memberData);
-              const currentEmail = userData.auth?.email;
-              
-              console.log('Checking signup - Previous:', previousEmail, 'Current:', currentEmail);
-              
-              // Signup if email exists and is different from previous (or previous was null)
-              if (currentEmail && currentEmail !== previousEmail) {
-                console.log('Signup detected:', currentEmail);
-                isTrialMode = false;
-                clearInterval(checkInterval);
-                
-                setTimeout(() => {
-                  goToCheckout(currentEmail);
-                }, 500);
-              }
-            }
-          } catch (e) {
-            console.error('Error:', e);
-          }
-        }
-      }, 300);
-
-      setTimeout(() => clearInterval(checkInterval), 60000);
-
-      async function goToCheckout(email) {
+      async function goToCheckout(email, memberId) {
         try {
-          console.log('Going to checkout with email:', email);
+          console.log('Going to checkout with email:', email, 'ID:', memberId);
           
-          // Wait for token if not ready
-          if (!memberStackToken && window.MemberStack) {
+          // Get fresh token
+          if (window.MemberStack) {
             const member = await MemberStack.onReady;
             memberStackToken = member.getToken();
-            console.log('Got token from MemberStack:', memberStackToken);
           }
           
-          const memberData = localStorage.getItem('_ms-mem');
-          let memberId = null;
-          if (memberData) {
-            const userData = JSON.parse(memberData);
-            memberId = userData.id;
-          }
-          
-          if (!memberId) {
-            console.error('No MemberStack ID found');
-            alert('Error: MemberStack ID not found');
-            return;
-          }
-
-          console.log('Using MemberStack ID:', memberId, 'Token:', memberStackToken);
+          console.log('Token:', memberStackToken);
           
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
@@ -280,25 +227,18 @@
           if (!response.ok) {
             const errorData = await response.json();
             console.error('API Error:', errorData);
-            alert('Error: ' + (errorData.error || 'Failed to create checkout'));
             return;
           }
 
           const session = await response.json();
-          console.log('Session data:', session);
+          console.log('Session URL:', session.url);
           
-          if (!session.url) {
-            console.error('No URL in response');
-            alert('Error: No checkout URL returned');
-            return;
+          if (session.url) {
+            window.location.href = session.url;
           }
-
-          console.log('Redirecting to Stripe:', session.url);
-          window.location.href = session.url;
 
         } catch (error) {
           console.error('Checkout Error:', error);
-          alert('Error: ' + error.message);
         }
       }
     </script>
