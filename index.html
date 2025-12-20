@@ -176,14 +176,12 @@
       let memberStackToken = null;
       let isTrialMode = false;
       let previousEmail = null;
-      let memberStackInitialized = false;
 
-      // Get MemberStack token on page load
+      // Get MemberStack token
       if (window.MemberStack) {
         MemberStack.onReady.then(member => {
           memberStackToken = member.getToken();
-          console.log('MemberStack token obtained');
-          memberStackInitialized = true;
+          console.log('MemberStack token obtained:', memberStackToken);
           
           try {
             const memberData = localStorage.getItem('_ms-mem');
@@ -196,10 +194,6 @@
             console.log('No initial member data');
           }
         });
-      } else {
-        setTimeout(() => {
-          memberStackInitialized = true;
-        }, 2000);
       }
 
       // Intercept Start Trial click
@@ -248,6 +242,13 @@
         try {
           console.log('Going to checkout with email:', email);
           
+          // Wait for token if not ready
+          if (!memberStackToken && window.MemberStack) {
+            const member = await MemberStack.onReady;
+            memberStackToken = member.getToken();
+            console.log('Got token from MemberStack:', memberStackToken);
+          }
+          
           const memberData = localStorage.getItem('_ms-mem');
           let memberId = null;
           if (memberData) {
@@ -256,17 +257,12 @@
           }
           
           if (!memberId) {
+            console.error('No MemberStack ID found');
             alert('Error: MemberStack ID not found');
             return;
           }
 
-          // Get fresh token
-          if (window.MemberStack) {
-            const member = await MemberStack.onReady;
-            memberStackToken = member.getToken();
-          }
-          
-          console.log('Using MemberStack ID:', memberId);
+          console.log('Using MemberStack ID:', memberId, 'Token:', memberStackToken);
           
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
@@ -279,6 +275,8 @@
             })
           });
 
+          console.log('Response status:', response.status);
+          
           if (!response.ok) {
             const errorData = await response.json();
             console.error('API Error:', errorData);
@@ -287,6 +285,8 @@
           }
 
           const session = await response.json();
+          console.log('Session data:', session);
+          
           if (!session.url) {
             console.error('No URL in response');
             alert('Error: No checkout URL returned');
