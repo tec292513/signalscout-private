@@ -1,31 +1,42 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// In-memory storage (shared across requests in same instance)
-let customersMap = {};
-
 export default async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(400).json({ error: 'POST only' });
   }
 
-  const { memberId } = req.body;
+  const { memberId, memberStackToken } = req.body;
   
   if (!memberId) {
-    return res.status(400).json({ isActive: true });
+    return res.status(400).json({ isActive: false });
   }
 
   try {
-    const customerData = customersMap[memberId];
+    // Fetch Stripe ID from MemberStack
+    let stripeCustomerId = null;
     
-    if (!customerData || !customerData.stripeCustomerId) {
+    try {
+      const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+        headers: { 'Authorization': `Bearer ${memberStackToken}` }
+      });
+      
+      if (memberRes.ok) {
+        const memberData = await memberRes.json();
+        stripeCustomerId = memberData.customFields?.stripeCustomerId;
+      }
+    } catch (e) {
+      console.log('Could not fetch from MemberStack:', e.message);
+    }
+    
+    if (!stripeCustomerId) {
       console.log('No Stripe customer found for memberId:', memberId);
       return res.json({ isActive: false });
     }
 
-    console.log('Checking subscription for Stripe customer:', customerData.stripeCustomerId);
+    console.log('Checking subscription for Stripe customer:', stripeCustomerId);
     
     const subscriptions = await stripe.subscriptions.list({
-      customer: customerData.stripeCustomerId,
+      customer: stripeCustomerId,
       status: 'active'
     });
 
@@ -35,6 +46,6 @@ export default async (req, res) => {
     
   } catch (error) {
     console.error('Stripe error:', error.message);
-    return res.json({ isActive: true });
+    return res.json({ isActive: false });
   }
 };

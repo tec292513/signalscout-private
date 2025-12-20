@@ -173,93 +173,97 @@
     </footer>
 
     <script>
+      let memberStackToken = null;
       let isTrialMode = false;
       let previousEmail = null;
       let memberStackInitialized = false;
 
-      // Wait a moment, then capture initial email
-      setTimeout(() => {
-        try {
-          const memberData = localStorage.getItem('_ms-mem');
-          if (memberData) {
-            const userData = JSON.parse(memberData);
-            previousEmail = userData.auth?.email;
-            console.log('Initial email set to:', previousEmail);
+      // Get MemberStack token on page load
+      if (window.MemberStack) {
+        MemberStack.onReady.then(member => {
+          memberStackToken = member.getToken();
+          console.log('MemberStack token obtained');
+          memberStackInitialized = true;
+          
+          try {
+            const memberData = localStorage.getItem('_ms-mem');
+            if (memberData) {
+              const userData = JSON.parse(memberData);
+              previousEmail = userData.auth?.email;
+              console.log('Initial email set to:', previousEmail);
+            }
+          } catch (e) {
+            console.log('No initial member data');
           }
+        });
+      } else {
+        setTimeout(() => {
           memberStackInitialized = true;
-        } catch (e) {
-          console.log('No initial member data');
-          memberStackInitialized = true;
-        }
-      }, 500);
+        }, 2000);
+      }
 
-      // Intercept the Start Trial link to set a flag
+      // Intercept Start Trial click
       document.addEventListener('DOMContentLoaded', () => {
         const startTrialLink = document.getElementById('startTrialLink');
         if (startTrialLink) {
           startTrialLink.addEventListener('click', (e) => {
-  console.log('Start Trial clicked - setting trial mode');
-  isTrialMode = true;
-  localStorage.setItem('trialMode', 'true');
-});
+            console.log('Start Trial clicked - setting trial mode');
+            isTrialMode = true;
+            localStorage.setItem('trialMode', 'true');
+          });
         }
       });
 
-      // Monitor localStorage for NEW user signup (email changed)
-      if (typeof window !== 'undefined') {
-        const checkInterval = setInterval(() => {
-          if (isTrialMode && memberStackInitialized) {
-            try {
-              const memberData = localStorage.getItem('_ms-mem');
-              if (memberData) {
-                const userData = JSON.parse(memberData);
-                const currentEmail = userData.auth?.email;
+      // Monitor for new signup
+      const checkInterval = setInterval(() => {
+        if (isTrialMode && memberStackInitialized) {
+          try {
+            const memberData = localStorage.getItem('_ms-mem');
+            if (memberData) {
+              const userData = JSON.parse(memberData);
+              const currentEmail = userData.auth?.email;
+              
+              if (currentEmail && currentEmail !== previousEmail && previousEmail !== null) {
+                console.log('NEW signup detected:', currentEmail);
+                isTrialMode = false;
+                clearInterval(checkInterval);
                 
-                console.log('Checking email - Previous:', previousEmail, 'Current:', currentEmail);
+                localStorage.setItem('pendingCheckoutEmail', currentEmail);
+                localStorage.setItem('trialSignupInProgress', 'true');
                 
-                // Check if email changed (new signup)
-                if (currentEmail && currentEmail !== previousEmail && previousEmail !== null) {
-                  console.log('NEW signup detected:', currentEmail);
-                  isTrialMode = false;
-                  clearInterval(checkInterval);
-                  
-                  // Set flag and email for checkout
-                  localStorage.setItem('pendingCheckoutEmail', currentEmail);
-                  localStorage.setItem('trialSignupInProgress', 'true');
-                  
-                  // Redirect to checkout
-                  setTimeout(() => {
-                    goToCheckout(currentEmail);
-                  }, 500);
-                }
+                setTimeout(() => {
+                  goToCheckout(currentEmail);
+                }, 500);
               }
-            } catch (e) {
-              console.error('Error:', e);
             }
+          } catch (e) {
+            console.error('Error:', e);
           }
-        }, 500);
+        }
+      }, 500);
 
-        // Stop checking after 60 seconds
-        setTimeout(() => {
-          clearInterval(checkInterval);
-        }, 60000);
-      }
+      setTimeout(() => clearInterval(checkInterval), 60000);
 
       async function goToCheckout(email) {
         try {
           console.log('Going to checkout with email:', email);
           
-          // Get the real MemberStack ID
           const memberData = localStorage.getItem('_ms-mem');
           let memberId = null;
           if (memberData) {
             const userData = JSON.parse(memberData);
-            memberId = userData.id; // Real MemberStack ID
+            memberId = userData.id;
           }
           
           if (!memberId) {
             alert('Error: MemberStack ID not found');
             return;
+          }
+
+          // Get fresh token
+          if (window.MemberStack) {
+            const member = await MemberStack.onReady;
+            memberStackToken = member.getToken();
           }
           
           console.log('Using MemberStack ID:', memberId);
@@ -269,8 +273,9 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: email,
-              memberId: memberId, // Real ID now
-              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+              memberId: memberId,
+              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG',
+              memberStackToken: memberStackToken
             })
           });
 

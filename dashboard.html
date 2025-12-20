@@ -122,123 +122,54 @@
   <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
   <script>
-  // CHECK TRIAL MODE FIRST
-  if (localStorage.getItem('trialMode') === 'true') {
-    console.log('Trial mode detected - getting user info');
-    localStorage.removeItem('trialMode');
-    
-    // Get user email from MemberStack
-    const memberData = localStorage.getItem('_ms-mem');
-    if (memberData) {
-      try {
-        const userData = JSON.parse(memberData);
-        const email = userData.auth?.email;
-        const memberId = userData.id;
-        
-        console.log('User email:', email, 'Member ID:', memberId);
-        
-        if (email && memberId) {
-          localStorage.setItem('pendingCheckoutEmail', email);
-          localStorage.setItem('trialSignupInProgress', 'true');
-          console.log('Flags set for checkout');
-        }
-      } catch (e) {
-        console.error('Error parsing member data:', e);
-      }
-    }
-  }
+    let memberStackToken = null;
 
-  // CHECK IF TRIAL SIGNUP JUST COMPLETED
-  if (localStorage.getItem('trialSignupInProgress') === 'true') {
-    const pendingEmail = localStorage.getItem('pendingCheckoutEmail');
-    if (pendingEmail) {
-      console.log('Trial signup complete - redirecting to checkout');
-      localStorage.removeItem('trialSignupInProgress');
-      localStorage.removeItem('pendingCheckoutEmail');
-      
-      // Get real MemberStack ID
-      const memberData = localStorage.getItem('_ms-mem');
-      if (memberData) {
-        try {
-          const userData = JSON.parse(memberData);
-          const memberId = userData.id;
+    // Get MemberStack token
+    if (window.MemberStack) {
+      MemberStack.onReady.then(member => {
+        memberStackToken = member.getToken();
+        console.log('Dashboard: MemberStack token obtained');
+      });
+    }
+
+    // Open Stripe Customer Portal
+    function openCustomerPortal() {
+      try {
+        const memberData = localStorage.getItem('_ms-mem');
+        if (memberData) {
+          const member = JSON.parse(memberData);
+          const memberId = member.id;
           
-          console.log('Using MemberStack ID:', memberId);
+          console.log('Opening portal for MemberStack ID:', memberId);
           
-          // Create checkout session
-          fetch('/api/create-checkout-session', {
+          fetch('/api/stripe-portal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: pendingEmail,
+            body: JSON.stringify({ 
               memberId: memberId,
-              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+              memberStackToken: memberStackToken
             })
           })
           .then(r => r.json())
           .then(data => {
             if (data.url) {
-              console.log('Redirecting to Stripe');
               window.location.href = data.url;
             } else {
-              console.error('No checkout URL:', data);
+              alert('Error: ' + (data.error || 'Could not open portal'));
             }
           })
-          .catch(err => console.error('Error:', err));
-        } catch (e) {
-          console.error('Error parsing MemberStack data:', e);
+          .catch(err => {
+            console.error('Error:', err);
+            alert('Error opening portal');
+          });
+        } else {
+          alert('Error: Member data not found');
         }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
       }
     }
-  }
-
-  // Show dashboard
-  document.body.style.display = 'block';
-  
-  // Store email from checkout redirect
-  const urlParams = new URLSearchParams(window.location.search);
-  const checkoutEmail = urlParams.get('email');
-  if (checkoutEmail) {
-    localStorage.setItem('checkout_email', decodeURIComponent(checkoutEmail));
-  }
-  
-  console.log('Dashboard loaded');
-  
-  // Open Stripe Customer Portal
-  function openCustomerPortal() {
-    try {
-      const memberData = localStorage.getItem('_ms-mem');
-      if (memberData) {
-        const member = JSON.parse(memberData);
-        const memberId = member.id;
-        
-        console.log('Opening portal for MemberStack ID:', memberId);
-        
-        fetch('/api/stripe-portal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ memberId: memberId })
-        })
-        .then(r => r.json())
-        .then(data => {
-          if (data.url) {
-            window.location.href = data.url;
-          } else {
-            alert('Error: ' + (data.error || 'Could not open portal'));
-          }
-        })
-        .catch(err => {
-          console.error('Error:', err);
-          alert('Error opening portal');
-        });
-      } else {
-        alert('Error: Member data not found');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error: ' + error.message);
-    }
-  }
   </script>
 
   <script>

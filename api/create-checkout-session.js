@@ -1,21 +1,30 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// In-memory storage (for testing only)
-let customersMap = {};
-
 export default async (req, res) => {
-  const { email, memberId, priceId } = req.body;
+  const { email, memberId, priceId, memberStackToken } = req.body;
 
   console.log('API called with:', { email, memberId, priceId });
 
   try {
-    // Check if customer already exists for this memberId
+    // Fetch member data from MemberStack to check if Stripe ID exists
     let stripeCustomerId = null;
-    if (customersMap[memberId]) {
-      stripeCustomerId = customersMap[memberId].stripeCustomerId;
-      console.log('Found existing Stripe customer:', stripeCustomerId);
-    } else {
-      // Create new Stripe customer
+    
+    try {
+      const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+        headers: { 'Authorization': `Bearer ${memberStackToken}` }
+      });
+      
+      if (memberRes.ok) {
+        const memberData = await memberRes.json();
+        stripeCustomerId = memberData.customFields?.stripeCustomerId;
+        console.log('Found existing Stripe customer in MemberStack:', stripeCustomerId);
+      }
+    } catch (e) {
+      console.log('Could not fetch from MemberStack:', e.message);
+    }
+
+    // If no Stripe ID found, create new customer
+    if (!stripeCustomerId) {
       console.log('Creating new Stripe customer for:', email);
       const customer = await stripe.customers.create({
         email: email.toLowerCase(),
@@ -24,13 +33,24 @@ export default async (req, res) => {
       stripeCustomerId = customer.id;
       console.log('Stripe customer created:', stripeCustomerId);
 
-      // Store in memory
-      customersMap[memberId] = {
-        email: email.toLowerCase(),
-        stripeCustomerId: stripeCustomerId,
-        createdAt: new Date().toISOString()
-      };
-      console.log('Stored in memory');
+      // Store in MemberStack metadata
+      try {
+        await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+          method: 'PATCH',
+          headers: { 
+            'Authorization': `Bearer ${memberStackToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            customFields: {
+              stripeCustomerId: stripeCustomerId
+            }
+          })
+        });
+        console.log('Stored Stripe ID in MemberStack');
+      } catch (e) {
+        console.error('Error storing in MemberStack:', e.message);
+      }
     }
 
     // Create checkout session
