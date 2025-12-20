@@ -300,25 +300,16 @@
   
   // Open Stripe Customer Portal
   function openCustomerPortal() {
-    let email = localStorage.getItem('checkout_email');
-    
-    if (!email) {
-      const memberData = localStorage.getItem('_ms-mem');
-      if (memberData) {
-        try {
-          const member = JSON.parse(memberData);
-          email = member.auth?.email;
-        } catch (err) {
-          console.error('Error parsing member data:', err);
-        }
-      }
-    }
-    
-    if (email) {
+  try {
+    const memberData = localStorage.getItem('_ms-mem');
+    if (memberData) {
+      const member = JSON.parse(memberData);
+      const memberId = member.id; // Get memberId from MemberStack
+      
       fetch('/api/stripe-portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ memberId: memberId })
       })
       .then(r => r.json())
       .then(data => {
@@ -333,9 +324,13 @@
         alert('Error opening portal');
       });
     } else {
-      alert('Error: Email not found');
+      alert('Error: Member data not found');
     }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error: ' + error.message);
   }
+}
   </script>
 
   <script>

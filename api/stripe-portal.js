@@ -1,19 +1,32 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const fs = require('fs').promises;
+const path = require('path');
+
+const CUSTOMERS_FILE = path.join(process.cwd(), 'customers.json');
+
+async function loadCustomers() {
+  try {
+    const data = await fs.readFile(CUSTOMERS_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    return {};
+  }
+}
 
 export default async (req, res) => {
-  const { email } = req.body;
+  const { memberId } = req.body;
 
   try {
-    const customers = await stripe.customers.list({
-      email: email.toLowerCase(),
-      limit: 1
-    });
-
-    if (!customers.data || customers.data.length === 0) {
+    // Load customers mapping
+    const customers = await loadCustomers();
+    const customerData = customers[memberId];
+    
+    if (!customerData || !customerData.stripeCustomerId) {
       return res.status(404).json({ error: 'Customer not found' });
     }
 
-    const customerId = customers.data[0].id;
+    const customerId = customerData.stripeCustomerId;
+    console.log('Creating portal session for:', customerId);
 
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
