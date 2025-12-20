@@ -216,20 +216,20 @@
 
       // Monitor for new signup
       const checkInterval = setInterval(() => {
-        if (isTrialMode && memberStackInitialized) {
+        if (isTrialMode) {
           try {
             const memberData = localStorage.getItem('_ms-mem');
             if (memberData) {
               const userData = JSON.parse(memberData);
               const currentEmail = userData.auth?.email;
               
-              if (currentEmail && currentEmail !== previousEmail && previousEmail !== null) {
-                console.log('NEW signup detected:', currentEmail);
+              console.log('Checking signup - Previous:', previousEmail, 'Current:', currentEmail);
+              
+              // Signup if email exists and is different from previous (or previous was null)
+              if (currentEmail && currentEmail !== previousEmail) {
+                console.log('Signup detected:', currentEmail);
                 isTrialMode = false;
                 clearInterval(checkInterval);
-                
-                localStorage.setItem('pendingCheckoutEmail', currentEmail);
-                localStorage.setItem('trialSignupInProgress', 'true');
                 
                 setTimeout(() => {
                   goToCheckout(currentEmail);
@@ -240,7 +240,7 @@
             console.error('Error:', e);
           }
         }
-      }, 500);
+      }, 300);
 
       setTimeout(() => clearInterval(checkInterval), 60000);
 
