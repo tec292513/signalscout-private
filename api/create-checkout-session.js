@@ -1,84 +1,66 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
 
-export default async (req, res) => {
-  const { email, memberId, priceId, memberStackToken } = req.body;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  console.log('API called with:', { email, memberId, priceId });
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(400).json({ error: 'POST only' });
+  }
+
+  const { email, memberId, priceId } = req.body;
 
   try {
-    // Fetch member data from MemberStack to check if Stripe ID exists
     let stripeCustomerId = null;
-    
+
     try {
       const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-        headers: { 'Authorization': `Bearer ${memberStackToken}` }
+        headers: { Authorization: `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
       });
-      
+
       if (memberRes.ok) {
         const memberData = await memberRes.json();
-        stripeCustomerId = memberData.customFields?.stripeCustomerId;
-        console.log('Found existing Stripe customer in MemberStack:', stripeCustomerId);
+        stripeCustomerId = memberData?.customFields?.stripeCustomerId || null;
       }
     } catch (e) {
-      console.log('Could not fetch from MemberStack:', e.message);
+      console.log('Could not fetch from Memberstack:', e.message);
     }
 
-    // If no Stripe ID found, create new customer
     if (!stripeCustomerId) {
-      console.log('Creating new Stripe customer for:', email);
       const customer = await stripe.customers.create({
         email: email.toLowerCase(),
-        metadata: { memberId: memberId }
+        metadata: { memberId }
       });
-      stripeCustomerId = customer.id;
-      console.log('Stripe customer created:', stripeCustomerId);
 
-      // Store in MemberStack metadata
+      stripeCustomerId = customer.id;
+
       try {
         await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
           method: 'PATCH',
-          headers: { 
-            'Authorization': `Bearer ${memberStackToken}`,
+          headers: {
+            Authorization: `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            customFields: {
-              stripeCustomerId: stripeCustomerId
-            }
+            customFields: { stripeCustomerId }
           })
         });
-        console.log('Stored Stripe ID in MemberStack');
       } catch (e) {
-        console.error('Error storing in MemberStack:', e.message);
+        console.log('Error storing Stripe ID in Memberstack:', e.message);
       }
     }
 
-    // Create checkout session
-    console.log('Creating checkout session for:', stripeCustomerId);
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
-      payment_method_types: ['card'],
-      payment_method_collection: 'always',
-      billing_address_collection: 'required',
       mode: 'subscription',
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1
-        }
-      ],
-      subscription_data: {
-        trial_period_days: 2
-      },
-      success_url: 'https://aisignalscout.com/dashboard.html?email=' + encodeURIComponent(email),
+      line_items: [{ price: priceId, quantity: 1 }],
+      subscription_data: { trial_period_days: 2 },
+      success_url: 'https://aisignalscout.com/dashboard.html',
       cancel_url: 'https://aisignalscout.com/?canceled=true'
     });
-    
-    console.log('Session created:', session.id);
-    return res.json({ url: session.url });
 
+    return res.status(200).json({ url: session.url });
   } catch (error) {
-    console.error('Error details:', error);
+    console.error('Error:', error);
     return res.status(500).json({ error: error.message });
   }
-};
+}
