@@ -129,7 +129,55 @@
       MemberStack.onReady.then(member => {
         memberStackToken = member.getToken();
         console.log('Dashboard: MemberStack token obtained');
+        
+        // Check if user just signed up (no Stripe ID yet)
+        const memberData = localStorage.getItem('_ms-mem');
+        if (memberData) {
+          const userData = JSON.parse(memberData);
+          const memberId = userData.id;
+          const email = userData.auth?.email;
+          
+          console.log('Checking if new user - memberId:', memberId);
+          
+          // Try to fetch from MemberStack to see if Stripe ID exists
+          fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+            headers: { 'Authorization': `Bearer ${memberStackToken}` }
+          })
+          .then(r => r.json())
+          .then(data => {
+            const stripeId = data.customFields?.stripeCustomerId;
+            console.log('Existing Stripe ID:', stripeId);
+            
+            // If no Stripe ID, this is a new user - send to checkout
+            if (!stripeId && email) {
+              console.log('NEW USER - sending to Stripe checkout');
+              goToCheckout(email, memberId);
+            }
+          })
+          .catch(e => console.log('Could not check Stripe ID:', e.message));
+        }
       });
+    }
+
+    function goToCheckout(email, memberId) {
+      fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          memberId: memberId,
+          priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG',
+          memberStackToken: memberStackToken
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        console.log('Checkout URL:', data.url);
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      })
+      .catch(e => console.error('Checkout error:', e));
     }
 
     // Open Stripe Customer Portal

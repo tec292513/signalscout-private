@@ -173,73 +173,11 @@
     </footer>
 
     <script>
-      let memberStackToken = null;
-
-      // Listen for MemberStack signup/login
+      // Just load MemberStack, checkout happens on dashboard
       if (window.MemberStack) {
         MemberStack.onReady.then(member => {
-          memberStackToken = member.getToken();
-          console.log('MemberStack token obtained');
-          
-          // Listen for user auth changes
-          member.onAuthStateChange(() => {
-            console.log('Auth state changed');
-            const memberData = localStorage.getItem('_ms-mem');
-            if (memberData) {
-              const userData = JSON.parse(memberData);
-              const email = userData.auth?.email;
-              const memberId = userData.id;
-              
-              if (email && memberId) {
-                console.log('User logged in:', email);
-                goToCheckout(email, memberId);
-              }
-            }
-          });
+          console.log('MemberStack ready on homepage');
         });
-      }
-
-      async function goToCheckout(email, memberId) {
-        try {
-          console.log('Going to checkout with email:', email, 'ID:', memberId);
-          
-          // Get fresh token
-          if (window.MemberStack) {
-            const member = await MemberStack.onReady;
-            memberStackToken = member.getToken();
-          }
-          
-          console.log('Token:', memberStackToken);
-          
-          const response = await fetch('/api/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: email,
-              memberId: memberId,
-              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG',
-              memberStackToken: memberStackToken
-            })
-          });
-
-          console.log('Response status:', response.status);
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('API Error:', errorData);
-            return;
-          }
-
-          const session = await response.json();
-          console.log('Session URL:', session.url);
-          
-          if (session.url) {
-            window.location.href = session.url;
-          }
-
-        } catch (error) {
-          console.error('Checkout Error:', error);
-        }
       }
     </script>
   </body>
