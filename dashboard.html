@@ -22,178 +22,42 @@
     .signal-card blockquote { border-left: 3px solid #3b82f6; padding-left: 1.5rem; color: #d1d5db; font-style: italic; }
     .signal-type-badge { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); }
     
-    .choices {
-      margin: 0;
-    }
+    .choices { margin: 0; }
+    .choices__inner { background-color: #1E293B !important; border: 1px solid #475569 !important; border-radius: 0.375rem !important; padding: 0.5rem 0.75rem !important; min-height: 2.75rem !important; }
+    .choices__inner:focus-within { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important; }
+    .choices__input { background-color: transparent !important; color: #64748b !important; font-size: 0.875rem !important; }
+    .choices__input::placeholder { color: #64748b !important; }
+    .choices__list { max-height: 200px !important; }
+    .choices__list--dropdown { background-color: #0f172a !important; border: 1px solid #3b82f6 !important; border-radius: 0.375rem !important; margin-top: 0.25rem !important; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important; }
+    .choices__list--dropdown .choices__item { color: #e2e8f0 !important; background-color: #0f172a !important; padding: 0.625rem 1rem !important; }
+    .choices__item--choice { color: #e2e8f0 !important; background-color: #0f172a !important; }
+    .choices__item--choice:hover { background-color: #3b82f6 !important; color: #ffffff !important; }
+    .choices__item--choice.is-highlighted { background-color: #3b82f6 !important; color: #ffffff !important; }
+    .choices__item--selectable { color: #e2e8f0 !important; }
+    .choices__item--selectable:hover { background-color: #3b82f6 !important; color: #ffffff !important; }
+    .choices__item.is-selected { background-color: rgba(59, 130, 246, 0.3) !important; color: #60a5fa !important; }
+    .choices__button { background-color: #3b82f6 !important; color: #ffffff !important; border-color: #3b82f6 !important; }
+    .choices__button:hover { background-color: #2563eb !important; border-color: #2563eb !important; }
+    .choices__placeholder { color: #94a3b8 !important; }
     
-    .choices__inner {
-      background-color: #1E293B !important;
-      border: 1px solid #475569 !important;
-      border-radius: 0.375rem !important;
-      padding: 0.5rem 0.75rem !important;
-      min-height: 2.75rem !important;
-    }
+    .filter-group label { color: #cbd5e1; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; font-weight: 500; }
+    .search-input { background-color: #1E293B; border: 1px solid #475569; color: #e2e8f0; padding: 0.75rem 1rem; border-radius: 0.5rem; width: 100%; }
+    .search-input::placeholder { color: #64748b; }
+    .search-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     
-    .choices__inner:focus-within {
-      border-color: #3b82f6 !important;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-    }
+    .date-input { background-color: #1E293B; border: 1px solid #475569; color: #e2e8f0; padding: 0.75rem 1rem; border-radius: 0.5rem; width: 100%; }
+    .date-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     
-    .choices__input {
-      background-color: transparent !important;
-      color: #64748b !important;
-      font-size: 0.875rem !important;
-    }
+    .date-range-group { display: flex; gap: 0.5rem; align-items: center; }
+    .date-range-group input { flex: 1; }
+    .date-range-separator { color: #64748b; font-weight: 500; min-width: max-content; }
     
-    .choices__input::placeholder {
-      color: #64748b !important;
-    }
+    .favorite-btn { background: none; border: none; cursor: pointer; font-size: 1.5rem; padding: 0.25rem; transition: all 0.2s; color: #64748b; }
+    .favorite-btn:hover { color: #fbbf24; transform: scale(1.2); }
+    .favorite-btn.favorited { color: #fbbf24; }
     
-    .choices__list {
-      max-height: 200px !important;
-    }
-    
-    .choices__list--dropdown {
-      background-color: #0f172a !important;
-      border: 1px solid #3b82f6 !important;
-      border-radius: 0.375rem !important;
-      margin-top: 0.25rem !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-    }
-    
-    .choices__list--dropdown .choices__item {
-      color: #e2e8f0 !important;
-      background-color: #0f172a !important;
-      padding: 0.625rem 1rem !important;
-    }
-    
-    .choices__item--choice {
-      color: #e2e8f0 !important;
-      background-color: #0f172a !important;
-    }
-    
-    .choices__item--choice:hover {
-      background-color: #3b82f6 !important;
-      color: #ffffff !important;
-    }
-    
-    .choices__item--choice.is-highlighted {
-      background-color: #3b82f6 !important;
-      color: #ffffff !important;
-    }
-    
-    .choices__item--selectable {
-      color: #e2e8f0 !important;
-    }
-    
-    .choices__item--selectable:hover {
-      background-color: #3b82f6 !important;
-      color: #ffffff !important;
-    }
-    
-    .choices__item.is-selected {
-      background-color: rgba(59, 130, 246, 0.3) !important;
-      color: #60a5fa !important;
-    }
-    
-    .choices__button {
-      background-color: #3b82f6 !important;
-      color: #ffffff !important;
-      border-color: #3b82f6 !important;
-    }
-    
-    .choices__button:hover {
-      background-color: #2563eb !important;
-      border-color: #2563eb !important;
-    }
-    
-    .choices__placeholder {
-      color: #94a3b8 !important;
-    }
-    
-    .filter-group label { 
-      color: #cbd5e1; 
-      font-size: 0.9rem; 
-      margin-bottom: 0.5rem; 
-      display: block;
-      font-weight: 500;
-    }
-    
-    .search-input {
-      background-color: #1E293B;
-      border: 1px solid #475569;
-      color: #e2e8f0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      width: 100%;
-    }
-    .search-input::placeholder {
-      color: #64748b;
-    }
-    .search-input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .date-input {
-      background-color: #1E293B;
-      border: 1px solid #475569;
-      color: #e2e8f0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      width: 100%;
-    }
-    .date-input:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .date-range-group {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    
-    .date-range-group input {
-      flex: 1;
-    }
-    
-    .date-range-separator {
-      color: #64748b;
-      font-weight: 500;
-      min-width: max-content;
-    }
-    
-    .favorite-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.5rem;
-      padding: 0.25rem;
-      transition: all 0.2s;
-      color: #64748b;
-    }
-    .favorite-btn:hover {
-      color: #fbbf24;
-      transform: scale(1.2);
-    }
-    .favorite-btn.favorited {
-      color: #fbbf24;
-    }
-    
-    .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .btn-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+    .btn-secondary { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.3s ease; }
+    .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.2); }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -266,23 +130,36 @@
       localStorage.removeItem('trialSignupInProgress');
       localStorage.removeItem('pendingCheckoutEmail');
       
-      // Create checkout session
-      fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: pendingEmail,
-          memberId: `member-${Date.now()}`,
-          priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
-        })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.url) {
-          window.location.href = data.url;
+      // Get real MemberStack ID
+      const memberData = localStorage.getItem('_ms-mem');
+      if (memberData) {
+        try {
+          const userData = JSON.parse(memberData);
+          const memberId = userData.id; // Real MemberStack ID
+          
+          console.log('Using MemberStack ID:', memberId);
+          
+          // Create checkout session
+          fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: pendingEmail,
+              memberId: memberId, // Real ID
+              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+            })
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.url) {
+              window.location.href = data.url;
+            }
+          })
+          .catch(err => console.error('Error:', err));
+        } catch (e) {
+          console.error('Error parsing MemberStack data:', e);
         }
-      })
-      .catch(err => console.error('Error:', err));
+      }
     }
   }
 
@@ -300,37 +177,39 @@
   
   // Open Stripe Customer Portal
   function openCustomerPortal() {
-  try {
-    const memberData = localStorage.getItem('_ms-mem');
-    if (memberData) {
-      const member = JSON.parse(memberData);
-      const memberId = member.id; // Get memberId from MemberStack
-      
-      fetch('/api/stripe-portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ memberId: memberId })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert('Error: ' + (data.error || 'Could not open portal'));
-        }
-      })
-      .catch(err => {
-        console.error('Error:', err);
-        alert('Error opening portal');
-      });
-    } else {
-      alert('Error: Member data not found');
+    try {
+      const memberData = localStorage.getItem('_ms-mem');
+      if (memberData) {
+        const member = JSON.parse(memberData);
+        const memberId = member.id; // Get real memberId from MemberStack
+        
+        console.log('Opening portal for MemberStack ID:', memberId);
+        
+        fetch('/api/stripe-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ memberId: memberId })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert('Error: ' + (data.error || 'Could not open portal'));
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Error opening portal');
+        });
+      } else {
+        alert('Error: Member data not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
     }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Error: ' + error.message);
   }
-}
   </script>
 
   <script>

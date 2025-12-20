@@ -240,12 +240,27 @@
         try {
           console.log('Going to checkout with email:', email);
           
+          // Get the real MemberStack ID
+          const memberData = localStorage.getItem('_ms-mem');
+          let memberId = null;
+          if (memberData) {
+            const userData = JSON.parse(memberData);
+            memberId = userData.id; // Real MemberStack ID
+          }
+          
+          if (!memberId) {
+            alert('Error: MemberStack ID not found');
+            return;
+          }
+          
+          console.log('Using MemberStack ID:', memberId);
+          
           const response = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: email,
-              memberId: `member-${Date.now()}`,
+              memberId: memberId, // Real ID now
               priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
             })
           });
