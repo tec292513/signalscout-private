@@ -124,39 +124,64 @@
   <script>
     let memberStackToken = null;
 
-    // Get MemberStack token
-    if (window.MemberStack) {
-      MemberStack.onReady.then(member => {
-        memberStackToken = member.getToken();
-        console.log('Dashboard: MemberStack token obtained');
+    function checkAndRedirectToCheckout() {
+      // Wait for MemberStack to be ready
+      const maxRetries = 20;
+      let retries = 0;
+
+      const tryCheckout = () => {
+        retries++;
         
-        // Check if user just signed up (no Stripe ID yet)
-        const memberData = localStorage.getItem('_ms-mem');
-        if (memberData) {
+        if (!window.MemberStack) {
+          console.log('MemberStack not ready yet, retry', retries);
+          if (retries < maxRetries) {
+            setTimeout(tryCheckout, 500);
+          }
+          return;
+        }
+
+        MemberStack.onReady.then(member => {
+          memberStackToken = member.getToken();
+          console.log('MemberStack ready, token obtained');
+          
+          const memberData = localStorage.getItem('_ms-mem');
+          if (!memberData) {
+            console.log('No member data in localStorage');
+            return;
+          }
+
           const userData = JSON.parse(memberData);
           const memberId = userData.id;
           const email = userData.auth?.email;
           
-          console.log('Checking if new user - memberId:', memberId);
+          console.log('Checking user - email:', email, 'memberId:', memberId);
           
-          // Try to fetch from MemberStack to see if Stripe ID exists
+          // Check if Stripe ID already exists
           fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
             headers: { 'Authorization': `Bearer ${memberStackToken}` }
           })
           .then(r => r.json())
           .then(data => {
             const stripeId = data.customFields?.stripeCustomerId;
-            console.log('Existing Stripe ID:', stripeId);
+            console.log('Stripe ID exists:', !!stripeId);
             
-            // If no Stripe ID, this is a new user - send to checkout
             if (!stripeId && email) {
-              console.log('NEW USER - sending to Stripe checkout');
+              console.log('New user detected - sending to checkout');
               goToCheckout(email, memberId);
+            } else {
+              console.log('Existing user or no email');
             }
           })
-          .catch(e => console.log('Could not check Stripe ID:', e.message));
-        }
-      });
+          .catch(e => console.error('MemberStack fetch error:', e));
+        }).catch(e => {
+          console.error('MemberStack onReady error:', e);
+          if (retries < maxRetries) {
+            setTimeout(tryCheckout, 500);
+          }
+        });
+      };
+
+      tryCheckout();
     }
 
     function goToCheckout(email, memberId) {
@@ -172,13 +197,17 @@
       })
       .then(r => r.json())
       .then(data => {
-        console.log('Checkout URL:', data.url);
+        console.log('API response:', data);
         if (data.url) {
+          console.log('Redirecting to:', data.url);
           window.location.href = data.url;
         }
       })
       .catch(e => console.error('Checkout error:', e));
     }
+
+    // Start checking on page load
+    checkAndRedirectToCheckout();
 
     // Open Stripe Customer Portal
     function openCustomerPortal() {
