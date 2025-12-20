@@ -175,15 +175,23 @@
     <script>
       let isTrialMode = false;
       let previousEmail = null;
+      let memberStackInitialized = false;
 
-      // Get initial email (if any)
-      try {
-        const memberData = localStorage.getItem('_ms-mem');
-        if (memberData) {
-          const userData = JSON.parse(memberData);
-          previousEmail = userData.auth?.email;
+      // Wait a moment, then capture initial email
+      setTimeout(() => {
+        try {
+          const memberData = localStorage.getItem('_ms-mem');
+          if (memberData) {
+            const userData = JSON.parse(memberData);
+            previousEmail = userData.auth?.email;
+            console.log('Initial email set to:', previousEmail);
+          }
+          memberStackInitialized = true;
+        } catch (e) {
+          console.log('No initial member data');
+          memberStackInitialized = true;
         }
-      } catch (e) {}
+      }, 500);
 
       // Intercept the Start Trial link to set a flag
       document.addEventListener('DOMContentLoaded', () => {
@@ -201,15 +209,17 @@
       // Monitor localStorage for NEW user signup (email changed)
       if (typeof window !== 'undefined') {
         const checkInterval = setInterval(() => {
-          if (isTrialMode) {
+          if (isTrialMode && memberStackInitialized) {
             try {
               const memberData = localStorage.getItem('_ms-mem');
               if (memberData) {
                 const userData = JSON.parse(memberData);
                 const currentEmail = userData.auth?.email;
                 
+                console.log('Checking email - Previous:', previousEmail, 'Current:', currentEmail);
+                
                 // Check if email changed (new signup)
-                if (currentEmail && currentEmail !== previousEmail) {
+                if (currentEmail && currentEmail !== previousEmail && previousEmail !== null) {
                   console.log('NEW signup detected:', currentEmail);
                   isTrialMode = false;
                   clearInterval(checkInterval);
