@@ -180,21 +180,17 @@ window.$memberstackDom.getCurrentMember().then(({ data: member }) => {
           
           console.log('Checking user - email:', email, 'memberId:', memberId);
           
-          fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-            headers: { 'Authorization': `Bearer ${memberStackToken}` }
-          })
-          .then(r => r.json())
-          .then(data => {
-            const stripeId = data.customFields?.stripeCustomerId;
-            console.log('Stripe ID exists:', !!stripeId);
-            
-            if (!stripeId && email) {
-              console.log('New user detected - sending to checkout');
-              goToCheckout(email, memberId);
-            } else {
-              console.log('Existing user or no email');
-            }
-          })
+          // Use the v2 SDK - no fetch needed!
+const stripeId = member.customFields?.stripeCustomerId;
+console.log('Stripe ID exists:', !!stripeId);
+
+if (!stripeId && email) {
+  console.log('New user detected - sending to checkout');
+  goToCheckout(email, memberId);
+} else {
+  console.log('Existing user or no email');
+}
+
           .catch(e => console.error('MemberStack fetch error:', e));
         }).catch(e => {
           console.error('MemberStack onReady error:', e);
