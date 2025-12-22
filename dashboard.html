@@ -157,7 +157,7 @@
       const tryCheckout = () => {
         retries++;
         
-        if (!window.MemberStack) {
+if (!window.$memberstackDom) {
           console.log('MemberStack not ready yet, retry', retries);
           if (retries < maxRetries) {
             setTimeout(tryCheckout, 500);
@@ -165,8 +165,7 @@
           return;
         }
 
-        MemberStack.onReady.then(member => {
-          memberStackToken = member.getToken();
+window.$memberstackDom.getCurrentMember().then(({ data: member }) => {
           console.log('MemberStack ready, token obtained');
           
           const memberData = localStorage.getItem('_ms-mem');
