@@ -148,38 +148,40 @@
 
 
   <script>
-    let memberStackToken = null;
+    window.$memberstackDom.getCurrentMember().then(({ data: member }) => {
+  if (!member) return;
+  
+  console.log('MemberStack ready');
+  
+  const memberData = localStorage.getItem('_ms-mem');
+  if (!memberData) {
+    console.log('No member data in localStorage');
+    return;
+  }
 
-    function checkAndRedirectToCheckout() {
-      const maxRetries = 20;
-      let retries = 0;
+  const userData = JSON.parse(memberData);
+  const memberId = userData.id;
+  const email = userData.auth?.email;
+  
+  console.log('Checking user - email:', email, 'memberId:', memberId);
+  
+  // Check if user has Stripe ID
+  const stripeId = member.customFields?.stripeCustomerId;
+  console.log('Stripe ID exists:', !!stripeId);
+  
+  if (!stripeId && email) {
+    console.log('New user detected - sending to checkout');
+    goToCheckout(email, memberId);
+  } else {
+    console.log('Existing user or no email');
+  }
+}).catch(e => {
+  console.error('MemberStack error:', e);
+  if (retries < maxRetries) {
+    setTimeout(tryCheckout, 500);
+  }
+});
 
-      const tryCheckout = () => {
-        retries++;
-        
-if (!window.$memberstackDom) {
-          console.log('MemberStack not ready yet, retry', retries);
-          if (retries < maxRetries) {
-            setTimeout(tryCheckout, 500);
-          }
-          return;
-        }
-
-window.$memberstackDom.getCurrentMember().then(({ data: member }) => {
-          console.log('MemberStack ready, token obtained');
-          
-          const memberData = localStorage.getItem('_ms-mem');
-          if (!memberData) {
-            console.log('No member data in localStorage');
-            return;
-          }
-
-          const userData = JSON.parse(memberData);
-          const memberId = userData.id;
-          const email = userData.auth?.email;
-          
-          console.log('Checking user - email:', email, 'memberId:', memberId);
-          
           // Use the v2 SDK - no fetch needed!
 const stripeId = member.customFields?.stripeCustomerId;
 console.log('Stripe ID exists:', !!stripeId);
