@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="https://api.memberstack.io/static/memberstack.js?custom" data-memberstack-id="app_cmfu0bt8h002n0wubdfa67lp6"></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SignalScout AI Dashboard</title>
@@ -121,14 +123,28 @@
 
   <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
-  <script>
-    console.log('Dashboard script loaded');
-    console.log('window.MemberStack at load:', window.MemberStack);
+<script>
+  // Wait for the page to fully load
+  window.addEventListener('load', function() {
     
-    setTimeout(() => {
-      console.log('After 2 second wait - window.MemberStack:', window.MemberStack);
-    }, 2000);
-  </script>
+    // Check if MemberStack loaded correctly
+    if (window.$memberstackDom) {
+      
+      // NOW you can safely use MemberStack
+      window.$memberstackDom.getCurrentMember()
+        .then(({ data: member }) => {
+          if (member) {
+            console.log("User logged in:", member.auth.email);
+            // Load your dashboard data here
+          }
+        });
+        
+    } else {
+      console.error("MemberStack failed to load");
+    }
+  });
+</script>
+
 
   <script>
     let memberStackToken = null;
