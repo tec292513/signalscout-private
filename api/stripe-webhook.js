@@ -1,5 +1,13 @@
 import Stripe from 'stripe';
+import { buffer } from 'micro';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+export const config = {
+  api: {
+    bodyParser: false, // CRITICAL: Disable body parsing
+  },
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -12,22 +20,24 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    // Get raw body as buffer
+    const buf = await buffer(req);
+    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
   } catch (err) {
-    console.log('Webhook signature verification failed:', err.message);
+    console.log('Webhook Error:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the checkout.session.completed event
+  // Handle checkout.session.completed
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-
+    
     const stripeCustomerId = session.customer;
-    const memberId = session.client_reference_id; // We'll add this in create-checkout-session
+    const memberId = session.client_reference_id;
 
     console.log('Payment successful for member:', memberId);
 
-    // Update Memberstack with Stripe customer ID
+    // Update Memberstack
     try {
       await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
         method: 'PATCH',
@@ -49,9 +59,3 @@ export default async function handler(req, res) {
 
   res.status(200).json({ received: true });
 }
-
-export const config = {
-  api: {
-    bodyParser: false, // Stripe needs raw body
-  },
-};
