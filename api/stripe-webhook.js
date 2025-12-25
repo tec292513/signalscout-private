@@ -31,11 +31,28 @@ export default async function handler(req, res) {
   // Handle checkout.session.completed
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    
     const stripeCustomerId = session.customer;
     const memberId = session.client_reference_id;
 
     console.log('Payment successful for member:', memberId);
+
+    // Check if subscription had a trial period
+    try {
+      const subscription = await stripe.subscriptions.retrieve(session.subscription);
+      
+      if (subscription.trial_start) {
+        // Trial was started, mark as used
+        await stripe.customers.update(stripeCustomerId, {
+          metadata: {
+            trial_used: 'true'
+          }
+        });
+        
+        console.log(`Marked trial as used for customer ${stripeCustomerId}`);
+      }
+    } catch (e) {
+      console.log('Could not mark trial as used:', e.message);
+    }
 
     // Update Memberstack
     try {
