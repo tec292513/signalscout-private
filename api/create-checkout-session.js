@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
@@ -12,9 +11,10 @@ export default async function handler(req, res) {
   try {
     let stripeCustomerId = null;
 
+    // Check if user already has a Stripe customer ID
     try {
       const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-        headers: { Authorization: `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
+        headers: { 'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
       });
 
       if (memberRes.ok) {
@@ -25,40 +25,34 @@ export default async function handler(req, res) {
       console.log('Could not fetch from Memberstack:', e.message);
     }
 
+    // Create new Stripe customer if doesn't exist
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: email.toLowerCase(),
         metadata: { memberId }
       });
-
       stripeCustomerId = customer.id;
-
-      try {
-        await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            customFields: { stripeCustomerId }
-          })
-        });
-      } catch (e) {
-        console.log('Error storing Stripe ID in Memberstack:', e.message);
-      }
+      // DON'T save to Memberstack here - let webhook do it after payment
     }
 
+    // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
+      client_reference_id: memberId, // This lets webhook know which member to update
       mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
-      subscription_data: { trial_period_days: 2 },
-      success_url: 'https://aisignalscout.com/dashboard.html',
-      cancel_url: 'https://aisignalscout.com/?canceled=true'
+      line_items: [{
+        price: priceId,
+        quantity: 1
+      }],
+      subscription_data: {
+        trial_period_days: 2
+      },
+      success_url: `https://aisignalscout.com/dashboard.html?success=true`,
+      cancel_url: `https://aisignalscout.com?canceled=true`
     });
 
     return res.status(200).json({ url: session.url });
+
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: error.message });
