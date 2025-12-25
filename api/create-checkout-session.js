@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
         headers: { 'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
       });
-
+      
       if (memberRes.ok) {
         const memberData = await memberRes.json();
         stripeCustomerId = memberData?.customFields?.stripeCustomerId || null;
@@ -32,13 +32,31 @@ export default async function handler(req, res) {
         metadata: { memberId }
       });
       stripeCustomerId = customer.id;
-      // DON'T save to Memberstack here - let webhook do it after payment
+      
+      // SAVE IMMEDIATELY to Memberstack - don't wait for webhook
+      try {
+        await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            customFields: {
+              stripeCustomerId: stripeCustomerId
+            }
+          })
+        });
+        console.log('Stripe ID saved to Memberstack BEFORE checkout');
+      } catch (e) {
+        console.log('Error saving to Memberstack:', e.message);
+      }
     }
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
-      client_reference_id: memberId, // This lets webhook know which member to update
+      client_reference_id: memberId,
       mode: 'subscription',
       line_items: [{
         price: priceId,
@@ -52,7 +70,7 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({ url: session.url });
-
+    
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: error.message });
