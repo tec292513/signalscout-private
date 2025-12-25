@@ -25,11 +25,11 @@ export default async function handler(req, res) {
     // Check for ANY active-like subscription (active, trialing, past_due)
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,
-      limit: 10  // Check up to 10 subscriptions
+      limit: 10
     });
 
     // Filter for valid statuses
-    const validSubscriptions = subscriptions.data.filter(sub => 
+    const validSubscriptions = subscriptions.data.filter(sub =>
       ['active', 'trialing', 'past_due'].includes(sub.status)
     );
 
