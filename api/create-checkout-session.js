@@ -10,8 +10,9 @@ export default async function handler(req, res) {
 
   try {
     let stripeCustomerId = null;
+    let memberHasStripeId = false;
 
-    // Check if user already has a Stripe customer ID
+    // Check if user already has a Stripe customer ID in Memberstack
     try {
       const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
         headers: { 'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
@@ -20,6 +21,7 @@ export default async function handler(req, res) {
       if (memberRes.ok) {
         const memberData = await memberRes.json();
         stripeCustomerId = memberData?.customFields?.stripeCustomerId || null;
+        memberHasStripeId = !!stripeCustomerId;
       }
     } catch (e) {
       console.log('Could not fetch from Memberstack:', e.message);
@@ -32,8 +34,11 @@ export default async function handler(req, res) {
         metadata: { memberId }
       });
       stripeCustomerId = customer.id;
-      
-      // SAVE IMMEDIATELY to Memberstack - don't wait for webhook
+      memberHasStripeId = false; // Need to save it
+    }
+
+    // Save to Memberstack if not already there
+    if (!memberHasStripeId && stripeCustomerId) {
       try {
         await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
           method: 'PATCH',
@@ -47,7 +52,7 @@ export default async function handler(req, res) {
             }
           })
         });
-        console.log('Stripe ID saved to Memberstack BEFORE checkout');
+        console.log('Stripe ID saved to Memberstack');
       } catch (e) {
         console.log('Error saving to Memberstack:', e.message);
       }
