@@ -319,10 +319,10 @@
             try {
                 // Check Stripe directly for active subscription
                 const response = await fetch('/api/check-stripe-subscription', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
-                });
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, customerId: userData.customFields?.stripeCustomerId })
+});
 
                 const data = await response.json();
 

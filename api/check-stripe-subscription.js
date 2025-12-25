@@ -7,28 +7,45 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'POST only' });
   }
 
-  const { email } = req.body;
+  const { email, customerId } = req.body;
 
   try {
-    // Search for customer by email
-    const customers = await stripe.customers.list({
-      email: email.toLowerCase(),
-      limit: 1
-    });
+    let cust_id = customerId;
 
-    if (customers.data.length === 0) {
-      return res.status(200).json({ hasSubscription: false });
+    // If no customerId provided, search by email
+    if (!cust_id) {
+      const customers = await stripe.customers.list({
+        email: email.toLowerCase(),
+        limit: 100  // Check up to 100
+      });
+
+      if (customers.data.length === 0) {
+        return res.status(200).json({ hasSubscription: false });
+      }
+
+      // Find the customer with subscriptions
+      for (let customer of customers.data) {
+        const subs = await stripe.subscriptions.list({
+          customer: customer.id,
+          limit: 1
+        });
+        if (subs.data.length > 0) {
+          cust_id = customer.id;
+          break;
+        }
+      }
+
+      if (!cust_id) {
+        return res.status(200).json({ hasSubscription: false });
+      }
     }
 
-    const customerId = customers.data[0].id;
-
-    // Check for ANY active-like subscription (active, trialing, past_due)
+    // Check subscriptions for this customer
     const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
+      customer: cust_id,
       limit: 10
     });
 
-    // Filter for valid statuses
     const validSubscriptions = subscriptions.data.filter(sub =>
       ['active', 'trialing', 'past_due'].includes(sub.status)
     );
@@ -36,14 +53,14 @@ export default async function handler(req, res) {
     const hasSubscription = validSubscriptions.length > 0;
 
     console.log(`Subscription check for ${email}:`, {
-      customerId,
+      customerId: cust_id,
       hasSubscription,
       statuses: subscriptions.data.map(s => s.status)
     });
 
     return res.status(200).json({ 
       hasSubscription,
-      customerId: customerId
+      customerId: cust_id
     });
 
   } catch (error) {
