@@ -132,20 +132,14 @@
 
   <script>
     let memberStackToken = null;
-function checkAndRedirectToCheckout(member) {
-  // NEW: Skip redirect if just returned from successful payment
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('success') === 'true') {
-    console.log('Just completed payment, skipping checkout redirect');
-    return; // Exit immediately
-  }
-  
-  // Rest of your existing code below...
-  const maxRetries = 20;
-  let retries = 0;
-  // etc...
-
     function checkAndRedirectToCheckout() {
+      // Skip redirect if just returned from successful payment
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        console.log('Just completed payment, skipping checkout redirect');
+        return;
+      }
+
       const maxRetries = 20;
       let retries = 0;
 
