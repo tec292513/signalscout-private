@@ -17,27 +17,29 @@ export default async function handler(req, res) {
     });
 
     if (customers.data.length === 0) {
-      // No customer found = no subscription
       return res.status(200).json({ hasSubscription: false });
     }
 
     const customerId = customers.data[0].id;
 
-    // Check if customer has active subscription
+    // Check for ANY active-like subscription (active, trialing, past_due)
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,
-      status: 'active',
-      limit: 1
+      limit: 10  // Check up to 10 subscriptions
     });
 
-    // Also check for trialing subscriptions
-    const trialingSubscriptions = await stripe.subscriptions.list({
-      customer: customerId,
-      status: 'trialing',
-      limit: 1
-    });
+    // Filter for valid statuses
+    const validSubscriptions = subscriptions.data.filter(sub => 
+      ['active', 'trialing', 'past_due'].includes(sub.status)
+    );
 
-    const hasSubscription = subscriptions.data.length > 0 || trialingSubscriptions.data.length > 0;
+    const hasSubscription = validSubscriptions.length > 0;
+
+    console.log(`Subscription check for ${email}:`, {
+      customerId,
+      hasSubscription,
+      statuses: subscriptions.data.map(s => s.status)
+    });
 
     return res.status(200).json({ 
       hasSubscription,
