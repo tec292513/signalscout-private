@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         metadata: { memberId }
       });
       stripeCustomerId = customer.id;
-      memberHasStripeId = false; // Need to save it
+      memberHasStripeId = false;
       console.log(`✅ Created new Stripe customer: ${stripeCustomerId}`);
     } else {
       // Check if customer already used trial by looking at past subscriptions
