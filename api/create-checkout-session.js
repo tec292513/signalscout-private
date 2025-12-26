@@ -95,8 +95,13 @@ export default async function handler(req, res) {
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomerId,
-      client_reference_id: memberId,
+  customer: stripeCustomerId,
+  mode: 'subscription',
+  metadata: {
+    memberId: memberId
+  },
+  line_items: [
+
       mode: 'subscription',
       line_items: [{
         price: priceId,
