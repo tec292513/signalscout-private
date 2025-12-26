@@ -1,13 +1,6 @@
 import Stripe from 'stripe';
-import { buffer } from 'micro';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-export const config = {
-  api: {
-    bodyParser: false, // CRITICAL: Disable body parsing
-  },
-};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,64 +8,62 @@ export default async function handler(req, res) {
   }
 
   const sig = req.headers['stripe-signature'];
-  const webhookSecret = 'whsec_NkWbcsbRx415gPKIaqCaCNv9aEadFPHN';
+  const rawBody = req.rawBody || JSON.stringify(req.body);
 
   let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).json({ error: 'Webhook signature verification failed' });
+  }
 
   try {
-    // Get raw body as buffer
-    const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
-  } catch (err) {
-    console.log('Webhook Error:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    const { type, data } = event;
+    const stripeCustomerId = data.object?.customer;
+    const memberId = data.object?.metadata?.memberId;
 
-  // Handle checkout.session.completed
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const stripeCustomerId = session.customer;
-    const memberId = session.client_reference_id;
+    console.log(`📥 Webhook event: ${type}`);
+    console.log(`   Customer: ${stripeCustomerId}, Member: ${memberId}`);
 
-    console.log('Payment successful for member:', memberId);
-
-    // Check if subscription had a trial period
-    try {
-      const subscription = await stripe.subscriptions.retrieve(session.subscription);
+    // Handle subscription creation, update, or deletion
+    if (type === 'customer.subscription.created' || 
+        type === 'customer.subscription.updated' ||
+        type === 'customer.subscription.deleted') {
       
-      if (subscription.trial_start) {
-        // Trial was started, mark as used
-        await stripe.customers.update(stripeCustomerId, {
-          metadata: {
-            trial_used: 'true'
+      if (memberId && stripeCustomerId) {
+        // Sync Stripe customer ID to MemberStack built-in field
+        try {
+          const updateRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+            method: 'PATCH',
+            headers: {
+              'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              stripeCustomerId: stripeCustomerId
+            })
+          });
+
+          if (updateRes.ok) {
+            console.log(`✅ Synced stripeCustomerId ${stripeCustomerId} to member ${memberId}`);
+          } else {
+            const errorText = await updateRes.text();
+            console.log(`❌ Failed to sync to MemberStack (${updateRes.status}):`, errorText);
           }
-        });
-        
-        console.log(`Marked trial as used for customer ${stripeCustomerId}`);
+        } catch (e) {
+          console.log('❌ Error syncing to MemberStack:', e.message);
+        }
       }
-    } catch (e) {
-      console.log('Could not mark trial as used:', e.message);
     }
 
-    // Update Memberstack
-    try {
-      await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          customFields: {
-            stripeCustomerId: stripeCustomerId
-          }
-        })
-      });
-      console.log('Stripe ID saved to Memberstack');
-    } catch (e) {
-      console.error('Error updating Memberstack:', e.message);
-    }
+    return res.status(200).json({ success: true, eventType: type });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    return res.status(500).json({ error: error.message });
   }
-
-  res.status(200).json({ received: true });
 }
