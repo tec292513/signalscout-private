@@ -16,14 +16,20 @@ export default async function handler(req, res) {
 
     // Check if user already has a Stripe customer ID in Memberstack
     try {
-      const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-        headers: { 'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}` }
+      const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+        headers: { 
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+          'Content-Type': 'application/json'
+        }
       });
 
       if (memberRes.ok) {
         const memberData = await memberRes.json();
-        stripeCustomerId = memberData?.customFields?.stripeCustomerId || null;
+        stripeCustomerId = memberData?.data?.customFields?.stripeCustomerId || null;
         memberHasStripeId = !!stripeCustomerId;
+        console.log(`MemberStack fetch successful. Stripe ID: ${stripeCustomerId || 'none'}`);
+      } else {
+        console.log(`MemberStack fetch failed: ${memberRes.status}`);
       }
     } catch (e) {
       console.log('Could not fetch from Memberstack:', e.message);
@@ -37,45 +43,51 @@ export default async function handler(req, res) {
       });
       stripeCustomerId = customer.id;
       memberHasStripeId = false; // Need to save it
+      console.log(`✅ Created new Stripe customer: ${stripeCustomerId}`);
     } else {
       // Check if customer already used trial by looking at past subscriptions
       try {
         const subscriptions = await stripe.subscriptions.list({
           customer: stripeCustomerId,
           limit: 1,
-          status: 'all'  // Include cancelled subscriptions too
+          status: 'all'
         });
-        // If they have ANY past subscription, they already used the trial
         trialUsed = subscriptions.data.length > 0;
         console.log(`Customer ${stripeCustomerId}: Has ${subscriptions.data.length} past subscription(s), trialUsed = ${trialUsed}`);
       } catch (e) {
         console.log('Could not retrieve customer subscriptions:', e.message);
-        trialUsed = false;  // Default to giving trial if we can't check
+        trialUsed = false;
       }
     }
 
     // Save to Memberstack if not already there
-if (!memberHasStripeId && stripeCustomerId) {
-  try {
-    const saveRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        customFields: {
-          stripeCustomerId: stripeCustomerId
+    if (!memberHasStripeId && stripeCustomerId) {
+      try {
+        const saveRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+          method: 'PATCH',
+          headers: {
+            'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            customFields: {
+              stripeCustomerId: stripeCustomerId
+            }
+          })
+        });
+        
+        if (saveRes.ok) {
+          const saveData = await saveRes.json();
+          console.log('✅ SAVE RESPONSE:', JSON.stringify(saveData));
+          console.log(`✅ Stripe ID ${stripeCustomerId} saved to Memberstack for member ${memberId}`);
+        } else {
+          const errorText = await saveRes.text();
+          console.log(`❌ MemberStack save failed (${saveRes.status}):`, errorText);
         }
-      })
-    });
-    const saveData = await saveRes.json();
-    console.log('SAVE RESPONSE:', saveData);
-    console.log(`✅ Stripe ID ${stripeCustomerId} saved to Memberstack for member ${memberId}`);
-  } catch (e) {
-    console.log('❌ Error saving to Memberstack:', e.message);
-  }
-}
+      } catch (e) {
+        console.log('❌ Error saving to Memberstack:', e.message);
+      }
+    }
 
     // Determine trial eligibility
     const trialPeriodDays = trialUsed ? 0 : 2;
