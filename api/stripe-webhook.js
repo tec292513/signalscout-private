@@ -2,16 +2,47 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// THIS LINE IS CRITICAL - tells Vercel NOT to parse the body
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+// Helper to read raw body
+async function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', chunk => {
+      data += chunk;
+    });
+    req.on('end', () => {
+      resolve(data);
+    });
+    req.on('error', reject);
+  });
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const sig = req.headers['stripe-signature'];
-  const rawBody = req.rawBody || JSON.stringify(req.body);
+  let rawBody;
+
+  try {
+    // Get the ACTUAL raw body from request
+    rawBody = await getRawBody(req);
+  } catch (e) {
+    console.error('Error reading raw body:', e.message);
+    return res.status(400).json({ error: 'Could not read request body' });
+  }
 
   let event;
+
   try {
+    // Verify signature using the REAL raw body
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
@@ -28,15 +59,15 @@ export default async function handler(req, res) {
     const memberId = data.object?.metadata?.memberId;
 
     console.log(`📥 Webhook event: ${type}`);
-    console.log(`   Customer: ${stripeCustomerId}, Member: ${memberId}`);
+    console.log(` Customer: ${stripeCustomerId}, Member: ${memberId}`);
 
-    // Handle subscription creation, update, or deletion
-    if (type === 'customer.subscription.created' || 
+    // Handle subscription events
+    if (type === 'customer.subscription.created' ||
         type === 'customer.subscription.updated' ||
         type === 'customer.subscription.deleted') {
-      
+
       if (memberId && stripeCustomerId) {
-        // Sync Stripe customer ID to MemberStack built-in field
+        // Save to Memberstack custom field
         try {
           const updateRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
             method: 'PATCH',
@@ -45,7 +76,9 @@ export default async function handler(req, res) {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              stripeCustomerId: stripeCustomerId
+              customFields: {
+                stripeCustomerId: stripeCustomerId
+              }
             })
           });
 
