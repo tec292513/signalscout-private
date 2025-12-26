@@ -55,25 +55,27 @@ export default async function handler(req, res) {
     }
 
     // Save to Memberstack if not already there
-    if (!memberHasStripeId && stripeCustomerId) {
-      try {
-        await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            customFields: {
-              stripeCustomerId: stripeCustomerId
-            }
-          })
-        });
-        console.log('Stripe ID saved to Memberstack');
-      } catch (e) {
-        console.log('Error saving to Memberstack:', e.message);
-      }
-    }
+if (!memberHasStripeId && stripeCustomerId) {
+  try {
+    const saveRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        customFields: {
+          stripeCustomerId: stripeCustomerId
+        }
+      })
+    });
+    const saveData = await saveRes.json();
+    console.log('SAVE RESPONSE:', saveData);
+    console.log(`✅ Stripe ID ${stripeCustomerId} saved to Memberstack for member ${memberId}`);
+  } catch (e) {
+    console.log('❌ Error saving to Memberstack:', e.message);
+  }
+}
 
     // Determine trial eligibility
     const trialPeriodDays = trialUsed ? 0 : 2;
