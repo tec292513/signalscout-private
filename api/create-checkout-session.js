@@ -14,6 +14,7 @@ export default async function handler(req, res) {
     let memberHasStripeId = false;
     let trialUsed = false;
 
+    // Fetch member data
     try {
       const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
         headers: {
@@ -24,7 +25,11 @@ export default async function handler(req, res) {
 
       if (memberRes.ok) {
         const memberData = await memberRes.json();
-        stripeCustomerId = memberData?.data?.customFields?.stripeCustomerId || null;
+        // Try both formats
+        stripeCustomerId = 
+          memberData?.data?.customFieldsDict?.stripeCustomerId ||
+          memberData?.data?.customFields?.stripeCustomerId ||
+          null;
         memberHasStripeId = !!stripeCustomerId;
         console.log(`MemberStack fetch successful. Stripe ID: ${stripeCustomerId || 'none'}`);
       }
@@ -32,6 +37,7 @@ export default async function handler(req, res) {
       console.log('Could not fetch from Memberstack:', e.message);
     }
 
+    // Create new Stripe customer if doesn't exist
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: email.toLowerCase(),
@@ -41,6 +47,7 @@ export default async function handler(req, res) {
       memberHasStripeId = false;
       console.log(`✅ Created new Stripe customer: ${stripeCustomerId}`);
     } else {
+      // Check if customer already used trial
       try {
         const subscriptions = await stripe.subscriptions.list({
           customer: stripeCustomerId,
@@ -54,6 +61,7 @@ export default async function handler(req, res) {
       }
     }
 
+    // Save to Memberstack if not already there
     if (!memberHasStripeId && stripeCustomerId) {
       try {
         const saveRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
@@ -63,7 +71,7 @@ export default async function handler(req, res) {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            customFields: {
+            customFieldsDict: {
               stripeCustomerId: stripeCustomerId
             }
           })
@@ -71,15 +79,20 @@ export default async function handler(req, res) {
 
         if (saveRes.ok) {
           console.log(`✅ Stripe ID ${stripeCustomerId} saved to Memberstack`);
+        } else {
+          const errorText = await saveRes.text();
+          console.log(`❌ MemberStack save failed (${saveRes.status}):`, errorText);
         }
       } catch (e) {
         console.log('❌ Error saving to Memberstack:', e.message);
       }
     }
 
+    // Determine trial eligibility
     const trialPeriodDays = trialUsed ? 0 : 2;
     console.log(`Creating subscription with trial_period_days: ${trialPeriodDays}`);
 
+    // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
       mode: 'subscription',
