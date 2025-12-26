@@ -16,22 +16,20 @@ export default async function handler(req, res) {
 
     // Fetch member data
     try {
-      const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+      const memberRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
         headers: {
-          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+          'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
           'Content-Type': 'application/json'
         }
       });
 
       if (memberRes.ok) {
         const memberData = await memberRes.json();
-        // Try both formats
-        stripeCustomerId = 
-          memberData?.data?.customFieldsDict?.stripeCustomerId ||
-          memberData?.data?.customFields?.stripeCustomerId ||
-          null;
+        stripeCustomerId = memberData?.data?.customFields?.stripeCustomerId || null;
         memberHasStripeId = !!stripeCustomerId;
         console.log(`MemberStack fetch successful. Stripe ID: ${stripeCustomerId || 'none'}`);
+      } else {
+        console.log(`MemberStack fetch failed: ${memberRes.status}`);
       }
     } catch (e) {
       console.log('Could not fetch from Memberstack:', e.message);
@@ -64,14 +62,14 @@ export default async function handler(req, res) {
     // Save to Memberstack if not already there
     if (!memberHasStripeId && stripeCustomerId) {
       try {
-        const saveRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+        const saveRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
           method: 'PATCH',
           headers: {
-            'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+            'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            customFieldsDict: {
+            customFields: {
               stripeCustomerId: stripeCustomerId
             }
           })
