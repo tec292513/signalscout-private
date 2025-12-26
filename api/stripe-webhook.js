@@ -2,14 +2,12 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// THIS LINE IS CRITICAL - tells Vercel NOT to parse the body
 export const config = {
   api: {
     bodyParser: false
   }
 };
 
-// Helper to read raw body
 async function getRawBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
@@ -32,7 +30,6 @@ export default async function handler(req, res) {
   let rawBody;
 
   try {
-    // Get the ACTUAL raw body from request
     rawBody = await getRawBody(req);
   } catch (e) {
     console.error('Error reading raw body:', e.message);
@@ -40,9 +37,7 @@ export default async function handler(req, res) {
   }
 
   let event;
-
   try {
-    // Verify signature using the REAL raw body
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
@@ -61,18 +56,15 @@ export default async function handler(req, res) {
     console.log(`📥 Webhook event: ${type}`);
     console.log(` Customer: ${stripeCustomerId}, Member: ${memberId}`);
 
-    // Handle subscription events
     if (type === 'customer.subscription.created' ||
         type === 'customer.subscription.updated' ||
         type === 'customer.subscription.deleted') {
-
       if (memberId && stripeCustomerId) {
-        // Save to Memberstack custom field
         try {
-          const updateRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+          const updateRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
             method: 'PATCH',
             headers: {
-              'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+              'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
