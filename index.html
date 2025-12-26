@@ -1,434 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignalScout AI - AI-Powered Sales Intelligence</title>
-  <script src="https://api.memberstack.io/static/memberstack.js" data-memberstack-id="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignalScout AI - AI-Powered Sales Intelligence for Cloud & DevOps</title>
+    <meta name="description" content="Stop losing deals to faster competitors. SignalScout AI finds qualified Cloud & DevOps leads automatically by detecting buying signals from podcasts, newsletters & social media." />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      color: #1a1a1a;
-      background: #fff;
-    }
+    <script data-memberstack-app="app_cmfu0bt8h002n0wubdfa67lp6" src="https://static.memberstack.com/scripts/v1/memberstack.js" type="text/javascript"></script>
 
-    header {
-      padding: 24px 20px;
-      border-bottom: 1px solid #e5e5e5;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: #000;
-    }
-
-    .auth-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #2563eb;
-    }
-
-    .btn-secondary {
-      background: #f3f4f6;
-      color: #1a1a1a;
-      border: 1px solid #e5e5e5;
-    }
-
-    .btn-secondary:hover {
-      background: #e5e7eb;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .hero {
-      padding: 60px 20px;
-      text-align: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      font-size: 20px;
-      margin-bottom: 32px;
-      opacity: 0.9;
-    }
-
-    .section {
-      padding: 60px 20px;
-      border-bottom: 1px solid #e5e5e5;
-    }
-
-    .section h2 {
-      font-size: 36px;
-      margin-bottom: 40px;
-      text-align: center;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-      margin-bottom: 40px;
-    }
-
-    .card {
-      padding: 32px;
-      background: #f9fafb;
-      border-radius: 8px;
-      border: 1px solid #e5e5e5;
-    }
-
-    .card h3 {
-      font-size: 20px;
-      margin-bottom: 12px;
-    }
-
-    .card p {
-      color: #666;
-      line-height: 1.6;
-    }
-
-    .pricing {
-      background: #f9fafb;
-      padding: 60px 20px;
-    }
-
-    .pricing-card {
-      max-width: 400px;
-      margin: 0 auto;
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      border: 2px solid #e5e5e5;
-      text-align: center;
-    }
-
-    .price {
-      font-size: 48px;
-      font-weight: 700;
-      margin: 20px 0;
-    }
-
-    .price-period {
-      color: #666;
-      font-size: 16px;
-    }
-
-    .features {
-      text-align: left;
-      margin: 32px 0;
-      list-style: none;
-    }
-
-    .features li {
-      padding: 12px 0;
-      border-bottom: 1px solid #e5e5e5;
-      color: #666;
-    }
-
-    .features li:before {
-      content: "✓ ";
-      color: #10b981;
-      font-weight: bold;
-      margin-right: 8px;
-    }
-
-    .cta-button {
-      display: inline-block;
-      width: 100%;
-      padding: 16px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 24px;
-      transition: background 0.3s;
-    }
-
-    .cta-button:hover {
-      background: #2563eb;
-    }
-
-    .cta-button:disabled {
-      background: #d1d5db;
-      cursor: not-allowed;
-    }
-
-    footer {
-      background: #1a1a1a;
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .auth-required {
-      display: none;
-    }
-
-    .auth-required.show {
-      display: block;
-    }
-
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header>
-    <div class="logo">SignalScout AI</div>
-    <div class="auth-buttons">
-      <button class="btn-secondary" id="loginBtn">Login</button>
-      <button class="btn-primary" id="signupBtn">Sign Up</button>
-      <button class="btn-secondary" id="logoutBtn" style="display: none;">Logout</button>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1>Stop Losing Deals to Faster Competitors</h1>
-      <p>SignalScout AI is an AI-powered sales intelligence platform that automatically finds qualified <strong>Cloud & DevOps leads</strong> for your team by detecting buying signals from podcasts, newsletters, social media, and more.</p>
-      <p><em>2-day free trial. Credit card required.</em></p>
-    </div>
-  </section>
-
-  <!-- Problems Section -->
-  <section class="section">
-    <div class="container">
-      <h2>Your Sales Team is Fighting an Impossible Battle</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Manual Research is Slow</h3>
-          <p>Teams waste countless hours listening to podcasts and reading newsletters searching for a single lead.</p>
+    <style>
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #cbd5e1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; }
+      .btn-primary { background-image: linear-gradient(to right, #2563eb, #3b82f6, #60a5fa); transition: all 0.3s ease; background-size: 200% auto; }
+      .btn-primary:hover { background-position: right center; }
+      .btn-secondary { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: background-color 0.3s ease; }
+      .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.2); }
+      .info-card { background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 2rem; text-align: center; }
+      .feature-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; }
+      .hero-bg { background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=4800'); background-size: cover; background-position: center; position: relative; }
+      .hero-bg::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, #0B1120 10%, rgba(11, 17, 32, 0.8) 100%); z-index: 1; }
+      .hero-content { position: relative; z-index: 2; }
+      .pricing-card { background-color: #1E293B; border: 1px solid #475569; }
+      [data-ms-secure-badge] { display: none !important; }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-300">
+    <header class="w-full p-6 flex justify-between items-center container mx-auto">
+      <a href="/" class="flex items-center">
+        <img src="./logo.png" alt="SignalScout AI" class="h-10">
+      </a>
+      <nav class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#pricing" class="hover:text-white">Pricing</a>
+        <a href="#" data-ms-modal="login" class="btn-secondary py-2 px-4 rounded-lg">Sign In</a>
+        <a href="#" id="startTrialLink" data-ms-modal="signup" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg">Get Started</a>
+      </nav>
+      <div class="md:hidden"><a href="#" data-ms-modal="login" class="font-semibold text-white">Sign In</a></div>
+    </header>
+    
+    <main>
+      <section class="hero-bg text-center pt-24 pb-32 px-6">
+        <div class="hero-content">
+          <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Stop Losing Deals to Faster Competitors</h1>
+          <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-8">SignalScout AI is an AI-powered sales intelligence platform that automatically finds qualified <strong class="text-white">Cloud & DevOps leads</strong> for your team by detecting buying signals from podcasts, newsletters, social media, and more.</p>
+          <button id="heroStartTrialBtn" class="btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg" onclick="document.getElementById('startTrialLink').click()">Start Free Trial</button>
+          <p class="text-gray-500 mt-3 text-sm">2-day free trial. Credit card required.</p>
         </div>
-        <div class="card">
-          <h3>Outreach is Ineffective</h3>
-          <p>A majority of sales time is wasted on unproductive prospecting with generic, cold emails.</p>
-        </div>
-        <div class="card">
-          <h3>Opportunities are Missed</h3>
-          <p>The majority of the buyer's journey is now done digitally, often before they ever contact a vendor.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Solution Section -->
-  <section class="section">
-    <div class="container">
-      <h2>SignalScout AI: Your Unfair Advantage</h2>
-      <p style="text-align: center; margin-bottom: 40px; color: #666; font-size: 18px;">Our AI engine listens to thousands of sources 24/7 to deliver actionable buying signals straight to your dashboard.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>We Listen</h3>
-          <p>Our AI monitors podcasts, conference talks, and newsletters in the Cloud & DevOps space.</p>
-        </div>
-        <div class="card">
-          <h3>AI Analyzes</h3>
-          <p>We identify key decision-makers (VPs, Directors) talking about specific pain points.</p>
-        </div>
-        <div class="card">
-          <h3>You Get Leads</h3>
-          <p>You receive a daily feed of actionable leads with the person, company, and their exact quote.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="section">
-    <div class="container">
-      <h2>Everything You Need to Dominate Your Market</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>AI-Powered Signal Detection</h3>
-          <p>Our AI is trained to understand the nuances of technical pain points in the DevOps space.</p>
-        </div>
-        <div class="card">
-          <h3>Daily Lead Feed</h3>
-          <p>Log in to a fresh list of qualified, actionable leads every single morning.</p>
-        </div>
-        <div class="card">
-          <h3>Quality Over Quantity</h3>
-          <p>We focus on high-intent signals from decision-makers, not just random keyword mentions.</p>
-        </div>
-        <div class="card">
-          <h3>Podcast Monitoring</h3>
-          <p>We transcribe and analyze hundreds of industry podcasts to find hidden gems.</p>
-        </div>
-        <div class="card">
-          <h3>Newsletter Intelligence</h3>
-          <p>Stay ahead of the market by getting signals from influential newsletters.</p>
-        </div>
-        <div class="card">
-          <h3>Conference & Webinar Insights</h3>
-          <p>Get key quotes and pain points from talks given by tech leaders.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing Section -->
-  <section class="pricing">
-    <div class="container">
-      <h2>Choose Your Competitive Edge</h2>
-      <p style="text-align: center; margin-bottom: 40px; color: #666; font-size: 16px;">Simple pricing. No hidden fees.</p>
+      </section>
       
-      <div class="pricing-card">
-        <h3>Pro Plan</h3>
-        <p style="color: #666; margin-bottom: 0;">For teams ready to dominate their market.</p>
-        
-        <div class="price">
-          $499<span class="price-period">/month</span>
+      <section class="py-20 px-6 container mx-auto">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-2">Your Sales Team is Fighting an<br> <span class="gradient-text">Impossible Battle</span></h2>
         </div>
-        <p style="color: #666; margin-bottom: 24px;">2-day free trial. Credit card required.</p>
-        
-        <ul class="features">
-          <li>Real-time signals from industry leaders</li>
-          <li>Multiple content sources</li>
-          <li>Direct access to original sources</li>
-          <li>Email & Chat Support</li>
-        </ul>
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Manual Research is Slow</h3>
+            <p class="text-gray-400">Teams waste countless hours listening to podcasts and reading newsletters searching for a single lead.</p>
+          </div>
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Outreach is Ineffective</h3>
+            <p class="text-gray-400">A majority of sales time is wasted on unproductive prospecting with generic, cold emails.</p>
+          </div>
+          <div class="info-card">
+            <h3 class="text-xl font-semibold text-white mb-2">Opportunities are Missed</h3>
+            <p class="text-gray-400">The majority of the buyer's journey is now done digitally, often before they ever contact a vendor.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section class="py-20 px-6 bg-black bg-opacity-20">
+        <div class="container mx-auto">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-white mb-2">SignalScout AI: Your<br> <span class="gradient-text">Unfair Advantage</span></h2>
+            <p class="text-lg text-gray-400 mb-12">Our AI engine listens to thousands of sources 24/7 to deliver actionable buying signals straight to your dashboard.</p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-center">
+            <div>
+              <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+              <h3 class="text-xl font-semibold text-white mb-2">We Listen</h3>
+              <p class="text-gray-400">Our AI monitors podcasts, conference talks, and newsletters in the Cloud & DevOps space.</p>
+            </div>
+            <div>
+              <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+              <h3 class="text-xl font-semibold text-white mb-2">AI Analyzes</h3>
+              <p class="text-gray-400">We identify key decision-makers (VPs, Directors) talking about specific pain points.</p>
+            </div>
+            <div>
+              <div class="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+              <h3 class="text-xl font-semibold text-white mb-2">You Get Leads</h3>
+              <p class="text-gray-400">You receive a daily feed of actionable leads with the person, company, and their exact quote.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="features" class="py-20 px-6 container mx-auto">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-12">Everything You Need to<br> <span class="gradient-text">Dominate Your Market</span></h2>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div class="feature-card p-6">
+            <i class="fas fa-robot text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">AI-Powered Signal Detection</h3>
+            <p class="text-sm text-gray-400">Our AI is trained to understand the nuances of technical pain points in the DevOps space.</p>
+          </div>
+          <div class="feature-card p-6">
+            <i class="far fa-list-alt text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">Daily Lead Feed</h3>
+            <p class="text-sm text-gray-400">Log in to a fresh list of qualified, actionable leads every single morning.</p>
+          </div>
+          <div class="feature-card p-6">
+            <i class="fas fa-bullseye text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">Quality Over Quantity</h3>
+            <p class="text-sm text-gray-400">We focus on high-intent signals from decision-makers, not just random keyword mentions.</p>
+          </div>
+          <div class="feature-card p-6">
+            <i class="fas fa-microphone-alt text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">Podcast Monitoring</h3>
+            <p class="text-sm text-gray-400">We transcribe and analyze hundreds of industry podcasts to find hidden gems.</p>
+          </div>
+          <div class="feature-card p-6">
+            <i class="far fa-newspaper text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">Newsletter Intelligence</h3>
+            <p class="text-sm text-gray-400">Stay ahead of the market by getting signals from influential newsletters.</p>
+          </div>
+          <div class="feature-card p-6">
+            <i class="fas fa-chalkboard-teacher text-2xl gradient-text mb-4"></i>
+            <h3 class="text-lg font-semibold text-white mb-2">Conference & Webinar Insights</h3>
+            <p class="text-sm text-gray-400">Get key quotes and pain points from talks given by tech leaders.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="pricing" class="py-20 px-6 container mx-auto">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-4xl font-bold text-white mb-2">Choose Your <span class="gradient-text">Competitive Edge</span></h2>
+          <p class="text-lg text-gray-400 mb-12">Simple pricing. No hidden fees.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8">
+          <div class="pricing-card p-8 rounded-lg w-full max-w-sm border-2 border-blue-500">
+            <h3 class="text-xl font-semibold text-white text-center">Pro Plan</h3>
+            <p class="text-center text-gray-400 mb-6">For teams ready to dominate their market.</p>
+            <p class="text-5xl font-extrabold text-white text-center mb-2">$499</p>
+            <p class="text-center text-gray-400 mb-2">per month</p>
+            <p class="text-center text-gray-400 mb-6">2-day free trial. Credit card required.</p>
+            <ul class="space-y-4 text-gray-300 mb-8">
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Real-time signals from industry leaders</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Multiple content sources</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Direct access to original sources</li>
+              <li class="flex items-center"><i class="fas fa-check text-green-400 mr-3"></i> Email & Chat Support</li>
+            </ul>
+            <button id="pricingStartTrialBtn" onclick="document.getElementById('startTrialLink').click()" class="w-full btn-primary text-white font-bold py-3 px-8 rounded-lg text-lg">Start Free Trial</button>
+          </div>
+        </div>
+      </section>
 
-        <button class="cta-button" id="checkoutBtn">Start Free Trial</button>
+      <button id="start-trial-button" style="padding: 15px 30px; background: #0066cc; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer;">
+  Start 2-day free trial
+</button>
+
+    </main>
+    
+    <footer class="text-center py-10 px-6 border-t border-gray-800 text-gray-500 text-sm">
+      <div class="space-x-6 mb-4">
+        <a href="./terms-of-service.html" class="hover:text-white">Terms of Service</a>
+        <a href="./privacy-policy.html" class="hover:text-white">Privacy Policy</a>
       </div>
-    </div>
-  </section>
+      <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
+    </footer>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 SignalScout AI. All rights reserved.</p>
-  </footer>
-
-  <script>
-    // Initialize Memberstack
-    const memberstack = window.memberstack;
-
-    // Stripe Price ID - UPDATE THIS
-    const STRIPE_PRICE_ID = 'price_1SeGPGK6XKSvejaaEk3HD3DG'; // Replace with your actual price ID
-
-    // Check auth status on page load
-    memberstack.onReady.then(async (data) => {
-      const member = data.user;
-
-      if (member) {
-        // User is logged in
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('signupBtn').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'block';
-      } else {
-        // User is not logged in
-        document.getElementById('loginBtn').style.display = 'block';
-        document.getElementById('signupBtn').style.display = 'block';
-        document.getElementById('logoutBtn').style.display = 'none';
+       <script>
+      // MemberStack initialization
+      if (window.MemberStack) {
+        MemberStack.onReady.then(member => {
+          console.log('MemberStack ready on homepage');
+        });
       }
-    });
+    </script>
 
-    // Login button
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      memberstack.openSignIn();
-    });
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('start-trial-button');
+        if (!btn) return;
 
-    // Signup button
-    document.getElementById('signupBtn').addEventListener('click', () => {
-      memberstack.openSignUp();
-    });
+        btn.addEventListener('click', async () => {
+          const memberstack = window.memberstack;
 
-    // Logout button
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      memberstack.logout();
-      window.location.reload();
-    });
+          // Get current member using NEW API
+          const currentMember = await memberstack.getCurrentMember();
 
-    // Checkout button
-    document.getElementById('checkoutBtn').addEventListener('click', async () => {
-      // Check if user is logged in
-      const currentMember = await memberstack.getCurrentMember();
+          if (!currentMember) {
+            await memberstack.openSignUp();
+            return;
+          }
 
-      if (!currentMember) {
-        alert('Please log in first');
-        memberstack.openSignIn();
+          const email = currentMember.email;
+          const memberId = currentMember.id;  // ← THIS WAS MISSING
+
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              memberId,  // ← NOW SENDING MEMBERID
+              priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert('Could not start trial. Please contact support.');
+          }
+        });
+      });
+    </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('start-trial-button');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      const memberstack = window.$memberstackDom;
+
+      const { data: member } = await memberstack.getCurrentMember();
+
+      if (!member) {
+        await memberstack.openModal('SIGNUP');
         return;
       }
 
-      const btn = document.getElementById('checkoutBtn');
-      btn.classList.add('loading');
-      btn.disabled = true;
+      const email = member.auth.email;
+      const memberId = member.id;
 
-      try {
-        // Call your API with memberId ← THIS IS THE FIX
-        const response = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: currentMember.email,
-            memberId: currentMember.id,  // ← PASS THE MEMBERSTACK ID
-            priceId: STRIPE_PRICE_ID
-          })
-        });
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          memberId,
+          priceId: 'price_1SeGPGK6XKSvejaaEk3HD3DG'
+        })
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to create checkout session');
-        }
+      const data = await response.json();
 
-        const { url } = await response.json();
-        
-        // Redirect to Stripe Checkout
-        window.location.href = url;
-      } catch (error) {
-        console.error('Checkout error:', error);
-        alert('Error: ' + error.message);
-        btn.classList.remove('loading');
-        btn.disabled = false;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Could not start trial. Please contact support.');
       }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
