@@ -35,18 +35,22 @@ export default async function handler(req, res) {
         email: email.toLowerCase(),
         metadata: { memberId }
       });
-
       stripeCustomerId = customer.id;
       memberHasStripeId = false; // Need to save it
     } else {
-      // Check if customer already used trial (existing customer)
+      // Check if customer already used trial by looking at past subscriptions
       try {
-        const customer = await stripe.customers.retrieve(stripeCustomerId);
-        trialUsed = customer.metadata?.trial_used === 'true';
-        
-        console.log(`Customer ${stripeCustomerId}: trialUsed = ${trialUsed}`);
+        const subscriptions = await stripe.subscriptions.list({
+          customer: stripeCustomerId,
+          limit: 1,
+          status: 'all'  // Include cancelled subscriptions too
+        });
+        // If they have ANY past subscription, they already used the trial
+        trialUsed = subscriptions.data.length > 0;
+        console.log(`Customer ${stripeCustomerId}: Has ${subscriptions.data.length} past subscription(s), trialUsed = ${trialUsed}`);
       } catch (e) {
-        console.log('Could not retrieve customer metadata:', e.message);
+        console.log('Could not retrieve customer subscriptions:', e.message);
+        trialUsed = false;  // Default to giving trial if we can't check
       }
     }
 
@@ -92,7 +96,6 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({ url: session.url });
-
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: error.message });
