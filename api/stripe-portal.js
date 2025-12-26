@@ -1,40 +1,43 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
 
-export default async (req, res) => {
-  const { memberId, memberStackToken } = req.body;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+export default async function handler(req, res) {
+  const { memberId } = req.body;
 
   try {
-    // Fetch Stripe ID from MemberStack
+    // Fetch Stripe ID from MemberStack using Admin API
     let stripeCustomerId = null;
-    
+
     try {
-      const memberRes = await fetch(`https://api.memberstack.io/v1/members/${memberId}`, {
-        headers: { 'Authorization': `Bearer ${memberStackToken}` }
+      const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
+        headers: {
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+          'Content-Type': 'application/json'
+        }
       });
-      
+
       if (memberRes.ok) {
         const memberData = await memberRes.json();
-        stripeCustomerId = memberData.customFields?.stripeCustomerId;
+        stripeCustomerId = memberData?.data?.customFields?.stripeCustomerId;
       }
     } catch (e) {
       console.log('Could not fetch from MemberStack:', e.message);
     }
-    
+
     if (!stripeCustomerId) {
       return res.status(404).json({ error: 'Customer not found' });
     }
 
     console.log('Creating portal session for:', stripeCustomerId);
-
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
       return_url: 'https://aisignalscout.com/dashboard.html'
     });
 
     return res.json({ url: session.url });
-
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: error.message });
   }
-};
+}
