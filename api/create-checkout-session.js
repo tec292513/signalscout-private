@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
-import fetch from 'node-fetch';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async (req, res) => {
   if (req.method !== 'POST') {
@@ -13,7 +14,9 @@ export default async (req, res) => {
   }
 
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    console.log('STRIPE_PRICE_ID:', process.env.STRIPE_PRICE_ID);
+    console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
+    console.log('MEMBERSTACK_SECRET_KEY exists:', !!process.env.MEMBERSTACK_SECRET_KEY);
 
     // Check trial eligibility
     const customers = await stripe.customers.list({ email, limit: 1 });
@@ -46,31 +49,35 @@ export default async (req, res) => {
       },
     });
 
-    // Save Stripe ID to MemberStack
-    const msResponse = await fetch('https://admin.memberstack.com/members/', {
-      method: 'PATCH',
-      headers: {
-        'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        customFields: [
-          {
-            fieldName: 'stripeCustomerId',
-            value: customer.id,
-          },
-        ],
-      }),
-    });
+    // Save Stripe ID to MemberStack using native fetch
+    try {
+      const msResponse = await fetch('https://admin.memberstack.com/members/', {
+        method: 'PATCH',
+        headers: {
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          customFields: [
+            {
+              fieldName: 'stripeCustomerId',
+              value: customer.id,
+            },
+          ],
+        }),
+      });
 
-    if (!msResponse.ok) {
-      console.warn('Failed to save Stripe ID to MemberStack');
+      if (!msResponse.ok) {
+        console.warn('Failed to save Stripe ID to MemberStack:', msResponse.status);
+      }
+    } catch (msError) {
+      console.warn('MemberStack error (non-critical):', msError.message);
     }
 
     return res.status(200).json({ sessionId: session.id });
   } catch (error) {
-    console.error('Checkout error:', error.message);
+    console.error('Checkout error:', error);
     return res.status(500).json({ error: error.message });
   }
 };
