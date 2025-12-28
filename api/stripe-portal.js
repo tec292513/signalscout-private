@@ -12,8 +12,8 @@ export default async function handler(req, res) {
       const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
         headers: {
           'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (memberRes.ok) {
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     console.log('Creating portal session for:', stripeCustomerId);
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
-      return_url: 'https://aisignalscout.com/dashboard.html'
+      return_url: 'https://aisignalscout.com/dashboard.html',
     });
 
     return res.json({ url: session.url });

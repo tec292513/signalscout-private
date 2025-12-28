@@ -19,9 +19,9 @@ export default async function handler(req, res) {
     try {
       const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
         headers: {
-          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY
-          'Content-Type': 'application/json'
-        }
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
+          'Content-Type': 'application/json',
+        },
       });
 
       if (memberRes.ok) {
@@ -40,11 +40,12 @@ export default async function handler(req, res) {
     console.log('Checking subscription for Stripe customer:', stripeCustomerId);
     const subscriptions = await stripe.subscriptions.list({
       customer: stripeCustomerId,
-      status: 'active'
+      status: 'active',
     });
 
     const isActive = subscriptions.data && subscriptions.data.length > 0;
     console.log('Is active subscription:', isActive);
+
     return res.json({ isActive });
   } catch (error) {
     console.error('Stripe error:', error.message);
