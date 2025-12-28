@@ -9,9 +9,9 @@ export default async function handler(req, res) {
     let stripeCustomerId = null;
 
     try {
-      const memberRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
+      const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
         headers: {
-          'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY,
           'Content-Type': 'application/json'
         }
       });

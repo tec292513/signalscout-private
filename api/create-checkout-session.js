@@ -16,9 +16,9 @@ export default async function handler(req, res) {
 
     // Fetch member data
     try {
-      const memberRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
+      const memberRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
         headers: {
-          'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
+          'X-API-KEY': process.env.MEMBERSTACK_SECRET_KEY
           'Content-Type': 'application/json'
         }
       });
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     // Save to Memberstack if not already there
     if (!memberHasStripeId && stripeCustomerId) {
       try {
-        const saveRes = await fetch(`https://api.memberstack.com/v1/members/${memberId}`, {
+        const saveRes = await fetch(`https://admin.memberstack.com/members/${memberId}`, {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${process.env.MEMBERSTACK_SECRET_KEY}`,
