@@ -369,17 +369,52 @@
                 return;
             }
             
-            console.log('MemberStack loaded, waiting for member data');
+            console.log('MemberStack loaded, getting current member');
             
-            // Wait for localStorage to populate
-            let attempts2 = 0;
-            while (!localStorage.getItem('ms-mem') && attempts2 < 10) {
-                await new Promise(r => setTimeout(r, 200));
-                attempts2++;
+            // Get current member from MemberStack
+            try {
+                const { data: member } = await window.$memberstackDom.getCurrentMember();
+                
+                if (!member) {
+                    console.log('No member logged in');
+                    fetchSignals();
+                    return;
+                }
+                
+                console.log('Member found:', member.auth?.email);
+                
+                // Check subscription with member data
+                const email = member.auth?.email;
+                const customerId = member.customFields?.stripeCustomerId;
+                const memberId = member.id;
+                
+                try {
+                    const response = await fetch('/api/check-stripe-subscription', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: email,
+                            customerId: customerId,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.hasSubscription) {
+                        console.log('No active subscription - sending to checkout');
+                        goToCheckout(email, memberId);
+                        return;
+                    } else {
+                        console.log('Active subscription found - staying on dashboard');
+                    }
+                } catch (error) {
+                    console.error('Error checking subscription', error);
+                }
+                
+            } catch (error) {
+                console.error('Error getting member:', error);
             }
             
-            console.log('Member data available, checking subscription');
-            await checkAndRedirectToCheckout();
             fetchSignals();
         }
 
