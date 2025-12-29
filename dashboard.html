@@ -352,9 +352,37 @@
                 alert('Error: ' + error.message);
             }
         }
-    </script>
 
-    <script>
+        async function initDashboard() {
+            console.log('Initializing dashboard');
+            
+            // Wait for MemberStack to load
+            let attempts = 0;
+            while (!window.$memberstackDom && attempts < 50) {
+                await new Promise(r => setTimeout(r, 100));
+                attempts++;
+            }
+            
+            if (!window.$memberstackDom) {
+                console.warn('MemberStack failed to load');
+                fetchSignals();
+                return;
+            }
+            
+            console.log('MemberStack loaded, waiting for member data');
+            
+            // Wait for localStorage to populate
+            let attempts2 = 0;
+            while (!localStorage.getItem('ms-mem') && attempts2 < 10) {
+                await new Promise(r => setTimeout(r, 200));
+                attempts2++;
+            }
+            
+            console.log('Member data available, checking subscription');
+            await checkAndRedirectToCheckout();
+            fetchSignals();
+        }
+
         const APIKEY = 'patQZunGJdbMIjNaG.388cc8dfbf3fae8e01d98bd7d112f8fd3476c62131361cc65abedafdfe51afb0';
         const BASEID = 'appLmGqJQ0olQo4es';
         const TABLENAME = 'Signals';
@@ -631,16 +659,8 @@
         dateFromInput.addEventListener('change', applyFilters);
         dateToInput.addEventListener('change', applyFilters);
 
-        if (window.MemberStack) {
-            MemberStack.onReady.then(() => {
-                console.log('MemberStack ready - loading signals');
-                checkAndRedirectToCheckout();
-                fetchSignals();
-            });
-        } else {
-            console.warn('MemberStack not available, loading signals anyway');
-            fetchSignals();
-        }
+        // Start initialization
+        initDashboard();
     </script>
 </body>
 
