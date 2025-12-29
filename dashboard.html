@@ -640,16 +640,16 @@
         dateFromInput.addEventListener('change', applyFilters);
         dateToInput.addEventListener('change', applyFilters);
 
-        if (window.MemberStack) {
-            MemberStack.onReady.then(() => {
-                console.log('MemberStack ready - loading signals');
-                checkAndRedirectToCheckout();
-                fetchSignals();
-            });
-        } else {
-            console.warn('MemberStack not available, loading signals anyway');
-            fetchSignals();
-        }
+        if (window.$memberstackReady) {
+    window.$memberstackReady.then(async () => {
+        console.log('MemberStack ready - checking subscription');
+        checkAndRedirectToCheckout();
+        fetchSignals();
+    });
+} else {
+    console.warn('MemberStack not available');
+    fetchSignals();
+}
     </script>
 </body>
 
